@@ -13,6 +13,9 @@ protected:
 public:
 	EntityBase();
 	void move(float deltaX, float deltaY);
+	void move(const sf::Vector2f& deltaPosition);
+	void setPosition(float x, float y);
+	void setPosition(const sf::Vector2f& newPosition);
 
 	virtual void update() = 0;
 	virtual void draw(sf::RenderWindow& window) = 0;
