@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-sf::Vector2f ViewManager::convertVector2u(sf::Vector2u & input) {
+sf::Vector2f ViewManager::convertVector2u(const sf::Vector2u & input) {
 	return sf::Vector2f(static_cast<float>(input.x), static_cast<float>(input.y));
 }
 
@@ -142,6 +142,7 @@ sf::Vector2f ViewManager::getViewPosition(const int & screenNumber) const{
 			return sf::Vector2f(s.view.getCenter().x - s.view.getSize().x/2, s.view.getCenter().y - s.view.getSize().y/2);
 		}
 	}
+	return sf::Vector2f(0.f, 0.f);
 }
 
 sf::Vector2f ViewManager::getViewSize(const int & screenNumber) const{
@@ -150,4 +151,5 @@ sf::Vector2f ViewManager::getViewSize(const int & screenNumber) const{
 			return s.view.getSize();
 		}
 	}
+	return sf::Vector2f(0.f, 0.f);
 }
