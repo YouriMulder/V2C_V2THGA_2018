@@ -1,3 +1,5 @@
+#ifndef VIEWMANAGER_HPP
+#define VIEWMANAGER_HPP
 #include <SFML/Graphics.hpp> 
 #include <vector>
 
@@ -154,4 +156,6 @@ public:
 
 	virtual ~ViewManager();
 };
+
+#endif
 
