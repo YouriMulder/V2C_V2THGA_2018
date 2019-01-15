@@ -14,7 +14,8 @@ ViewManager::ViewManager(sf::RenderWindow & mainWindow, const int & noOfScreens)
 	mScreens.reserve(4);
 	sf::Vector2f mainWindowSize = convertVector2u(mainWindow.getSize());
 
-	if (noOfScreens == 1) {		
+	if (noOfScreens == 1) {	
+		mScreens.push_back(screen{ 1,mainWindow.getDefaultView() });
 		resetDrawingScreen();
 	} else if (noOfScreens == 2) {
 		screen newScreen1{ 1, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y / 2)) };
@@ -132,5 +133,21 @@ bool ViewManager::pollEvent(sf::Event & e) {
 void ViewManager::changeLineColor(const sf::Color & newColor) {
 	for (auto & line : mLines) {
 		line.color = newColor;
+	}
+}
+
+sf::Vector2f ViewManager::getViewPosition(const int & screenNumber) {
+	for (auto & s : mScreens) {
+		if (s.number == screenNumber) {
+			return sf::Vector2f(s.view.getCenter().x - s.view.getSize().x/2, s.view.getCenter().y - s.view.getSize().y/2);
+		}
+	}
+}
+
+sf::Vector2f ViewManager::getViewSize(const int & screenNumber) {
+	for (auto & s : mScreens) {
+		if (s.number == screenNumber) {
+			return s.view.getSize();
+		}
 	}
 }

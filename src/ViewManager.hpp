@@ -7,8 +7,7 @@ struct screen {
 	bool selected = false;
 };
 
-class ViewManager
-{
+class ViewManager{
 private:
 	///
 	/// \brief
@@ -136,6 +135,22 @@ public:
 	/// \param newColor
 	/// The new color the lines need to become
 	void changeLineColor(const sf::Color & newColor);
+
+	/// \brief
+	/// Function to get the current possition of the given view
+	/// \details
+	/// \param screenNumber
+	/// The number of the screen you want to get the position 
+	/// \return return the position of the view
+	sf::Vector2f getViewPosition(const int & screenNumber);
+
+	/// \brief
+	/// Function to get the current size of the given view
+	/// \details
+	/// \param screenNumber
+	/// The number of the screen you want to get the size
+	/// \return return the size of the view
+	sf::Vector2f getViewSize(const int & screenNumber);
 
 	virtual ~ViewManager();
 };
