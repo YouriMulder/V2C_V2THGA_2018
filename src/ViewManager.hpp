@@ -27,7 +27,7 @@ private:
 	
 	/// \brief
 	/// Function that converts a given sf::Vector2u to a Vector2f
-	sf::Vector2f convertVector2u(sf::Vector2u & input);
+	sf::Vector2f convertVector2u(const sf::Vector2u & input);
 
 public:
 	/// \brief
