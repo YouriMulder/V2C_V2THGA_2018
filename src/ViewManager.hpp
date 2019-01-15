@@ -3,8 +3,8 @@
 
 struct screen {
 	int number;
-	bool selected = false;
 	sf::View view;
+	bool selected = false;
 };
 
 class ViewManager
@@ -39,7 +39,7 @@ public:
 	/// The window on wich de ViewManager is based
 	/// \param noOffScreens
 	/// The number of screens that need to be made choices: 1,2,4
-	ViewManager(sf::RenderWindow & mainWindow, const int & noOffScreens);
+	ViewManager(sf::RenderWindow & mainWindow, const int & noOfScreens);
 
 	/// \brief
 	/// Function to select a certain screen for moving
