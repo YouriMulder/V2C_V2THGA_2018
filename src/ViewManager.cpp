@@ -136,7 +136,7 @@ void ViewManager::changeLineColor(const sf::Color & newColor) {
 	}
 }
 
-sf::Vector2f ViewManager::getViewPosition(const int & screenNumber) {
+sf::Vector2f ViewManager::getViewPosition(const int & screenNumber) const{
 	for (auto & s : mScreens) {
 		if (s.number == screenNumber) {
 			return sf::Vector2f(s.view.getCenter().x - s.view.getSize().x/2, s.view.getCenter().y - s.view.getSize().y/2);
@@ -144,7 +144,7 @@ sf::Vector2f ViewManager::getViewPosition(const int & screenNumber) {
 	}
 }
 
-sf::Vector2f ViewManager::getViewSize(const int & screenNumber) {
+sf::Vector2f ViewManager::getViewSize(const int & screenNumber) const{
 	for (auto & s : mScreens) {
 		if (s.number == screenNumber) {
 			return s.view.getSize();

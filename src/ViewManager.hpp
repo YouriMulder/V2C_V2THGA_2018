@@ -142,7 +142,7 @@ public:
 	/// \param screenNumber
 	/// The number of the screen you want to get the position 
 	/// \return return the position of the view
-	sf::Vector2f getViewPosition(const int & screenNumber);
+	sf::Vector2f getViewPosition(const int & screenNumber) const;
 
 	/// \brief
 	/// Function to get the current size of the given view
@@ -150,7 +150,7 @@ public:
 	/// \param screenNumber
 	/// The number of the screen you want to get the size
 	/// \return return the size of the view
-	sf::Vector2f getViewSize(const int & screenNumber);
+	sf::Vector2f getViewSize(const int & screenNumber) const;
 
 	virtual ~ViewManager();
 };
