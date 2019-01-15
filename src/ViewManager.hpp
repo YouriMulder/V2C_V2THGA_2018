@@ -10,9 +10,10 @@ struct screen {
 class ViewManager
 {
 private:
-	sf::RenderWindow & mainWindow;
-	std::vector<screen> screens;
-
+	sf::RenderWindow & mMainWindow;
+	std::vector<screen> mScreens;
+	sf::Vertex mLines[4];
+	
 	sf::Vector2f convertVector2u(sf::Vector2u & input);
 
 public:
@@ -27,7 +28,16 @@ public:
 	void draw(const sf::Vertex * vertices, std::size_t vertexCount, sf::PrimitiveType type);
 	void draw(const sf::VertexBuffer & vertexBuffer);
 	void draw(const sf::VertexBuffer &vertexBuffer, std::size_t firstVertex, std::size_t vertexCount);
+
 	void move(const sf::Vector2f & offset);
+	
+	void display();
+	void clear();
+	void close();
+	bool isOpen();
+	bool pollEvent(sf::Event & e);
+
+	void changeLineColor(const sf::Color & newColor);
 
 	virtual ~ViewManager();
 };
