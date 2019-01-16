@@ -15,13 +15,16 @@ Character::Character(
 	mMaxVelocity(maxVelocity), 
 	mAcceleration(acceleration),
 	mMovingDirection(Character::Direction::None),
+	mIsFacingRight(true),
+	mPreviousState(Character::State::Idle),
+	mState(Character::State::Idle),
 	mSpriteWidth(size.x),
 	mSpriteHeight(size.y),
-	mCurrentSpriteSheetLocation(0,0,size.x,size.y),
-	mIsFacingRight(true)
+	mCurrentSpriteSheetLocation(0,0,size.x,size.y)
 {
 	mTexture.loadFromFile("../res/Textures/Player/player.png");
 	mSprite = sf::Sprite(mTexture, mCurrentSpriteSheetLocation);
+	mSprite.scale(2.0f, 2.0f);
 }
 
 Character::~Character() { }
@@ -39,31 +42,22 @@ void Character::setMoveDirection(const Direction& newDirection) {
 
 void Character::applyMovement() {
 	switch(mMovingDirection) {
-		case Direction::Down: {
-			updateVelocity(
-				sf::Vector2f(0.0f, +mAcceleration.y)
-			);
-			break;
-		}
-		case Direction::Up: {
-			updateVelocity(
-				sf::Vector2f(0.0f, -mAcceleration.y)
-			);
-			break;
-		}
 		case Direction::Left: {
+			setState(Character::State::Moving);
 			updateVelocity(
 				sf::Vector2f(-mAcceleration.x, 0.0f)
 			);
 			break;
 		}
 		case Direction::Right: {
+			setState(Character::State::Moving);	
 			updateVelocity(
 				sf::Vector2f(+mAcceleration.x, 0.0f)
 			);
 			break;
 		}
 		case Direction::None: {
+			setState(Character::State::Idle);
 			applyFriction();
 			break;
 		}
@@ -71,24 +65,58 @@ void Character::applyMovement() {
 }
 
 
-void Character::animate() {
+void Character::animate(const sf::Time& deltaTime) {
+	timeSinceLastAnimation += deltaTime;
+
 	updateFacingDirection();
-	if(mIsFacingRight) {
-		if(mCurrentSpriteSheetLocation.width) {
-			mCurrentSpriteSheetLocation.width = -mCurrentSpriteSheetLocation.width;
+
+	if(mState != mPreviousState) {
+		for(const auto& animation : animations) {
+			if(mState == animation.first) {
+				currentSprite = animation.second.start;
+			}
 		}
 	}
-	
-	if (mCurrentSpriteSheetLocation.left == mSpriteWidth * 3) {
-        mCurrentSpriteSheetLocation.left = 0;
-	} else {
-        mCurrentSpriteSheetLocation.left += mSpriteWidth;
+
+	for(const auto& animation : animations) {
+		if(mState == animation.first) {
+			
+			if(timeSinceLastAnimation >= animation.second.displayTime) {
+				timeSinceLastAnimation = sf::seconds(0.0f);
+				currentSprite.x++;
+
+
+				if(currentSprite == animation.second.end) {					
+					currentSprite = animation.second.start;
+				}
+				
+				if(mIsFacingRight) {
+					mSprite.setTextureRect(
+						sf::IntRect(
+							currentSprite.x * animation.second.size.x,
+							currentSprite.y * animation.second.size.y,
+							animation.second.size.x,
+							animation.second.size.y
+						)
+					);
+				} else {
+					mSprite.setTextureRect(
+						sf::IntRect(
+							(currentSprite.x + 1) * animation.second.size.x,
+							currentSprite.y * animation.second.size.y,
+							-animation.second.size.x,
+							animation.second.size.y
+						)
+					);
+				}
+			}
+		}
 	}
-	mSprite.setTextureRect(mCurrentSpriteSheetLocation);
+	mPreviousState = mState;
 }
 
 void Character::updateVelocity(const sf::Vector2f& deltaVelocity) {
-	mVelocity = deltaVelocity;
+	mVelocity = sf::Vector2f(deltaVelocity.x * 0.1f, deltaVelocity.y * 0.1f);
 }
 
 void Character::updateFacingDirection() {
@@ -97,6 +125,10 @@ void Character::updateFacingDirection() {
 	} else if(mVelocity.x < 0) {
 		mIsFacingRight = false;
 	}
+}
+
+void Character::setState(const State& newState) {
+	mState = newState;
 }
 
 void Character::applyFrictionOneAxis(float& axisVelocity, const float& friction) {
@@ -114,12 +146,12 @@ void Character::applyFriction() {
 	applyFrictionOneAxis(mVelocity.y, mAcceleration.y);
 }
 
-void Character::update() {
+void Character::update(const sf::Time& deltaTime) {
 	move(mVelocity);
 	if(mPosition.y + mSprite.getGlobalBounds().height <= 900) {
 		mPosition.y++;
 	}
-	animate();
+	animate(deltaTime);
 }
 
 void Character::draw(sf::RenderWindow& window) {
