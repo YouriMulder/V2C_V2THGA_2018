@@ -1,17 +1,27 @@
 #include "Character.hpp"
 
 #include "../World/Physics.hpp"
-
 #include <iostream>
 
-Character::Character(sf::Vector2f maxVelocity, sf::Vector2f acceleration):
+Character::Character(
+		const sf::Vector2f& position,
+		const sf::Vector2f& size,
+		int screenNumber,
+		const sf::Vector2f& maxVelocity, 
+		const sf::Vector2f& acceleration
+):
+	EntityBase(position, size, screenNumber),
 	mVelocity(0.0f, 0.0f),
 	mMaxVelocity(maxVelocity), 
 	mAcceleration(acceleration),
-	mMovingDirection(Character::Direction::None)
+	mMovingDirection(Character::Direction::None),
+	mSpriteWidth(size.x),
+	mSpriteHeight(size.y),
+	mCurrentSpriteSheetLocation(0,0,size.x,size.y),
+	mIsFacingRight(true)
 {
-	mTexture.loadFromFile("../res/textures/player/player.png");
-	mSprite = sf::Sprite(mTexture);
+	mTexture.loadFromFile("../res/Textures/Player/player.png");
+	mSprite = sf::Sprite(mTexture, mCurrentSpriteSheetLocation);
 }
 
 Character::~Character() { }
@@ -23,40 +33,11 @@ void Character::move(const sf::Vector2f& delta) {
 
 void Character::setMoveDirection(const Direction& newDirection) {
 	mMovingDirection = newDirection;
+	
+	applyMovement();
 }
 
-void Character::updateVelocity(const sf::Vector2f& deltaVelocity) {
-	mVelocity += deltaVelocity;
-	if(mVelocity.x > mMaxVelocity.x) {
-		mVelocity.x = mMaxVelocity.x;
-	} else if(mVelocity.x < -mMaxVelocity.x) {
-		mVelocity.x = -mMaxVelocity.x;
-	}
-
-	if(mVelocity.y > mMaxVelocity.y) {
-		mVelocity.y = mMaxVelocity.y;
-	} else if(mVelocity.y < -mMaxVelocity.y) {
-		mVelocity.y = -mMaxVelocity.y;
-	}
-
-}
-
-void Character::applyFrictionOneAxis(float& axisVelocity) {
-	if(axisVelocity > 0) {
-		axisVelocity -= Physics::airResistance;
-		axisVelocity = axisVelocity < 0 ? 0 : axisVelocity; 
-	} else if(axisVelocity < 0) {
-		axisVelocity += Physics::airResistance;
-		axisVelocity = axisVelocity > 0 ? 0 : axisVelocity; 
-	}
-}
-
-void Character::applyFriction() {
-	applyFrictionOneAxis(mVelocity.x);
-	applyFrictionOneAxis(mVelocity.y);
-}
-
-void Character::update() {
+void Character::applyMovement() {
 	switch(mMovingDirection) {
 		case Direction::Down: {
 			updateVelocity(
@@ -87,9 +68,64 @@ void Character::update() {
 			break;
 		}
 	}
+}
+
+
+void Character::animate() {
+	updateFacingDirection();
+	if(mIsFacingRight) {
+		if(mCurrentSpriteSheetLocation.width) {
+			mCurrentSpriteSheetLocation.width = -mCurrentSpriteSheetLocation.width;
+		}
+	}
+	
+	if (mCurrentSpriteSheetLocation.left == mSpriteWidth * 3) {
+        mCurrentSpriteSheetLocation.left = 0;
+	} else {
+        mCurrentSpriteSheetLocation.left += mSpriteWidth;
+	}
+	mSprite.setTextureRect(mCurrentSpriteSheetLocation);
+}
+
+void Character::updateVelocity(const sf::Vector2f& deltaVelocity) {
+	mVelocity = deltaVelocity;
+}
+
+void Character::updateFacingDirection() {
+	if(mVelocity.x > 0) {
+		mIsFacingRight = true;
+	} else if(mVelocity.x < 0) {
+		mIsFacingRight = false;
+	}
+}
+
+void Character::applyFrictionOneAxis(float& axisVelocity, const float& friction) {
+	if(axisVelocity > 0) {
+		axisVelocity -= friction;
+		axisVelocity = axisVelocity < 0 ? 0 : axisVelocity; 
+	} else if(axisVelocity < 0) {
+		axisVelocity += friction;
+		axisVelocity = axisVelocity > 0 ? 0 : axisVelocity; 
+	}
+}
+
+void Character::applyFriction() {
+	applyFrictionOneAxis(mVelocity.x, mAcceleration.x);
+	applyFrictionOneAxis(mVelocity.y, mAcceleration.y);
+}
+
+void Character::update() {
 	move(mVelocity);
+	if(mPosition.y + mSprite.getGlobalBounds().height <= 900) {
+		mPosition.y++;
+	}
+	animate();
 }
 
 void Character::draw(sf::RenderWindow& window) {
+	window.draw(mSprite);
+}
+
+void Character::draw(ViewManager& window) {
 	window.draw(mSprite);
 }
