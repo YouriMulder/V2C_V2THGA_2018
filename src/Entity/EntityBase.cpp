@@ -30,6 +30,14 @@ void EntityBase::setPosition(const sf::Vector2f& newPosition) {
 	mPosition = newPosition;
 }
 
+sf::Vector2f EntityBase::getPosition() const {
+	return mPosition;
+}
+
+sf::FloatRect EntityBase::getGlobalBounds() const {
+	return sf::FloatRect(mPosition, mSize);
+}
+
 void EntityBase::setScreenNumber(int newScreenNumber) {
 	mScreenNumber = newScreenNumber;
 }
