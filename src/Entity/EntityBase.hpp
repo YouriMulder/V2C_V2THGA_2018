@@ -8,12 +8,20 @@ class EntityBase {
 protected:
 	sf::Vector2f mPosition;
 	sf::Vector2f mSize;
+	int mScreenNumber;
 public:
-	EntityBase();
+	EntityBase(
+		const sf::Vector2f& mPosition, 
+		const sf::Vector2f mSize, 
+		int mScreenNumber 
+	);
 	void move(float deltaX, float deltaY);
 	void move(const sf::Vector2f& deltaPosition);
 	void setPosition(float x, float y);
 	void setPosition(const sf::Vector2f& newPosition);
+
+	void setScreenNumber(int newScreenNumber);
+	int getScreenNumber() const;
 
 	virtual void update() = 0;
 	virtual void draw(sf::RenderWindow& window) = 0;
