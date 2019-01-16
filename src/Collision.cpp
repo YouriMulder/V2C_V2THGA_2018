@@ -1,6 +1,7 @@
 #include "Collision.hpp"
 #include "Entity/EntityBase.hpp"
 #include <iostream>
+#include <memory>
 
 
 
@@ -97,19 +98,48 @@ void Collision::checkScope() {
 	}
 }
 
+CollisionBoxes Collision::createCollisionBoxes(const sf::FloatRect & mainBox) {
+	return CollisionBoxes{	sf::FloatRect(mainBox.left,mainBox.top, 1, mainBox.height), //Left
+							sf::FloatRect(mainBox.left + mainBox.width, mainBox.top, 1, mainBox.height), //Right
+							sf::FloatRect(mainBox.left, mainBox.top, mainBox.width, 1),//Top
+							sf::FloatRect(mainBox.left, mainBox.top + mainBox.height, mainBox.width, 1) }; //Bottom
+}
+
+void Collision::collisionDetected(std::unique_ptr<EntityBase> & object1, std::unique_ptr<EntityBase> & object2) {
+	CollisionBoxes boxes1 = createCollisionBoxes(object1->getGlobalBounds());
+	sf::FloatRect box2 = object2->getGlobalBounds();
+	Side output;
+	if (boxes1.leftBox.intersects(box2)) {
+		output = Side::Left;
+	} else if (boxes1.rightBox.intersects(box2)) {
+		output = Side::Right;
+	} else if (boxes1.topBox.intersects(box2)) {
+		output = Side::Top;
+	} else if (boxes1.bottomBox.intersects(box2)) {
+		output = Side::Top;
+	} else {
+		output = Side::NoSideDetected;
+	}
+
+	object1->handleCollision(object2,output);
+}
+
 
 void Collision::checkCollisions() {
 	checkScope();
 	for (const auto & dynamicIndex : mNeedsCheckDynamic) {
+		std::unique_ptr<EntityBase> & currentDynamicItem = mDynamicItems[dynamicIndex];
 		for (const auto & staticIndex : mNeedsCheckStatic) {
-			if (mDynamicItems[dynamicIndex]->getGlobalBounds().intersects(mStaticItems[staticIndex]->getGlobalBounds())) {
-				mDynamicItems[dynamicIndex]->handleCollision(mStaticItems[staticIndex]);
+			std::unique_ptr<EntityBase> & currentStaticItem = mStaticItems[staticIndex];
+			if (currentDynamicItem->getGlobalBounds().intersects(currentStaticItem->getGlobalBounds())) { //collision detected
+				collisionDetected(currentDynamicItem, currentStaticItem);
 			}
 		}
 		for (const auto & dynamicIndex2 : mNeedsCheckDynamic) {
-			if (mDynamicItems[dynamicIndex2] != mDynamicItems[dynamicIndex]) {
-				if (mDynamicItems[dynamicIndex]->getGlobalBounds().intersects(mDynamicItems[dynamicIndex2]->getGlobalBounds())) {
-					mDynamicItems[dynamicIndex]->handleCollision(mDynamicItems[dynamicIndex2]);
+			std::unique_ptr<EntityBase> & currentDynamicItem2 = mDynamicItems[dynamicIndex2];
+			if (currentDynamicItem != currentDynamicItem2) {
+				if (currentDynamicItem->getGlobalBounds().intersects(currentDynamicItem2->getGlobalBounds())) {//collision detected
+					collisionDetected(currentDynamicItem, currentDynamicItem2);
 				}
 			}
 		}
