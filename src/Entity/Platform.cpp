@@ -1,6 +1,6 @@
 #include "Platform.hpp"
 
-Platform::Platform(const char * filename, sf::Vector2f position, sf::Vector2f size, sf::IntRect picturepart, int screenNumber, bool repeated) :
+Platform::Platform(const char * filename, sf::Vector2f& position, sf::Vector2f& size, sf::IntRect& picturepart, int screenNumber, bool repeated) :
 	EntityBase(position, size, screenNumber)
 {
 	mTexture.loadFromFile(filename, picturepart);
@@ -10,7 +10,7 @@ Platform::Platform(const char * filename, sf::Vector2f position, sf::Vector2f si
 	mSprite.setPosition(position);
 }
 
-Platform::Platform(const char * filename, sf::Vector2f position, sf::Vector2f size, int screenNumber, bool repeated) :
+Platform::Platform(const char * filename, sf::Vector2f& position, sf::Vector2f& size, int screenNumber, bool repeated) :
 	EntityBase(position, size, screenNumber)
 {
 	mTexture.loadFromFile(filename);
@@ -23,6 +23,11 @@ Platform::Platform(const char * filename, sf::Vector2f position, sf::Vector2f si
 void Platform::resize(float width, float height) {
 	mSize = { width, height };
 	mSprite.setScale(width / mSprite.getGlobalBounds().width, height / mSprite.getGlobalBounds().height);
+}
+
+void Platform::resize(sf::Vector2f& newSize) {
+	mSize = newSize;
+	mSprite.setScale(newSize.x / mSprite.getGlobalBounds().width, newSize.y / mSprite.getGlobalBounds().height);
 }
 
 void Platform::resizeWidth(float width) {

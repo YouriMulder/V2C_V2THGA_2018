@@ -27,7 +27,7 @@ public:
 	/// 
 	/// \param repeated
 	/// A boolean that decides if the picture is repeated default is false
-	Platform(const char * filename, sf::Vector2f position, sf::Vector2f size, sf::IntRect picturepart, int screenNumber, bool repeated = false);
+	Platform(const char * filename, sf::Vector2f& position, sf::Vector2f& size, sf::IntRect& picturepart, int screenNumber, bool repeated = false);
 
 	/// \brief
 	/// Constructor for Platform
@@ -37,11 +37,15 @@ public:
 	/// Filename of the picture that is used as a texture for the platform
 	/// \param repeated
 	/// A boolean that decides if the picture is repeated default is false
-	Platform(const char * filename, sf::Vector2f position, sf::Vector2f size, int screenNumber, bool repeated = false);
+	Platform(const char * filename, sf::Vector2f& position, sf::Vector2f& size, int screenNumber, bool repeated = false);
 
 	/// \brief
 	/// Changes the size of the platform
 	void resize(float width, float height);
+
+	/// \brief
+	/// Changes the size of the platform
+	void resize(sf::Vector2f& newSize);
 
 	/// \brief
 	/// Changes the width of the platform
