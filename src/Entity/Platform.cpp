@@ -1,8 +1,8 @@
 #include "Platform.hpp"
 
-Platform::Platform(const char * filename, sf::Vector2f position, sf::Vector2f size, sf::IntRect picturepart, bool repeated) {
-	EntityBase::mPosition = position;
-	EntityBase::mSize = size;
+Platform::Platform(const char * filename, sf::Vector2f position, sf::Vector2f size, sf::IntRect picturepart, int screenNumber, bool repeated) :
+	EntityBase(position, size, screenNumber)
+{
 	mTexture.loadFromFile(filename, picturepart);
 	mTexture.setRepeated(repeated);
 	mSprite.setTexture(mTexture);
@@ -10,9 +10,9 @@ Platform::Platform(const char * filename, sf::Vector2f position, sf::Vector2f si
 	mSprite.setPosition(position);
 }
 
-Platform::Platform(const char * filename, sf::Vector2f position, sf::Vector2f size, bool repeated) {
-	EntityBase::mPosition = position;
-	EntityBase::mSize = size;
+Platform::Platform(const char * filename, sf::Vector2f position, sf::Vector2f size, int screenNumber, bool repeated) :
+	EntityBase(position, size, screenNumber)
+{
 	mTexture.loadFromFile(filename);
 	mTexture.setRepeated(repeated);
 	mSprite.setTexture(mTexture);
@@ -21,17 +21,17 @@ Platform::Platform(const char * filename, sf::Vector2f position, sf::Vector2f si
 }
 
 void Platform::resize(float width, float height) {
-	EntityBase::mSize = { width, height };
+	mSize = { width, height };
 	mSprite.setScale(width / mSprite.getGlobalBounds().width, height / mSprite.getGlobalBounds().height);
 }
 
 void Platform::resizeWidth(float width) {
-	EntityBase::mSize = { width, EntityBase::mSize.y };
+	mSize = { width, mSize.y };
 	mSprite.setScale(width / mSprite.getGlobalBounds().width, 1);
 }
 
 void Platform::resizeHeight(float height) {
-	EntityBase::mSize = { EntityBase::mSize.x, height };
+	mSize = { mSize.x, height };
 	mSprite.setScale(1, height / mSprite.getGlobalBounds().height);
 }
 
@@ -39,10 +39,15 @@ void Platform::draw(sf::RenderWindow& window) {
 	window.draw(mSprite);
 }
 
-void Platform::update() {
-	mSprite.setPosition(EntityBase::mPosition);
+void Platform::draw(ViewManager& window) {
+	window.selectDrawingScreen(mScreenNumber);
+	window.draw(mSprite);
 }
 
-sf::FloatRect Platform::getGlobalBounds() {
+void Platform::update() {
+	mSprite.setPosition(mPosition);
+}
+
+sf::FloatRect Platform::getGlobalBounds() const {
 	return mSprite.getGlobalBounds();
 }
