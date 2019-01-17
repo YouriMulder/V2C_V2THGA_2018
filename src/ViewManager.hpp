@@ -1,3 +1,6 @@
+#ifndef VIEW_MANAGER_HPP
+#define VIEW_MANAGER_HPP
+
 #include <SFML/Graphics.hpp> 
 #include <vector>
 
@@ -14,6 +17,8 @@ private:
 	/// a reference to the main window
 	sf::RenderWindow & mMainWindow;
 
+	int mAmountOfScreens;
+
 	/// \brief
 	/// A vector that contains all the separate screens
 	/// \details
@@ -28,6 +33,8 @@ private:
 	/// \brief
 	/// Function that converts a given sf::Vector2u to a Vector2f
 	sf::Vector2f convertVector2u(const sf::Vector2u & input);
+
+	
 
 public:
 	/// \brief
@@ -152,6 +159,9 @@ public:
 	/// \return return the size of the view
 	sf::Vector2f getViewSize(const int & screenNumber) const;
 
+	int getAmountOfScreens();
+
 	virtual ~ViewManager();
 };
 
+#endif /*VIEW_MANAGER_HPP*/
