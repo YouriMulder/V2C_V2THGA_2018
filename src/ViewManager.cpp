@@ -8,7 +8,8 @@ sf::Vector2f ViewManager::convertVector2u(const sf::Vector2u & input) {
 
 
 ViewManager::ViewManager(sf::RenderWindow & mainWindow, const int & noOfScreens):
-	mMainWindow(mainWindow)
+	mMainWindow(mainWindow),
+	mAmountOfScreens(noOfScreens)
 {
 	mMainWindow.setFramerateLimit(60);
 	mScreens.reserve(4);
@@ -19,7 +20,7 @@ ViewManager::ViewManager(sf::RenderWindow & mainWindow, const int & noOfScreens)
 		resetDrawingScreen();
 	} else if (noOfScreens == 2) {
 		screen newScreen1{ 1, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y / 2)) };
-		screen newScreen2{ 2, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y)) };
+		screen newScreen2{ 2, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y / 2)) };
 		newScreen1.view.setViewport(sf::FloatRect(0, 0, 1, 0.5));
 		newScreen2.view.setViewport(sf::FloatRect(0, 0.5, 1, 1));
 
@@ -32,13 +33,13 @@ ViewManager::ViewManager(sf::RenderWindow & mainWindow, const int & noOfScreens)
 		screen newScreen1{ 1, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
 		newScreen1.view.setViewport(sf::FloatRect(0, 0, 0.5, 0.5));
 
-		screen newScreen2{ 2, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y / 2)) };
+		screen newScreen2{ 2, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x/2, mainWindowSize.y / 2)) };
 		newScreen2.view.setViewport(sf::FloatRect(0.5, 0, 1, 0.5));
 
-		screen newScreen3{ 3, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y)) };
+		screen newScreen3{ 3, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
 		newScreen3.view.setViewport(sf::FloatRect(0, 0.5, 0.5, 1));
 
-		screen newScreen4{ 4, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y)) };
+		screen newScreen4{ 4, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x/2, mainWindowSize.y / 2)) };
 		newScreen4.view.setViewport(sf::FloatRect(0.5, 0.5, 1, 1));
 
 		mScreens.push_back(newScreen1);
@@ -152,4 +153,8 @@ sf::Vector2f ViewManager::getViewSize(const int & screenNumber) const{
 		}
 	}
 	return sf::Vector2f(0.f, 0.f);
+}
+
+int ViewManager::getAmountOfScreens() {
+	return mAmountOfScreens;
 }
