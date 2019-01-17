@@ -2,33 +2,27 @@
 #include "Platform.hpp"
 #include <iostream>
 
-MoveablePlatform::MoveablePlatform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size, const sf::IntRect& picturepart, int screenNumber, const sf::Vector2f& moveRange, int amountOfSteps, bool repeated) :
+MoveablePlatform::MoveablePlatform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
+	const sf::IntRect& picturepart, int screenNumber, const sf::Vector2f& moveRange, int amountOfSteps, bool repeated) :
+
 	Platform(filename, position, size, picturepart, screenNumber, repeated),
 	beginpoint(position),
 	endpoint({ beginpoint.x + moveRange.x, beginpoint.y + moveRange.y})
 {
-	if (endpoint.x >= beginpoint.x && endpoint.y >= beginpoint.y) {
-		reverse = false;
-	}
-	else {
-		reverse = true;
-	}
+	reverse = !(endpoint.x >= beginpoint.x && endpoint.y >= beginpoint.y);
 	speed = { endpoint - position };
 	speed.x /= amountOfSteps;
 	speed.y /= amountOfSteps;
 }
 
-MoveablePlatform::MoveablePlatform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size, int screenNumber, const sf::Vector2f& moveRange, int amountOfSteps, bool repeated) :
+MoveablePlatform::MoveablePlatform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
+	int screenNumber, const sf::Vector2f& moveRange, int amountOfSteps, bool repeated) :
+
 	Platform(filename, position, size, screenNumber, repeated),
 	beginpoint(position),
 	endpoint({ beginpoint.x + moveRange.x, beginpoint.y + moveRange.y })
 {
-	if (endpoint.x >= beginpoint.x && endpoint.y >= beginpoint.y) {
-		reverse = false;
-	}
-	else {
-		reverse = true;
-	}
+	reverse = !(endpoint.x >= beginpoint.x && endpoint.y >= beginpoint.y);
 	speed = { endpoint - position };
 	speed.x /= amountOfSteps;
 	speed.y /= amountOfSteps;

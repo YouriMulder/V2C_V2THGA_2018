@@ -1,6 +1,8 @@
 #include "LevelObject.hpp"
 
-LevelObject::LevelObject(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size, const sf::IntRect& picturepart, int screenNumber, bool repeated) :
+LevelObject::LevelObject(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
+	const sf::IntRect& picturepart, int screenNumber, bool repeated) :
+
 	EntityBase(position, size, screenNumber)
 {
 	mTexture.loadFromFile(filename, picturepart);
@@ -10,7 +12,9 @@ LevelObject::LevelObject(const std::string& filename, const sf::Vector2f& positi
 	mSprite.setPosition(position);
 }
 
-LevelObject::LevelObject(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size, int screenNumber, bool repeated) :
+LevelObject::LevelObject(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
+	int screenNumber, bool repeated) :
+
 	EntityBase(position, size, screenNumber)
 {
 	mTexture.loadFromFile(filename);

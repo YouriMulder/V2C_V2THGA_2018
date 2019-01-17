@@ -20,7 +20,8 @@ public:
 	/// 
 	/// \param repeated
 	/// A boolean that decides if the picture is repeated default is false
-	Platform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size, const sf::IntRect& picturepart, int screenNumber, bool repeated = false);
+	Platform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
+		const sf::IntRect& picturepart, int screenNumber, bool repeated = false);
 
 	/// \brief
 	/// Constructor for Platform
@@ -30,7 +31,8 @@ public:
 	/// Filename of the picture that is used as a texture for the platform
 	/// \param repeated
 	/// A boolean that decides if the picture is repeated default is false
-	Platform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size, int screenNumber, bool repeated = false);
+	Platform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
+		int screenNumber, bool repeated = false);
 
 	/// \brief
 	/// Returns the outline of the platform

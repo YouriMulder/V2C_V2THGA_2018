@@ -13,8 +13,10 @@ private:
 	bool goingForward = true;
 	bool reverse;
 public:
-	MoveablePlatform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size, const sf::IntRect& picturepart, int screenNumber, const sf::Vector2f& moveRange, int amountOfSteps, bool repeated = false);
-	MoveablePlatform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size, int screenNumber, const sf::Vector2f& moveRange, int amountOfSteps, bool repeated = false);
+	MoveablePlatform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
+		const sf::IntRect& picturepart, int screenNumber, const sf::Vector2f& moveRange, int amountOfSteps, bool repeated = false);
+	MoveablePlatform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
+		int screenNumber, const sf::Vector2f& moveRange, int amountOfSteps, bool repeated = false);
 	void update() override;
 };
 
