@@ -1,4 +1,5 @@
-#pragma once
+#ifndef FACTORY_HPP 
+#define FACTORY_HPP
 #include "Entity/EntityBase.hpp"
 #include <SFML/Graphics.hpp>
 #include <string>
@@ -13,16 +14,14 @@ struct SettingsData {
 };
 
 struct ObjectData {
-	std::vector<std::unique_ptr<EntityBase>> staticObjects;
-	std::vector<std::unique_ptr<EntityBase>> movableObjects;
+	std::vector<std::unique_ptr<EntityBase>> & staticObjects;
+	std::vector<std::unique_ptr<EntityBase>> & movableObjects;
 };
 
-
-/*struct FactoryData {
+struct FactoryData {
 	SettingsData settings;
 	ObjectData objects;
 };
-*/
 
 class Factory {
 private:
@@ -31,5 +30,7 @@ public:
 	Factory(){}
 
 	SettingsData readSettings(std::ifstream& text);//soundtrack, gametime, number of screens
-	std::vector<std::vector<int>> readObjects(std::ifstream& text);
+	void readObjects(std::ifstream& text, int amountOfScreens, std::vector<std::unique_ptr<EntityBase>> & staticObjects, std::vector<std::unique_ptr<EntityBase>> & movableObjects);
 };
+
+#endif /*FACTORY_HPP*/
