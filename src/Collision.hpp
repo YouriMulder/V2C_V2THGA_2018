@@ -1,8 +1,11 @@
-#pragma once
+#ifndef COLLISION_HPP
+#define COLLISION_HPP
+
 #include <vector>
 #include "ViewManager.hpp"
 #include "Entity/EntityBase.hpp"
-#include "CollisionInfo.hpp"
+#include "Side.hpp"
+
 struct ViewInfo {
 	int viewNumber;
 	sf::Vector2f viewPosition;
@@ -53,3 +56,4 @@ public:
 	void checkCollisions();
 };
 
+#endif /*COLLISION_HPP*/
