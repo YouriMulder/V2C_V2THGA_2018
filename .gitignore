@@ -1,3 +1,4 @@
 bin\
 build\
-dependencies\
+dependencies\SFML-2.5.1
+dependencies\sound
