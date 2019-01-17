@@ -1,21 +1,15 @@
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-
+#include "Entity/Character.hpp"
+#include "Entity/EntityBase.hpp"
+#include <iostream>
+#include <memory>
+#include <vector>
+#include "Collision.hpp"
+#include "ViewManager.hpp"
+#include "action.hpp"
+#include "GameManager.hpp"
 int main() {
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
-
-	while(window.isOpen()) {
-		sf::Event event;
-		while(window.pollEvent(event)) {
-			if(event.type == sf::Event::Closed)
-				window.close();
-		}
-
-		window.clear();
-		window.draw(shape);
-		window.display();
-	}
-
-	return 0;
+	GameManager game = GameManager("../dependencies/levels/all.txt");
+	game.runGame();
 }

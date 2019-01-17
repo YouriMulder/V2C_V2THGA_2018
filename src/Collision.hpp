@@ -45,7 +45,8 @@ private:
 	bool checkScopeRightBottom(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo);
 	void printViewInfo(ViewInfo info);
 
-	void Collision::collisionDetected(std::unique_ptr<EntityBase> & object1, std::unique_ptr<EntityBase> & object2);
+	void collisionDetected(std::unique_ptr<EntityBase> & object1, std::unique_ptr<EntityBase> & object2);
+	void reloadViewInfo();
 	CollisionBoxes createCollisionBoxes(const sf::FloatRect & mainBox);
 
 public:

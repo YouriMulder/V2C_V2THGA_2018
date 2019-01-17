@@ -1,0 +1,41 @@
+#ifndef GAME_MANAGER_HPP
+#define GAME_MANAGER_HPP
+#include <memory>
+#include <vector>
+#include <iostream>
+#include "ViewManager.hpp"
+#include "Collision.hpp"
+#include "Entity/EntityBase.hpp"
+
+#include "Factory.hpp"
+
+
+class GameManager{
+private:
+	int mCurrentLevel;
+	bool playingLevel = false;
+	sf::RenderWindow mMainWindow;
+	ViewManager mViewManager;
+	Factory mFactory;
+
+	Collision mCollisionManager;
+
+	SettingsData mCurrentSettings;
+	
+	std::vector<std::unique_ptr<EntityBase>>  mStaticItems = {};
+	std::vector<std::unique_ptr<EntityBase>> mDynamicItems = {};
+
+	std::vector<std::string> mLevelFileNames;
+	std::string mPath = "../dependencies/levels/";
+
+	void readLevelInfo();
+	void applyLevelSettings();
+
+public:
+	GameManager(std::string levelFileName);
+	virtual ~GameManager();
+	void runGame();
+
+};
+
+#endif /*GAME_MANAGER_HPP*/
