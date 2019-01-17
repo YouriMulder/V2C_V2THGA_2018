@@ -26,7 +26,7 @@ private:
 	std::vector<std::unique_ptr<EntityBase>> mDynamicItems = {};
 
 	std::vector<std::string> mLevelFileNames;
-	std::string mPath = "../dependencies/levels/";
+	std::string mPath = "../res/levels/";
 
 	void readLevelInfo();
 	void applyLevelSettings();
