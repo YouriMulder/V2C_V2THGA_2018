@@ -10,26 +10,30 @@ GameManager::GameManager(const std::string& levelFileName) :
 	mFactory(),
 	mCollisionManager(mViewManager,mStaticItems, mDynamicItems)
 {
+	if (!readLevelFileNames(levelFileName)) {
+		std::cout << "levelFileNames not read" << std::endl ;
+	}
+}
+
+
+GameManager::~GameManager()
+{
+}
+
+bool GameManager::readLevelFileNames(const std::string & levelFileName) {
 	std::ifstream input(levelFileName);
 	std::string newFileName;
 	if (!input) {
-		std::cout << "file not open";
+		return false;
 	} else {
 		input >> newFileName;
 		while (newFileName != "END") {
 			mLevelFileNames.push_back(newFileName);
 			input >> newFileName;
 		}
-		for (unsigned int i = 0; i < mLevelFileNames.size(); i++) {
-			std::cout << mLevelFileNames[i] << std::endl;
-		}
 	}
 	input.close();
-}
-
-
-GameManager::~GameManager()
-{
+	return true;
 }
 
 void GameManager::readLevelInfo() {
