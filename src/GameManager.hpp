@@ -1,5 +1,6 @@
 #ifndef GAME_MANAGER_HPP
 #define GAME_MANAGER_HPP
+
 #include <memory>
 #include <vector>
 #include <iostream>
@@ -10,7 +11,7 @@
 #include "Factory.hpp"
 
 
-class GameManager{
+class GameManager {
 private:
 	int mCurrentLevel;
 	bool playingLevel = false;
@@ -32,7 +33,8 @@ private:
 	void applyLevelSettings();
 
 public:
-	GameManager(std::string levelFileName);
+	GameManager(const std::string& levelFileName);
+	
 	virtual ~GameManager();
 	void runGame();
 

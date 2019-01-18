@@ -15,7 +15,7 @@ Character::Character(
 	mMaxVelocity(maxVelocity), 
 	mAcceleration(acceleration),
 	mIsFacingRight(true),
-	mIsInAir(false),
+	mIsInAir(true),
 	mPreviousState(Character::State::Idle),
 	mState(Character::State::Idle),
 	mSpriteWidth(size.x),
@@ -63,10 +63,10 @@ void Character::applyMovement(const Action& direction) {
 
 void Character::updateState(const Action& action) {
 	if(mIsInAir) {
-		if(mVelocity.y > 0) {
+		if(mVelocity.y < 0) {
 			mState = State::Jumping;
 			return;
-		} else if(mVelocity.y < 0) {
+		} else if(mVelocity.y > 0) {
 			mState = State::Falling;
 			return;
 		} else {
@@ -110,7 +110,6 @@ void Character::animate(const sf::Time& deltaTime) {
 	timeSinceLastAnimation += deltaTime;
 
 	updateFacingDirection();
-	std::cout << mIsFacingRight << "\n";
 
 	if(mState != mPreviousState) {
 		for(const auto& animation : mAnimations) {
@@ -171,14 +170,12 @@ void Character::jump() {
 		applyMovement(Action::Jump);
 	}
 }
-	
 
 void Character::updateVelocity(const sf::Vector2f& deltaVelocity) {
 	mVelocity += sf::Vector2f(deltaVelocity.x * 0.1f, deltaVelocity.y * 0.1f);
 }
 
 void Character::updateFacingDirection() {
-	std::cout << mVelocity.x << "\n";
 	if(mVelocity.x > 0) {
 		mIsFacingRight = true;
 	} else if(mVelocity.x < 0) {
@@ -211,7 +208,34 @@ void Character::performAction(const Action& unperformedAction) {
 	}
 }
 
+void Character::handleCollision(std::unique_ptr<EntityBase>& other, Side hitSide) {
+	mIsInAir = false;
+	if(hitSide == Side::Bottom) {
+		std::cout << "Bot\n";
+	} else if(hitSide == Side::Top) {
+		std::cout << "Top\n";
+	} else if(hitSide == Side::Left) {
+		std::cout << "Left\n";
+	} else if(hitSide == Side::Right) {
+		std::cout << "Right\n";
+	} else if(hitSide == Side::NoSideDetected) {
+		std::cout << "None\n";
+	}
+}
+
+sf::FloatRect Character::getGlobalBounds() const {
+	return mSprite.getGlobalBounds();
+}
+
 void Character::update(const sf::Time& deltaTime) {
+	if(mIsInAir) {
+		mVelocity.y += 1;
+	}
+
+	for(auto & EventManager : actions) {
+		EventManager();
+	}
+	
 	if(mUnperformedActions.empty()) {
 		updateState(Action::None);
 	}
@@ -220,6 +244,8 @@ void Character::update(const sf::Time& deltaTime) {
 		performAction(mUnperformedActions.front());
 		mUnperformedActions.pop();
 	}
+
+	
 	move(mVelocity);
 	animate(deltaTime);
 	applyFriction();

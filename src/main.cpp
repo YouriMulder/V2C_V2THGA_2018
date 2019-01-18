@@ -1,5 +1,6 @@
 #include "GameManager.hpp"
+
 int main() {
-	GameManager game = GameManager("../res/levels/all.txt");
+	GameManager game("../res/levels/all.txt");
 	game.runGame();
 }

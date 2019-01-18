@@ -3,12 +3,12 @@
 #include "Entity/Character.hpp"
 
 
-GameManager::GameManager(std::string levelFileName) :
+GameManager::GameManager(const std::string& levelFileName) :
 	mCurrentLevel(0),
-	mMainWindow(sf::RenderWindow(sf::VideoMode(1280, 720), "MiNdF*cK")),
+	mMainWindow(sf::VideoMode(1280, 720), "MiNdF*cK"),
 	mViewManager(mMainWindow, 1),
-	mFactory(Factory()),
-	mCollisionManager(Collision(mViewManager,mStaticItems, mDynamicItems))
+	mFactory(),
+	mCollisionManager(mViewManager,mStaticItems, mDynamicItems)
 {
 	std::ifstream input(levelFileName);
 	std::string newFileName;
@@ -51,10 +51,12 @@ void GameManager::applyLevelSettings() {
 }
 
 void GameManager::runGame() {
-	
+	sf::Clock updateClock; // Clock to monitor the time passed
+	sf::Time passedTime; // Accumulated game time
+	const sf::Time frameTime(sf::milliseconds(10));
 
+	
 	while (mViewManager.isOpen()) {
-		mViewManager.clear();
 		if (!playingLevel) {
 			readLevelInfo();
 			playingLevel = !playingLevel;
@@ -66,13 +68,26 @@ void GameManager::runGame() {
 			if (event.type == sf::Event::Closed)
 				mViewManager.close();
 		}
-		for (auto & staticItem : mStaticItems) {
-			staticItem->draw(mViewManager);
-		}
 
-		for (auto & dynaicItem : mDynamicItems) {
-			dynaicItem->update();
-			dynaicItem->draw(mViewManager);
+
+		mViewManager.clear();
+		int numUpdates = 0;
+		while(passedTime >= frameTime) {
+			if (numUpdates++ < 10) {
+				mCollisionManager.checkCollisions();
+				for(auto& dynamicObject : mDynamicItems) {
+
+					dynamicObject->update(passedTime);
+				}
+			}
+			passedTime -= frameTime;
+    	}
+
+		for(auto& staticObject : mStaticItems) {
+			staticObject->draw(mViewManager);
+		}
+		for(auto& dynamicObject : mDynamicItems) {
+			dynamicObject->draw(mViewManager);
 		}
 			
 		mViewManager.display();

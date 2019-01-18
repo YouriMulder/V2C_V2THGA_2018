@@ -6,6 +6,7 @@
 #include <functional>
 
 #include "EntityBase.hpp"
+#include "../EventManager.hpp"
 #include "../ViewManager.hpp"
 #include "Animation.hpp"
 
@@ -77,11 +78,16 @@ public:
 	void applyFriction();
 	
 	void performAction(const Action& unperformedAction);
+	virtual void handleCollision(
+		std::unique_ptr<EntityBase>& other, 
+		Side hitSize
+	); 
+	virtual sf::FloatRect getGlobalBounds() const;
 	virtual void update(const sf::Time& deltaTime);
 	virtual void draw(sf::RenderWindow& window) override;
 	virtual void draw(ViewManager& window) override;
 
-private:
+public:
 	sf::Vector2f mVelocity;
 	sf::Vector2f mMaxVelocity;
 	sf::Vector2f mAcceleration;
@@ -140,6 +146,34 @@ private:
 				sf::milliseconds(10)
 			)
 		),
+		std::make_pair(State::Falling, 
+			animationSequence(
+				sf::Vector2i(0,4),
+				sf::Vector2i(1,4),
+				sf::Vector2f(21.0f, 35.0f),
+				sf::milliseconds(10)
+			)
+		),
+	};
+
+	EventManager actions[17] = {
+		EventManager(sf::Keyboard::Left, 	[&] 	{addAction(Character::Action::Left);	}),
+		EventManager(sf::Keyboard::Right, 	[&] 	{addAction(Character::Action::Right);	}),
+		EventManager(sf::Keyboard::Up, 		[&] 	{addAction(Character::Action::Jump);	}),
+		EventManager(sf::Keyboard::Down, 	[&] 	{std::cout << "onderste pijltje \n";	}),
+		EventManager(sf::Keyboard::Escape,	[&] 	{std::cout << " escape toets "; }),
+		EventManager(sf::Keyboard::Space, 	[&] 	{addAction(Character::Action::Jump);	}),
+		EventManager(sf::Mouse::Left, 		[&] 	{std::cout << "linker muis \n"; }),
+		EventManager(sf::Keyboard::Num1, 	[&] 	{std::cout << "nummer 1 \n"; }),
+		EventManager(sf::Keyboard::Num2, 	[&] 	{std::cout << "nummer 2 \n"; }),
+		EventManager(sf::Keyboard::Num3, 	[&] 	{std::cout << "nummer 3 \n"; }),
+		EventManager(sf::Keyboard::Num4, 	[&] 	{std::cout << "nummer 4 \n"; }),
+		EventManager(sf::Keyboard::LShift, 	[&] 	{std::cout << "linker shift \n"; }),
+		EventManager(sf::Keyboard::RShift, 	[&] 	{std::cout << "rechter shift \n"; }),
+		EventManager(sf::Keyboard::W, 		[&] 	{std::cout << "w \n"; }),
+		EventManager(sf::Keyboard::A, 		[&] 	{std::cout << "a\n"; }),
+		EventManager(sf::Keyboard::S, 		[&] 	{std::cout << "s \n"; }),
+		EventManager(sf::Keyboard::D, 		[&] 	{std::cout << "d \n"; })
 	};
 };
 

@@ -111,6 +111,7 @@ void Collision::checkScope() {
 	}
 }
 
+// -1 and -2 to fix the bottom collision otherwise the left and right will be detected first.
 CollisionBoxes Collision::createCollisionBoxes(const sf::FloatRect & mainBox) {
 	return CollisionBoxes{	sf::FloatRect(mainBox.left,mainBox.top -1 , 1, mainBox.height -2), //Left
 							sf::FloatRect(mainBox.left + mainBox.width, mainBox.top -1, 1, mainBox.height -2), //Right

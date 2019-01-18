@@ -18,7 +18,7 @@ project "MindFuck"
 				includedirs { "dependencies/SFML-2.5.1/include" }
 				libdirs { "dependencies/SFML-2.5.1/lib" }
 				links {
-					"opengl32",
+					"opengl32",					
 					"freetype",
 					"winmm",
 					"gdi32",
@@ -34,7 +34,8 @@ project "MindFuck"
 				links {
 					"sfml-graphics", 
 					"sfml-window", 
-					"sfml-system"
+					"sfml-system",
+					"sfml-audio"
 				}
 
 		filter "configurations:Debug"

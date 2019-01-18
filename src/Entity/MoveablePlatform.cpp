@@ -28,7 +28,7 @@ MoveablePlatform::MoveablePlatform(const std::string& filename, const sf::Vector
 	speed.y /= amountOfSteps;
 }
 
-void MoveablePlatform::update() {
+void MoveablePlatform::update(const sf::Time& deltaTime) {
 	if (!reverse) {
 		if (goingForward && mPosition.x >= endpoint.x && mPosition.y >= endpoint.y) {
 			goingForward = false;
