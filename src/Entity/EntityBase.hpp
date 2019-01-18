@@ -27,8 +27,9 @@ public:
 	void setScreenNumber(int newScreenNumber);
 	int getScreenNumber() const;
 
+	virtual void update(const sf::Time& deltaTime) = 0;
 	virtual void handleCollision(std::unique_ptr<EntityBase> & other, Side hitSide) {};
-	virtual void update() = 0;
+
 	virtual void draw(sf::RenderWindow& window) = 0;
 	virtual void draw(ViewManager& window) = 0;
 	virtual ~EntityBase();

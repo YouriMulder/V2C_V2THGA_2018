@@ -14,81 +14,165 @@ Character::Character(
 	mVelocity(0.0f, 0.0f),
 	mMaxVelocity(maxVelocity), 
 	mAcceleration(acceleration),
-	mMovingDirection(Character::Direction::None),
+	mIsFacingRight(true),
+	mIsInAir(true),
+	mPreviousState(Character::State::Idle),
+	mState(Character::State::Idle),
 	mSpriteWidth(size.x),
 	mSpriteHeight(size.y),
-	mCurrentSpriteSheetLocation(0,0,size.x,size.y),
-	mIsFacingRight(true)
+	mCurrentSpriteSheetLocation(0,0,size.x,size.y)
 {
 	mTexture.loadFromFile("../res/Textures/Player/player.png");
 	mSprite = sf::Sprite(mTexture, mCurrentSpriteSheetLocation);
+	mSprite.scale(2.0f, 2.0f);
 }
 
 Character::~Character() { }
+
+void Character::addAction(const Action& newAction) {
+	mUnperformedActions.push(newAction);
+}
 
 void Character::move(const sf::Vector2f& delta) {
 	EntityBase::move(delta.x, delta.y);
 	mSprite.setPosition(EntityBase::mPosition);
 }
 
-void Character::setMoveDirection(const Direction& newDirection) {
-	mMovingDirection = newDirection;
-	
-	applyMovement();
-}
-
-void Character::applyMovement() {
-	switch(mMovingDirection) {
-		case Direction::Down: {
-			updateVelocity(
-				sf::Vector2f(0.0f, +mAcceleration.y)
-			);
-			break;
-		}
-		case Direction::Up: {
-			updateVelocity(
-				sf::Vector2f(0.0f, -mAcceleration.y)
-			);
-			break;
-		}
-		case Direction::Left: {
+void Character::applyMovement(const Action& direction) {
+	switch(direction) {
+		case Action::Left: {
 			updateVelocity(
 				sf::Vector2f(-mAcceleration.x, 0.0f)
 			);
 			break;
 		}
-		case Direction::Right: {
+		case Action::Right: {
 			updateVelocity(
 				sf::Vector2f(+mAcceleration.x, 0.0f)
 			);
 			break;
 		}
-		case Direction::None: {
-			applyFriction();
+		case Action::Jump: {
+			updateVelocity(
+				sf::Vector2f(0.0f, -mAcceleration.y)
+			);
 			break;
 		}
 	}
 }
 
-
-void Character::animate() {
-	updateFacingDirection();
-	if(mIsFacingRight) {
-		if(mCurrentSpriteSheetLocation.width) {
-			mCurrentSpriteSheetLocation.width = -mCurrentSpriteSheetLocation.width;
+void Character::updateState(const Action& action) {
+	if(mIsInAir) {
+		if(mVelocity.y < 0) {
+			mState = State::Jumping;
+			return;
+		} else if(mVelocity.y > 0) {
+			mState = State::Falling;
+			return;
+		} else {
+			mIsInAir = false;
 		}
 	}
 	
-	if (mCurrentSpriteSheetLocation.left == mSpriteWidth * 3) {
-        mCurrentSpriteSheetLocation.left = 0;
-	} else {
-        mCurrentSpriteSheetLocation.left += mSpriteWidth;
+	switch(action) {
+		case Action::Left: {
+			if(mVelocity.x != 0) {
+				mState = State::Moving;
+			} else {
+				mState = State::Idle;
+			}
+			break;
+		}
+		case Action::Right: {
+			if(mVelocity.x != 0) {
+				mState = State::Moving;
+			} else {
+				mState = State::Idle;
+			}			
+			break;
+		}
+		case Action::Jump: {
+			mState = State::Jumping;
+			break;
+		}
+		case Action::Punch: {
+			mState = State::Attacking;
+			break;
+		}
+		case Action::None: {
+			mState = State::Idle;
+			break;
+		}
 	}
-	mSprite.setTextureRect(mCurrentSpriteSheetLocation);
+}
+
+void Character::animate(const sf::Time& deltaTime) {
+	timeSinceLastAnimation += deltaTime;
+
+	updateFacingDirection();
+
+	if(mState != mPreviousState) {
+		for(const auto& animation : mAnimations) {
+			if(mState == animation.first) {
+				currentSprite = animation.second.start;
+			}
+		}
+	}
+
+	for(const auto& animation : mAnimations) {
+		if(mState == animation.first) {
+			
+			if(timeSinceLastAnimation >= animation.second.displayTime) {
+				timeSinceLastAnimation = sf::seconds(0.0f);
+				currentSprite.x++;
+
+
+				if(currentSprite == animation.second.end) {					
+					currentSprite = animation.second.start;
+				}
+				
+				if(mIsFacingRight) {
+					mSprite.setTextureRect(
+						sf::IntRect(
+							currentSprite.x * animation.second.size.x,
+							currentSprite.y * animation.second.size.y,
+							animation.second.size.x,
+							animation.second.size.y
+						)
+					);
+				} else {
+					mSprite.setTextureRect(
+						sf::IntRect(
+							(currentSprite.x + 1) * animation.second.size.x,
+							currentSprite.y * animation.second.size.y,
+							-animation.second.size.x,
+							animation.second.size.y
+						)
+					);
+				}
+			}
+		}
+	}
+	mPreviousState = mState;
+}
+
+void Character::left() {
+	applyMovement(Action::Left);
+}
+
+void Character::right() {
+	applyMovement(Action::Right);
+}
+
+void Character::jump() {
+	if(!mIsInAir) {
+		mIsInAir = true;
+		applyMovement(Action::Jump);
+	}
 }
 
 void Character::updateVelocity(const sf::Vector2f& deltaVelocity) {
-	mVelocity = deltaVelocity;
+	mVelocity += sf::Vector2f(deltaVelocity.x * 0.1f, deltaVelocity.y * 0.1f);
 }
 
 void Character::updateFacingDirection() {
@@ -110,16 +194,61 @@ void Character::applyFrictionOneAxis(float& axisVelocity, const float& friction)
 }
 
 void Character::applyFriction() {
-	applyFrictionOneAxis(mVelocity.x, mAcceleration.x);
-	applyFrictionOneAxis(mVelocity.y, mAcceleration.y);
+	applyFrictionOneAxis(mVelocity.x, mAcceleration.x/2);
+	applyFrictionOneAxis(mVelocity.y, mAcceleration.y/8);
 }
 
-void Character::update() {
-	move(mVelocity);
-	if(mPosition.y + mSprite.getGlobalBounds().height <= 900) {
-		mPosition.y++;
+void Character::performAction(const Action& unperformedAction) {
+	for(auto& action : mActions) {
+		if(unperformedAction == action.first) {
+			action.second();
+			updateState(action.first);
+			return;
+		}
 	}
-	animate();
+}
+
+void Character::handleCollision(std::unique_ptr<EntityBase>& other, Side hitSide) {
+	mIsInAir = false;
+	if(hitSide == Side::Bottom) {
+		std::cout << "Bot\n";
+	} else if(hitSide == Side::Top) {
+		std::cout << "Top\n";
+	} else if(hitSide == Side::Left) {
+		std::cout << "Left\n";
+	} else if(hitSide == Side::Right) {
+		std::cout << "Right\n";
+	} else if(hitSide == Side::NoSideDetected) {
+		std::cout << "None\n";
+	}
+}
+
+sf::FloatRect Character::getGlobalBounds() const {
+	return mSprite.getGlobalBounds();
+}
+
+void Character::update(const sf::Time& deltaTime) {
+	if(mIsInAir) {
+		mVelocity.y += 1;
+	}
+
+	for(auto & EventManager : actions) {
+		EventManager();
+	}
+	
+	if(mUnperformedActions.empty()) {
+		updateState(Action::None);
+	}
+
+	while(!mUnperformedActions.empty()) {
+		performAction(mUnperformedActions.front());
+		mUnperformedActions.pop();
+	}
+
+	
+	move(mVelocity);
+	animate(deltaTime);
+	applyFriction();
 }
 
 void Character::draw(sf::RenderWindow& window) {

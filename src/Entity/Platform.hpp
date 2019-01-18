@@ -34,6 +34,8 @@ public:
 	Platform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
 		int screenNumber, bool repeated = false);
 
+	virtual ~Platform();
+
 	/// \brief
 	/// Returns the outline of the platform
 	sf::FloatRect getGlobalBounds() const override;

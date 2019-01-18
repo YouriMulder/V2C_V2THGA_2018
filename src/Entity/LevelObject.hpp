@@ -42,6 +42,8 @@ public:
 	LevelObject(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
 		int screenNumber, bool repeated = false);
 
+	virtual ~LevelObject();
+
 	/// \brief
 	/// Changes the size of the platform
 	void resize(float width, float height);
@@ -68,7 +70,7 @@ public:
 
 	/// \brief
 	/// Updates the position of the platform
-	void update() override;
+	void update(const sf::Time& deltaTime) override;
 
 	/// \brief
 	/// Returns the outline of the platform
