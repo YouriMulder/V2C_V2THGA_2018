@@ -2,67 +2,10 @@
 #include "Entity/Platform.hpp"
 #include "Entity/Character.hpp"
 #include "Entity/MoveablePlatform.hpp"
+#include "Entity/Spikes.hpp"
 #include "Entity/EntityBase.hpp"
 #include <iostream>
-#include <typeinfo>
-#include <memory>
-
-std::ifstream & operator>>(std::ifstream & input, sf::Vector2f & rhs) {
-	std::string s;
-	input >> s;
-	bool x_fetched = false;
-	for (unsigned int index = 0; index < s.length(); index++) {
-		if (s[index] == '(') {
-			x_fetched = false;
-		}
-		else if (s[index] == ',') {
-			x_fetched = true;
-		}
-		else if ((s[index] >= '0' && s[index] <= '9') && x_fetched == false) {
-			rhs.x *= 10;
-			rhs.x += (int)s[index] - '0';
-		}
-		else if (s[index] >= '0' && s[index] <= '9' && x_fetched == true) {
-			rhs.y *= 10;
-			rhs.y += (int)s[index] - '0';
-		}
-		else if (s[index] == ')') {
-			return input;
-		}
-		/*else {
-			input.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-			throw incorrect_coordinate(s);
-		*/
-	}
-	return input;
-}
-
-std::ifstream & operator>>(std::ifstream & input, sf::IntRect & rhs) {
-	char c;
-	if (!(input >> c)) { /*throw endOfFile(_FILE, __LINE_);*/ }
-	if (c != '(') { /*throw invalidPosition(c, _FILE, __LINE_);*/ }
-
-	if (!(input >> rhs.left)) { /*throw invalidPosition(c, _FILE, __LINE_);*/ }
-	if (!(input >> c)) { /*throw invalidPosition(c, _FILE, __LINE_); */}
-	if (!(input >> rhs.top)) { /*throw invalidPosition(c, _FILE, __LINE_); */}
-	if (!(input >> c)) { /*throw invalidPosition(c, _FILE, __LINE_); */}
-	if (!(input >> rhs.width)) { /*throw invalidPosition(c, _FILE, __LINE_); */}
-	if (!(input >> c)) { /*throw invalidPosition(c, _FILE, __LINE_); */}
-	if (!(input >> rhs.height)) { /*throw invalidPosition(c, _FILE, __LINE_); */}
-
-
-	if (!(input >> c)) { /*throw invalidPosition(c, _FILE, __LINE_); */}
-	if (c != ')') { /*throw invalidPosition(c, _FILE, __LINE_); */}
-	return input;
-}
-
-std::ostream &operator<<(std::ostream & lhs, const sf::Vector2f & rhs) {
-	return lhs << "(" << rhs.x << "," << rhs.y << ") ";
-}
-
-std::ostream &operator<<(std::ostream & lhs, const sf::IntRect & rhs) {
-	return lhs << "(" << rhs.left << "," << rhs.top << "," << rhs.width << "," << rhs.height << ") ";
-}
+#include "operator.hpp"
 
 SettingsData Factory::readSettings(std::ifstream& text) {
 	std::string name;
@@ -87,6 +30,11 @@ SettingsData Factory::readSettings(std::ifstream& text) {
 				text >> data;
 				temp.songName = data;
 			}
+			else if (name == "levelSize") {
+				sf::Vector2f data;
+				text >> data;
+				temp.levelSize = data;
+			}
 			else if (text.eof()) {
 				return temp;
 			}
@@ -104,6 +52,7 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 	}
 
 	for (int i = 1; i < amountOfScreens + 1; i++) {
+		int errorCounter = 0;
 		name = "skip";
 		while (name != "SCREEN") {
 			text >> name;
@@ -139,10 +88,10 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 				if (partBool) {
 					sf::IntRect part;
 					text >> part;
-					//staticObjects.push_back(std::make_unique<Spike>(textureName, position, size, part, i, damage, textureRepeat));
+					staticObjects.push_back(std::make_unique<Spikes>(textureName, position, size, part, i, damage, textureRepeat));
 				}
 				else {
-					//staticObjects.push_back(std::make_unique<Spike>(textureName, position, size, i, damage, textureRepeat));
+					staticObjects.push_back(std::make_unique<Spikes>(textureName, position, size, i, damage, textureRepeat));
 				}
 			} else if (name == "movePlatform") {
 				std::string textureName;
@@ -155,7 +104,7 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 
 				text >> textureName;
 				text >> position >> size >> range >> steps >> textureRepeat >> partBool;
-				textureName = "../res/Textures/Platform/" + textureName;
+				textureName = "../res/Textures/Spike/" + textureName;
 
 				if (partBool) {
 					sf::IntRect part;
@@ -165,7 +114,7 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 					movableObjects.push_back(std::make_unique <MoveablePlatform>(textureName, position, size, i, range, steps, textureRepeat));
 				}
 			} else if (name == "CHARACTERS") {
-				std::cout << " END OBJECTS FOUND\n";
+				std::cerr << "END OBJECTS FOUND\n";
 				readCharacters(text, amountOfScreens, movableObjects);
 				break;
 			} else {
@@ -188,8 +137,8 @@ void Factory::readCharacters(std::ifstream& text, int amountOfScreens, std::vect
 			text >> position >> size >> maxVelocity >> acceleration;
 
 			movableObjects.push_back(std::make_unique<Character>(position, size, i, maxVelocity, acceleration));
-			std::cout << "character constructor: " << position << ", " << size << ", " << i << ", " << maxVelocity << ", " << acceleration << "\n";
+			//std::cout << "character constructor: " << position << ", " << size << ", " << i << ", " << maxVelocity << ", " << acceleration << "\n";
 		}
 	}
-	std::cout << "END CHARACTERS FOUND\n";
+	std::cerr << "END CHARACTERS FOUND\n";
 }

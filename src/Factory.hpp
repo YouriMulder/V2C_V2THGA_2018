@@ -6,11 +6,11 @@
 #include <fstream>
 #include <memory>
 
-
 struct SettingsData {
 	int noOfScreens;
 	int gameDuration;
 	std::string songName;
+	sf::Vector2f levelSize;
 };
 
 class Factory {
