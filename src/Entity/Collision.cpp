@@ -1,5 +1,5 @@
 #include "Collision.hpp"
-#include "Entity/EntityBase.hpp"
+#include "EntityBase.hpp"
 #include <iostream>
 #include <memory>
 
@@ -23,6 +23,7 @@ Collision::~Collision()
 {
 }
 
+
 void Collision::printViewInfo(ViewInfo info) {
 
 	std::cout	<< "viewnumber: " << info.viewNumber << std::endl
@@ -31,7 +32,19 @@ void Collision::printViewInfo(ViewInfo info) {
 
 }
 
+void Collision::reloadViewInfo() {
+	mViewInfos.clear();
+	for (int i = 1;i <= mAmountOfScreens;i++) {
+		ViewInfo newViewInfo{ i, mViewManager.getViewPosition(i), mViewManager.getViewSize(i) };
+		mViewInfos.push_back(newViewInfo);
+	}
+}
+
 void Collision::updateViewInfo() {
+	mAmountOfScreens = mViewManager.getAmountOfScreens();
+	if (static_cast<unsigned int>(mAmountOfScreens) > mViewInfos.size()) {
+		reloadViewInfo();
+	}
 	for (auto & info : mViewInfos) {
 		info.viewPosition = mViewManager.getViewPosition(info.viewNumber);
 	}
@@ -99,8 +112,8 @@ void Collision::checkScope() {
 }
 
 CollisionBoxes Collision::createCollisionBoxes(const sf::FloatRect & mainBox) {
-	return CollisionBoxes{	sf::FloatRect(mainBox.left,mainBox.top, 1, mainBox.height), //Left
-							sf::FloatRect(mainBox.left + mainBox.width, mainBox.top, 1, mainBox.height), //Right
+	return CollisionBoxes{	sf::FloatRect(mainBox.left,mainBox.top -1 , 1, mainBox.height -2), //Left
+							sf::FloatRect(mainBox.left + mainBox.width, mainBox.top -1, 1, mainBox.height -2), //Right
 							sf::FloatRect(mainBox.left, mainBox.top, mainBox.width, 1),//Top
 							sf::FloatRect(mainBox.left, mainBox.top + mainBox.height, mainBox.width, 1) }; //Bottom
 }
@@ -116,7 +129,7 @@ void Collision::collisionDetected(std::unique_ptr<EntityBase> & object1, std::un
 	} else if (boxes1.topBox.intersects(box2)) {
 		output = Side::Top;
 	} else if (boxes1.bottomBox.intersects(box2)) {
-		output = Side::Top;
+		output = Side::Bottom;
 	} else {
 		output = Side::NoSideDetected;
 	}

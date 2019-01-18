@@ -2,7 +2,9 @@
 #define ENTITY_BASE_HPP
 
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include "../ViewManager.hpp"
+#include "Side.hpp"
 
 class EntityBase {
 protected:
@@ -26,6 +28,8 @@ public:
 	int getScreenNumber() const;
 
 	virtual void update(const sf::Time& deltaTime) = 0;
+	virtual void handleCollision(std::unique_ptr<EntityBase> & other, Side hitSide) {};
+
 	virtual void draw(sf::RenderWindow& window) = 0;
 	virtual void draw(ViewManager& window) = 0;
 	virtual ~EntityBase();
