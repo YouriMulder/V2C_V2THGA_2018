@@ -7,7 +7,7 @@
 #include <string>
 
 class LevelObject : public EntityBase {
-public:
+protected:
 	/// \brief
 	/// Image stored in a texture
 	sf::Texture mTexture;
