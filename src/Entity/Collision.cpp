@@ -119,21 +119,22 @@ CollisionBoxes Collision::createCollisionBoxes(const sf::FloatRect & mainBox) {
 							sf::FloatRect(mainBox.left, mainBox.top + mainBox.height, mainBox.width, 1) }; //Bottom
 }
 
-void Collision::collisionDetected(std::unique_ptr<EntityBase> & object1, std::unique_ptr<EntityBase> & object2) {
+void Collision::collisionHandler(std::unique_ptr<EntityBase> & object1, std::unique_ptr<EntityBase> & object2) {
 	CollisionBoxes boxes1 = createCollisionBoxes(object1->getGlobalBounds());
 	sf::FloatRect box2 = object2->getGlobalBounds();
-	Side output;
+	CollisionSides output;
 	if (boxes1.leftBox.intersects(box2)) {
-		output = Side::Left;
-	} else if (boxes1.rightBox.intersects(box2)) {
-		output = Side::Right;
-	} else if (boxes1.topBox.intersects(box2)) {
-		output = Side::Top;
-	} else if (boxes1.bottomBox.intersects(box2)) {
-		output = Side::Bottom;
-	} else {
-		output = Side::NoSideDetected;
+		output.leftSide = true;
+	} 
+	if (boxes1.rightBox.intersects(box2)) {
+		output.rightSide = true;
+	} 
+	if (boxes1.topBox.intersects(box2)) {
+		output.topSide = true;
 	}
+	if (boxes1.bottomBox.intersects(box2)) {
+		output.bottomSide = true;
+	} 
 
 	object1->handleCollision(object2,output);
 }
@@ -146,14 +147,18 @@ void Collision::checkCollisions() {
 		for (const auto & staticIndex : mNeedsCheckStatic) {
 			std::unique_ptr<EntityBase> & currentStaticItem = mStaticItems[staticIndex];
 			if (currentDynamicItem->getGlobalBounds().intersects(currentStaticItem->getGlobalBounds())) { //collision detected
-				collisionDetected(currentDynamicItem, currentStaticItem);
+				collisionHandler(currentDynamicItem, currentStaticItem);
+			} else {
+				currentDynamicItem->noCollision();
 			}
 		}
 		for (const auto & dynamicIndex2 : mNeedsCheckDynamic) {
 			std::unique_ptr<EntityBase> & currentDynamicItem2 = mDynamicItems[dynamicIndex2];
 			if (currentDynamicItem != currentDynamicItem2) {
 				if (currentDynamicItem->getGlobalBounds().intersects(currentDynamicItem2->getGlobalBounds())) {//collision detected
-					collisionDetected(currentDynamicItem, currentDynamicItem2);
+					collisionHandler(currentDynamicItem, currentDynamicItem2);
+				} else {
+					currentDynamicItem->noCollision();
 				}
 			}
 		}

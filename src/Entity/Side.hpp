@@ -8,4 +8,10 @@ enum class Side {
 		Bottom,
 		NoSideDetected
 	};
+struct CollisionSides {
+	bool leftSide;
+	bool rightSide;
+	bool bottomSide;
+	bool topSide;
+};
 #endif /*SIDE_HPP*/
