@@ -71,7 +71,9 @@ void GameManager::runGame() {
 
 
 		mViewManager.clear();
+		passedTime += updateClock.restart();
 		int numUpdates = 0;
+	
 		while(passedTime >= frameTime) {
 			if (numUpdates++ < 10) {
 				mCollisionManager.checkCollisions();
