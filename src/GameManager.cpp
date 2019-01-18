@@ -13,7 +13,7 @@ GameManager::GameManager(std::string levelFileName) :
 	std::ifstream input(levelFileName);
 	std::string newFileName;
 	if (!input) {
-		"file not open";
+		std::cout << "file not open";
 	} else {
 		input >> newFileName;
 		while (newFileName != "END") {

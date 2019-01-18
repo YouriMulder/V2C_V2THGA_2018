@@ -1,5 +1,5 @@
 #include "Collision.hpp"
-#include "Entity/EntityBase.hpp"
+#include "EntityBase.hpp"
 #include <iostream>
 #include <memory>
 

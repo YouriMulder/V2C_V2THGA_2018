@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "ViewManager.hpp"
-#include "Collision.hpp"
+#include "Entity/Collision.hpp"
 #include "Entity/EntityBase.hpp"
 
 #include "Factory.hpp"

@@ -2,8 +2,8 @@
 #define COLLISION_HPP
 
 #include <vector>
-#include "ViewManager.hpp"
-#include "Entity/EntityBase.hpp"
+#include "../ViewManager.hpp"
+#include "EntityBase.hpp"
 #include "Side.hpp"
 
 struct ViewInfo {
