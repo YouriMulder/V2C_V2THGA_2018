@@ -70,7 +70,6 @@ void GameManager::runGame() {
 		}
 
 
-		mViewManager.clear();
 		passedTime += updateClock.restart();
 		int numUpdates = 0;
 	
@@ -85,6 +84,7 @@ void GameManager::runGame() {
 			passedTime -= frameTime;
     	}
 
+		mViewManager.clear();
 		for(auto& staticObject : mStaticItems) {
 			staticObject->draw(mViewManager);
 		}
