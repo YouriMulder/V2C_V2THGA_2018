@@ -161,6 +161,8 @@ public:
 
 	int getAmountOfScreens();
 
+	void changeAmountOfScreens(int newAmount);
+
 	virtual ~ViewManager();
 };
 

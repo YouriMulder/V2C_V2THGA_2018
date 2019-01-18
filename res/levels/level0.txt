@@ -1,0 +1,26 @@
+SETTINGS:
+noOfScreens 4
+gameTime 3
+songName yolo
+
+partMovePlatform platform.png (2,3) (3,6) (8,8) 10 1
+movePlatform platform.png (1,1) (100,100) (3,3) 10 1
+
+SCREEN1
+
+platform platform.png (1,100) (250,25) 1
+movePlatform platform.png (251,100) (250,25) (200,0) 50 1
+
+SCREEN
+
+platform platform.png (1,100) (250,25) 1
+
+SCREEN
+
+platform platform.png (1,100) (250,25) 1
+
+SCREEN
+
+platform platform.png (1,100) (250,25) 1
+
+END

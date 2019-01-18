@@ -3,7 +3,7 @@
 
 #include "SFML/Graphics.hpp"
 #include "EntityBase.hpp"
-#include "ViewManager.hpp"
+#include "../ViewManager.hpp"
 #include <string>
 
 class LevelObject : public EntityBase {
