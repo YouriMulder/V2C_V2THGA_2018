@@ -29,6 +29,8 @@ private:
 	std::vector<std::string> mLevelFileNames;
 	std::string mPath = "../res/levels/";
 
+	bool readLevelFileNames(const std::string & levelFileName);
+
 	void readLevelInfo();
 	void applyLevelSettings();
 
