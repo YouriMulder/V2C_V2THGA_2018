@@ -21,6 +21,6 @@ platform platform.png (1,100) (250,25) 1
 
 SCREEN
 
-platform platform.png (1,100) (250,25) 1
+platform platform.png (1,200) (250,25) 1
 
 END

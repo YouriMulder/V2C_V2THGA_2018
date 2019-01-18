@@ -8,7 +8,6 @@
 #include "EntityBase.hpp"
 #include "../EventManager.hpp"
 #include "../ViewManager.hpp"
-#include "Animation.hpp"
 
 struct animationSequence {
 	sf::Vector2i start;
@@ -73,17 +72,19 @@ public:
 	void attack();
 	void getHurt(int damage);
 	
+	void applyGravity();
 	void updateVelocity(const sf::Vector2f& deltaVelocity);
 	void applyFrictionOneAxis(float& axisVelocity, const float& friction);
 	void applyFriction();
 	
 	void performAction(const Action& unperformedAction);
 	virtual void handleCollision(
-		std::unique_ptr<EntityBase>& other, 
-		Side hitSize
+		std::unique_ptr<EntityBase> & other, 
+		CollisionSides hitSides
 	); 
-	virtual sf::FloatRect getGlobalBounds() const;
-	virtual void update(const sf::Time& deltaTime);
+	virtual void handleNoCollision() override;
+	virtual sf::FloatRect getGlobalBounds() const override;
+	virtual void update(const sf::Time& deltaTime) override;
 	virtual void draw(sf::RenderWindow& window) override;
 	virtual void draw(ViewManager& window) override;
 
@@ -94,6 +95,7 @@ public:
 
 	bool mIsFacingRight;
 	bool mIsInAir;
+	bool mIsJumping;
 	State mPreviousState;
 	State mState;
 
@@ -104,6 +106,8 @@ public:
 	sf::Sprite mSprite;
 
 	sf::Time timeSinceLastAnimation;
+
+	CollisionSides restrictedSides;
 
 	std::queue<Action> mUnperformedActions = {};
 	

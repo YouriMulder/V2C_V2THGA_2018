@@ -16,6 +16,7 @@ Character::Character(
 	mAcceleration(acceleration),
 	mIsFacingRight(true),
 	mIsInAir(true),
+	mIsJumping(false),
 	mPreviousState(Character::State::Idle),
 	mState(Character::State::Idle),
 	mSpriteWidth(size.x),
@@ -25,6 +26,10 @@ Character::Character(
 	mTexture.loadFromFile("../res/Textures/Player/player.png");
 	mSprite = sf::Sprite(mTexture, mCurrentSpriteSheetLocation);
 	mSprite.scale(2.0f, 2.0f);
+	mSize = sf::Vector2f(
+		mSprite.getGlobalBounds().width, 
+		mSprite.getGlobalBounds().height
+	);
 }
 
 Character::~Character() { }
@@ -34,7 +39,22 @@ void Character::addAction(const Action& newAction) {
 }
 
 void Character::move(const sf::Vector2f& delta) {
-	EntityBase::move(delta.x, delta.y);
+	auto deltaMovement = delta;
+
+	if(deltaMovement.x > 0 && restrictedSides.right) {
+		deltaMovement.x = 0;
+	} else if(deltaMovement.x < 0 && restrictedSides.left) {
+		deltaMovement.x = 0;
+	}
+
+	if(deltaMovement.y < 0 && restrictedSides.top) {
+		deltaMovement.y = 0;
+	} else if(deltaMovement.x > 0 && restrictedSides.bottom) {
+		deltaMovement.y = 0;
+	}
+
+
+	EntityBase::move(deltaMovement.x, deltaMovement.y);
 	mSprite.setPosition(EntityBase::mPosition);
 }
 
@@ -54,7 +74,7 @@ void Character::applyMovement(const Action& direction) {
 		}
 		case Action::Jump: {
 			updateVelocity(
-				sf::Vector2f(0.0f, -mAcceleration.y)
+				sf::Vector2f(0.0f, -mMaxVelocity.y)
 			);
 			break;
 		}
@@ -165,14 +185,26 @@ void Character::right() {
 }
 
 void Character::jump() {
-	if(!mIsInAir) {
+	if(!mIsInAir && !mIsJumping) {
 		mIsInAir = true;
+		mIsJumping = true;
 		applyMovement(Action::Jump);
 	}
 }
 
+void Character::applyGravity() {
+	updateVelocity(sf::Vector2f(mVelocity.x, 1.0f));
+}
+
 void Character::updateVelocity(const sf::Vector2f& deltaVelocity) {
-	mVelocity += sf::Vector2f(deltaVelocity.x * 0.1f, deltaVelocity.y * 0.1f);
+	mVelocity += sf::Vector2f(deltaVelocity.x, deltaVelocity.y);
+
+	mVelocity.x = mVelocity.x > +mMaxVelocity.x ? +mMaxVelocity.x : mVelocity.x;
+	mVelocity.x = mVelocity.x < -mMaxVelocity.x ? -mMaxVelocity.x : mVelocity.x;
+	
+	mVelocity.y = mVelocity.y > +mMaxVelocity.y ? +mMaxVelocity.y : mVelocity.y;
+	mVelocity.y = mVelocity.y < -mMaxVelocity.y ? -mMaxVelocity.y : mVelocity.y;
+
 }
 
 void Character::updateFacingDirection() {
@@ -194,8 +226,8 @@ void Character::applyFrictionOneAxis(float& axisVelocity, const float& friction)
 }
 
 void Character::applyFriction() {
-	applyFrictionOneAxis(mVelocity.x, mAcceleration.x/2);
-	applyFrictionOneAxis(mVelocity.y, mAcceleration.y/8);
+	//applyFrictionOneAxis(mVelocity.x, mAcceleration.x/2);
+	//applyFrictionOneAxis(mVelocity.y, mAcceleration.y/8);
 }
 
 void Character::performAction(const Action& unperformedAction) {
@@ -208,30 +240,46 @@ void Character::performAction(const Action& unperformedAction) {
 	}
 }
 
-void Character::handleCollision(std::unique_ptr<EntityBase>& other, Side hitSide) {
-	mIsInAir = false;
-	if(hitSide == Side::Bottom) {
-		std::cout << "Bot\n";
-	} else if(hitSide == Side::Top) {
-		std::cout << "Top\n";
-	} else if(hitSide == Side::Left) {
-		std::cout << "Left\n";
-	} else if(hitSide == Side::Right) {
-		std::cout << "Right\n";
-	} else if(hitSide == Side::NoSideDetected) {
-		std::cout << "None\n";
+void Character::handleCollision(
+	std::unique_ptr<EntityBase> & other, 
+	CollisionSides hitSides
+) {
+	restrictedSides = hitSides;
+
+	if(hitSides.bottom) {
+		mIsInAir = false;
+		//std::cout << "Bot\n";
+	} 
+	if(hitSides.top) {
+		//std::cout << "Top\n";
+	} 
+	if(hitSides.left) {
+		mVelocity.x = 0;
+		//std::cout << "Left\n";
+	} 
+	if(hitSides.right) {
+		mVelocity.x = 0;
+		//std::cout << "Right\n";
 	}
+	//std::cout << "\n";
 }
+
+void Character::handleNoCollision() {
+	restrictedSides = CollisionSides();
+	mIsInAir = true;
+}
+
 
 sf::FloatRect Character::getGlobalBounds() const {
 	return mSprite.getGlobalBounds();
 }
 
 void Character::update(const sf::Time& deltaTime) {
+	std::cout << "y: " << mVelocity.y << "\n";
 	if(mIsInAir) {
-		mVelocity.y += 1;
+		applyGravity();
 	}
-
+	
 	for(auto & EventManager : actions) {
 		EventManager();
 	}
@@ -245,7 +293,6 @@ void Character::update(const sf::Time& deltaTime) {
 		mUnperformedActions.pop();
 	}
 
-	
 	move(mVelocity);
 	animate(deltaTime);
 	applyFriction();
