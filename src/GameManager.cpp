@@ -80,7 +80,7 @@ void GameManager::moveScreens() {
 			mViewManager.getViewPosition(currentScreenNo).y + mViewManager.getViewSize(currentScreenNo).y / 2);
 		mViewManager.selectMoveScreen(currentScreenNo);
 
-		if (currentPlayerPosition.x > relativeScreenPosition.x) {
+		if (currentPlayerPosition.x > relativeScreenPosition.x && !(mViewManager.getViewPosition(currentScreenNo).x + mViewManager.getViewSize(currentScreenNo).x >= mCurrentSettings.totalLevelSize[currentScreenNo-1].x))  {
 			sf::Vector2f offset(currentPlayerPosition.x - relativeScreenPosition.x, 0);
 			mViewManager.move(offset);
 			for (auto & background : mBackgrounds) {
