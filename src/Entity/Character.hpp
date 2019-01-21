@@ -93,6 +93,8 @@ public:
 	virtual void draw(sf::RenderWindow& window) override;
 	virtual void draw(ViewManager& window) override;
 
+	bool mSelected;
+
 public:
 	sf::Vector2f mVelocity;
 	sf::Vector2f mMaxVelocity;
@@ -116,6 +118,9 @@ public:
 	sf::Time timeSinceLastAnimation;
 
 	CollisionSides restrictedSides;
+
+	void select(bool selection);
+	bool isSelected();
 
 	std::queue<Action> mUnperformedActions = {};
 	
