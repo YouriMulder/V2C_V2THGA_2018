@@ -4,6 +4,8 @@
 #include <utility>
 #include <queue>
 #include <functional>
+#include <vector>
+#include <memory>
 
 #include "EntityBase.hpp"
 #include "../EventManager.hpp"
@@ -82,7 +84,7 @@ public:
 	
 	void performAction(const Action& unperformedAction);
 	virtual void handleCollision(
-		std::unique_ptr<EntityBase> & other, 
+		std::vector<std::unique_ptr<EntityBase>*> others, 
 		CollisionSides hitSides
 	); 
 	virtual void handleNoCollision() override;

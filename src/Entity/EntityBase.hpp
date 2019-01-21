@@ -3,6 +3,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include <vector>
+
 #include "../ViewManager.hpp"
 #include "Side.hpp"
 
@@ -29,7 +31,7 @@ public:
 
 	virtual void update(const sf::Time& deltaTime) = 0;
 	virtual void handleCollision(
-		std::unique_ptr<EntityBase> & other, 
+		std::vector<std::unique_ptr<EntityBase>*> others, 
 		CollisionSides hitSides
 	) {};
 	virtual void handleNoCollision() {};

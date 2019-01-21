@@ -2,6 +2,7 @@
 #include "EntityBase.hpp"
 #include <iostream>
 #include <memory>
+#include <vector>
 
 
 
@@ -119,24 +120,21 @@ CollisionBoxes Collision::createCollisionBoxes(const sf::FloatRect & mainBox) {
 							sf::FloatRect(mainBox.left+ pixelOffset, mainBox.top + mainBox.height, mainBox.width-pixelOffset, 1) }; //Bottom
 }
 
-void Collision::collisionHandler(std::unique_ptr<EntityBase> & object1, std::unique_ptr<EntityBase> & object2) {
+void Collision::collisionHandler(std::unique_ptr<EntityBase> & object1, std::unique_ptr<EntityBase> & object2, CollisionSides& collisionSides) {
 	CollisionBoxes boxes1 = createCollisionBoxes(object1->getGlobalBounds());
 	sf::FloatRect box2 = object2->getGlobalBounds();
-	CollisionSides output;
 	if (boxes1.leftBox.intersects(box2)) {
-		output.left = true;
+		collisionSides.left = true;
 	} 
 	if (boxes1.rightBox.intersects(box2)) {
-		output.right = true;
+		collisionSides.right = true;
 	} 
 	if (boxes1.topBox.intersects(box2)) {
-		output.top = true;
+		collisionSides.top = true;
 	}
 	if (boxes1.bottomBox.intersects(box2)) {
-		output.bottom = true;
+		collisionSides.bottom = true;
 	} 
-
-	object1->handleCollision(object2,output);
 }
 
 
@@ -144,12 +142,17 @@ void Collision::checkCollisions() {
 	checkScope();
 	for (const auto & dynamicIndex : mNeedsCheckDynamic) {
 		bool collisionFound = false;		
+		std::vector<std::unique_ptr<EntityBase>*> others;
+		CollisionSides collisionSides;
+		
+
 		std::unique_ptr<EntityBase> & currentDynamicItem = mDynamicItems[dynamicIndex];
 		for (const auto & staticIndex : mNeedsCheckStatic) {
 			std::unique_ptr<EntityBase> & currentStaticItem = mStaticItems[staticIndex];
 			if (currentDynamicItem->getScreenNumber() == currentStaticItem->getScreenNumber()) {
 				if (currentDynamicItem->getGlobalBounds().intersects(currentStaticItem->getGlobalBounds())) { //collision detected
-					collisionHandler(currentDynamicItem, currentStaticItem);
+					collisionHandler(currentDynamicItem, currentStaticItem, collisionSides);
+					others.push_back(&currentStaticItem);
 					collisionFound = true;
 				}
 			}
@@ -160,14 +163,16 @@ void Collision::checkCollisions() {
 			if (currentDynamicItem->getScreenNumber() == currentDynamicItem2->getScreenNumber()){
 				if (currentDynamicItem != currentDynamicItem2) {
 					if (currentDynamicItem->getGlobalBounds().intersects(currentDynamicItem2->getGlobalBounds())) {//collision detected
-						collisionHandler(currentDynamicItem, currentDynamicItem2);
+						collisionHandler(currentDynamicItem, currentDynamicItem2, collisionSides);
 						collisionFound = true;
 					}
 				}
 			}
 		}
 
-		if(!collisionFound) {
+		if(collisionFound) {
+			currentDynamicItem->handleCollision(others, collisionSides);
+		} else {
 			currentDynamicItem->handleNoCollision();
 		}
 	}

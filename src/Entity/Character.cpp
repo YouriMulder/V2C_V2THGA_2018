@@ -182,7 +182,7 @@ void Character::performAction(const Action& unperformedAction) {
 }
 
 void Character::handleCollision(
-	std::unique_ptr<EntityBase> & other, 
+	std::vector<std::unique_ptr<EntityBase>*> others, 
 	CollisionSides hitSides
 ) {
 	restrictedSides = hitSides;
@@ -193,15 +193,15 @@ void Character::handleCollision(
 		//std::cout << "Bot\n";
 	} 
 	if(hitSides.top) {
-		std::cout << "Top\n";
+	//	std::cout << "Top\n";
 	} 
 	if(hitSides.left) {
 		mVelocity.x = 0;
-		std::cout << "Left\n";
+	//	std::cout << "Left\n";
 	} 
 	if(hitSides.right) {
 		mVelocity.x = 0;
-		std::cout << "Right\n";
+	//	std::cout << "Right\n";
 	}
 	//std::cout << "\n";
 }
