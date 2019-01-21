@@ -103,6 +103,8 @@ public:
 	sf::Vector2f mMaxVelocity;
 	sf::Vector2f mAcceleration;
 
+	float xOffset;
+
 	sf::Vector2f mGravity = { 0, 0 };
 	sf::Vector2f mJumpForce = { 0, -2 };
 
