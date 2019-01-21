@@ -56,7 +56,7 @@ public:
 
 	void addAction(const Action& newAction);
 
-	void move(const sf::Vector2f& delta);
+	void move(sf::Vector2f& delta);
 	void setMoveDirection(const Action& newDirection);
 	void applyMovement(const Action& direction);
 
@@ -74,6 +74,9 @@ public:
 	
 	void applyGravity();
 	void updateVelocity(const sf::Vector2f& deltaVelocity);
+	void resetVelocityY();
+	void resetVelocityX();
+
 	void applyFrictionOneAxis(float& axisVelocity, const float& friction);
 	void applyFriction();
 	
@@ -170,7 +173,7 @@ public:
 		EventManager(sf::Keyboard::Down, 	[&] 	{std::cout << "onderste pijltje \n";	}),
 		EventManager(sf::Keyboard::Escape,	[&] 	{std::cout << " escape toets "; }),
 		EventManager(sf::Keyboard::Space, 	[&] 	{addAction(Character::Action::Jump);	}),
-		EventManager(sf::Mouse::Left, 		[&] 	{std::cout << "linker muis \n"; }),
+		EventManager(sf::Mouse::Left, 		[&] 	{/*std::cout << "linker muis \n";*/ }),
 		EventManager(sf::Keyboard::Num1, 	[&] 	{std::cout << "nummer 1 \n"; }),
 		EventManager(sf::Keyboard::Num2, 	[&] 	{std::cout << "nummer 2 \n"; }),
 		EventManager(sf::Keyboard::Num3, 	[&] 	{std::cout << "nummer 3 \n"; }),
@@ -182,6 +185,11 @@ public:
 		EventManager(sf::Keyboard::S, 		[&] 	{std::cout << "s \n"; }),
 		EventManager(sf::Keyboard::D, 		[&] 	{std::cout << "d \n"; })
 	};
+
+	const int moveSpeed = 1.0f;
+	const int runSpeed  = 2.0f;
+	const int jumpSpeed = 1.0f;
+
 };
 
 

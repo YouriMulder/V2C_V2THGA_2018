@@ -143,30 +143,32 @@ void Collision::collisionHandler(std::unique_ptr<EntityBase> & object1, std::uni
 void Collision::checkCollisions() {
 	checkScope();
 	for (const auto & dynamicIndex : mNeedsCheckDynamic) {
+		bool collisionFound = false;		
 		std::unique_ptr<EntityBase> & currentDynamicItem = mDynamicItems[dynamicIndex];
 		for (const auto & staticIndex : mNeedsCheckStatic) {
 			std::unique_ptr<EntityBase> & currentStaticItem = mStaticItems[staticIndex];
 			if (currentDynamicItem->getScreenNumber() == currentStaticItem->getScreenNumber()) {
 				if (currentDynamicItem->getGlobalBounds().intersects(currentStaticItem->getGlobalBounds())) { //collision detected
 					collisionHandler(currentDynamicItem, currentStaticItem);
-				}
-				else {
-					currentDynamicItem->handleNoCollision();
+					collisionFound = true;
 				}
 			}
 		}
+
 		for (const auto & dynamicIndex2 : mNeedsCheckDynamic) {
 			std::unique_ptr<EntityBase> & currentDynamicItem2 = mDynamicItems[dynamicIndex2];
 			if (currentDynamicItem->getScreenNumber() == currentDynamicItem2->getScreenNumber()){
 				if (currentDynamicItem != currentDynamicItem2) {
 					if (currentDynamicItem->getGlobalBounds().intersects(currentDynamicItem2->getGlobalBounds())) {//collision detected
 						collisionHandler(currentDynamicItem, currentDynamicItem2);
-					}
-					else {
-						currentDynamicItem->handleNoCollision();
+						collisionFound = true;
 					}
 				}
 			}
+		}
+
+		if(!collisionFound) {
+			currentDynamicItem->handleNoCollision();
 		}
 	}
 }

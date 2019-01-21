@@ -3,24 +3,34 @@ noOfScreens 4
 gameTime 3
 songName yolo
 
+
 partMovePlatform platform.png (2,3) (3,6) (8,8) 10 1
 movePlatform platform.png (1,1) (100,100) (3,3) 10 1
 
 SCREEN1
 
-platform platform.png (1,100) (250,25) 1
-movePlatform platform.png (251,100) (250,25) (200,0) 50 1
+platform platform.png (1,200) (250,25) 1 0
+spike ../res/Textures/Spike/spike.png (50,175) (100,25) 200 0 0
+platform wallLeft.png (250,100) (32,100) 1 0
+platform fillSmal.png (250,200) (32,25) 1 0
+movePlatform platform.png (282,100) (250,25) (200,100) 150 1 0
 
 SCREEN
 
-platform platform.png (1,100) (250,25) 1
+platform platform.png (1,100) (250,25) 1 0
 
 SCREEN
 
-platform platform.png (1,100) (250,25) 1
+platform platform.png (1,100) (250,25) 1 0
 
 SCREEN
 
-platform platform.png (1,200) (250,25) 1
+platform platform.png (1,100) (250,25) 1 0
 
 END
+
+CHARACTERS
+player (0,38) (19,34) (2,2) (20,10)
+player (0,38) (19,34) (2,2) (20,10)
+player (0,38) (19,34) (2,2) (20,10)
+player (0,38) (19,34) (2,2) (20,10)

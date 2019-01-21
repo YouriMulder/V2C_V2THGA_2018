@@ -65,7 +65,7 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 
 				text >> textureName;
 				text >> position >> size >> textureRepeat >> partBool;
-				textureName = "../res/Textures/Platform/" + textureName;
+				textureName = "../res/Textures/Platform/platform.png";
 
 				if (partBool) {
 					sf::IntRect part;
@@ -104,7 +104,7 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 
 				text >> textureName;
 				text >> position >> size >> range >> steps >> textureRepeat >> partBool;
-				textureName = "../res/Textures/Spike/" + textureName;
+				textureName = "../res/Textures/Platform/platform.png";
 
 				if (partBool) {
 					sf::IntRect part;

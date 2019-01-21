@@ -52,17 +52,7 @@ void GameManager::readLevelInfo() {
 
 void GameManager::applyLevelSettings() {
 	mViewManager.changeAmountOfScreens(mCurrentSettings.noOfScreens);
-
-	auto character = std::make_unique<Character> (
-		sf::Vector2f(0.0f, 10.0f),
-		sf::Vector2f(19.0f, 34.0f),
-		1,
-		sf::Vector2f(2.0f, 2.0f),
-		sf::Vector2f(20.0f, 10.0f)
-	);
-
-
-	mDynamicItems.push_back(std::move(character));
+	//mDynamicItems.push_back(std::move(character));
 }
 
 void GameManager::runGame() {
