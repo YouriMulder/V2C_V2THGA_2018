@@ -31,7 +31,10 @@ public:
 
 	virtual void update(const sf::Time& deltaTime) = 0;
 	virtual void handleCollision(
-		std::vector<std::unique_ptr<EntityBase>*> others, 
+		std::vector<std::unique_ptr<EntityBase>*> top, 
+		std::vector<std::unique_ptr<EntityBase>*> bottom, 
+		std::vector<std::unique_ptr<EntityBase>*> left, 
+		std::vector<std::unique_ptr<EntityBase>*> right, 
 		CollisionSides hitSides
 	) {};
 	virtual void handleNoCollision() {};

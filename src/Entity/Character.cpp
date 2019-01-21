@@ -183,10 +183,16 @@ void Character::performAction(const Action& unperformedAction) {
 }
 
 void Character::handleCollision(
-	std::vector<std::unique_ptr<EntityBase>*> others, 
+	std::vector<std::unique_ptr<EntityBase>*> top, 
+	std::vector<std::unique_ptr<EntityBase>*> bottom, 
+	std::vector<std::unique_ptr<EntityBase>*> left, 
+	std::vector<std::unique_ptr<EntityBase>*> right, 
+		
 	CollisionSides hitSides
 ) {
 	restrictedSides = hitSides;
+
+	std::cout << right.size() << "\n";
 
 	if(hitSides.bottom) {
 		mIsInAir = false;
@@ -205,14 +211,6 @@ void Character::handleCollision(
 	//	std::cout << "Right\n";
 		//std::cout << "Top\n";
 	} 
-	if(hitSides.left) {
-		mVelocity.x = 0;
-		//std::cout << "Left\n";
-	} 
-	if(hitSides.right) {
-		mVelocity.x = 0;
-		//std::cout << "Right\n";
-	}
 	//std::cout << "\n";
 }
 

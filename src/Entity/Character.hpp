@@ -84,7 +84,10 @@ public:
 	
 	void performAction(const Action& unperformedAction);
 	virtual void handleCollision(
-		std::vector<std::unique_ptr<EntityBase>*> others, 
+		std::vector<std::unique_ptr<EntityBase>*> top, 
+		std::vector<std::unique_ptr<EntityBase>*> bottom, 
+		std::vector<std::unique_ptr<EntityBase>*> left, 
+		std::vector<std::unique_ptr<EntityBase>*> right,  
 		CollisionSides hitSides
 	); 
 	virtual void handleNoCollision() override;
