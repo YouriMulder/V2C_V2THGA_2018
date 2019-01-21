@@ -16,9 +16,7 @@ GameManager::GameManager(const std::string& levelFileName) :
 }
 
 
-GameManager::~GameManager()
-{
-}
+GameManager::~GameManager() {}
 
 bool GameManager::readLevelFileNames(const std::string & levelFileName) {
 	std::ifstream input(levelFileName);
@@ -42,7 +40,7 @@ void GameManager::readLevelInfo() {
 	currentLevelFile.close();
 	currentLevelFile.open(mPathLevels + mLevelFileNames[mCurrentLevel]);
 	if (!currentLevelFile.is_open()) {
-		std::cout << "error";
+		std::cout << "error could not open level file";
 	} else {
 		mFactory.readObjects(currentLevelFile, mCurrentSettings.noOfScreens, mStaticItems, mDynamicItems);
 	}
@@ -58,16 +56,19 @@ void GameManager::applyLevelSettings() {
 
 
 void GameManager::createBackgrounds() {
-	mBackgrounds.push_back(std::make_unique<Background>(mPathBackgrounds+"plx-1.png",
-		sf::Vector2f(0, 0),sf::Vector2f(384,216), mViewManager.getViewSize(1), 1));
-	mBackgrounds.push_back(std::make_unique<Background>(mPathBackgrounds + "plx-2.png",
-		sf::Vector2f(0, 0) , sf::Vector2f(384, 216), mViewManager.getViewSize(1), 1));
-	mBackgrounds.push_back(std::make_unique<Background>(mPathBackgrounds + "plx-3.png",
-		sf::Vector2f(0, 0), sf::Vector2f(384, 216), mViewManager.getViewSize(1), 1));
-	mBackgrounds.push_back(std::make_unique<Background>(mPathBackgrounds + "plx-4.png",
-		sf::Vector2f(0, 0), sf::Vector2f(384, 216), mViewManager.getViewSize(1), 1));
-	mBackgrounds.push_back(std::make_unique<Background>(mPathBackgrounds + "plx-5.png",
-		sf::Vector2f(0, 0), sf::Vector2f(384, 216), mViewManager.getViewSize(1), 1));
+	std::cout << "in function";
+	for (const auto & textureName : mCurrentSettings.backgroundImages) {
+		std::cout << "texturename" << textureName;
+		for (int i = 1; i <= mCurrentSettings.noOfScreens;i++) {
+			mBackgrounds.push_back(std::make_unique<Background>(
+				mPathBackgrounds + textureName,
+				sf::Vector2f(0, 0),
+				sf::Vector2f(384,216),
+				mViewManager.getViewSize(i),
+				i
+				));
+		}
+	}
 }
 
 void GameManager::moveScreens() {
@@ -78,6 +79,7 @@ void GameManager::moveScreens() {
 		sf::Vector2f relativeScreenPosition(mViewManager.getViewPosition(currentScreenNo).x + mViewManager.getViewSize(currentScreenNo).x / 2,
 			mViewManager.getViewPosition(currentScreenNo).y + mViewManager.getViewSize(currentScreenNo).y / 2);
 		mViewManager.selectMoveScreen(currentScreenNo);
+
 		if (currentPlayerPosition.x > relativeScreenPosition.x) {
 			sf::Vector2f offset(currentPlayerPosition.x - relativeScreenPosition.x, 0);
 			mViewManager.move(offset);

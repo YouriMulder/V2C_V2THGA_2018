@@ -10,7 +10,6 @@ public:
 		int screenNumber, bool repeated = false);
 	virtual ~Background();
 	sf::FloatRect getGlobalBounds() const override;
-	void move(const sf::Vector2f & deltaPosition);
 };
 
 #endif /*BACKGROUND_HPP*/
