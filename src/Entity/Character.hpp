@@ -32,6 +32,7 @@ public:
 	enum class State {
 		Idle,
 		Moving,
+		Running,
 		Jumping,
 		Falling,
 		Attacking
@@ -41,6 +42,7 @@ public:
 		Left,
 		Right,
 		Jump,
+		Run,
 		Duck,
 		Punch,
 		None
@@ -70,6 +72,7 @@ public:
 	void left();
 	void right();
 	void jump(); 
+	void run();
 
 	void attack();
 	void getHurt(int damage);
@@ -78,6 +81,7 @@ public:
 	void updateVelocity(const sf::Vector2f& deltaVelocity);
 	void resetVelocityY();
 	void resetVelocityX();
+	bool isMovingX() const;
 
 	void applyFrictionOneAxis(float& axisVelocity, const float& friction);
 	void applyFriction();
@@ -109,6 +113,7 @@ public:
 	bool mIsFacingRight;
 	bool mIsInAir;
 	bool mIsJumping;
+	bool mIsRunning;
 	State mPreviousState;
 	State mState;
 
@@ -139,6 +144,9 @@ public:
 		std::make_pair(
 			Action::Jump, 	[this](){jump();}
 		),
+		std::make_pair(
+			Action::Run, 	[this](){run();}
+		),
 	};
 
 	std::vector<std::pair<State, animationSequence>> mAnimations = {
@@ -156,6 +164,14 @@ public:
 				sf::Vector2i(8,1),
 				sf::Vector2f(21.0f, 35.0f),
 				sf::milliseconds(125)
+			)
+		),
+		std::make_pair(State::Running, 
+			animationSequence(
+				sf::Vector2i(0,1),
+				sf::Vector2i(8,1),
+				sf::Vector2f(21.0f, 35.0f),
+				sf::milliseconds(75)
 			)
 		),
 		std::make_pair(State::Jumping, 
@@ -182,13 +198,13 @@ public:
 		EventManager(sf::Keyboard::Up, 		[&] 	{addAction(Character::Action::Jump);	}),
 		EventManager(sf::Keyboard::Down, 	[&] 	{std::cout << "onderste pijltje \n";	}),
 		EventManager(sf::Keyboard::Escape,	[&] 	{std::cout << " escape toets "; }),
-		EventManager(sf::Keyboard::Space, 	[&] 	{addAction(Character::Action::Jump);	}),
+		EventManager(sf::Keyboard::Space, 	[&] 	{addAction(Character::Action::Jump);}),
 		EventManager(sf::Mouse::Left, 		[&] 	{/*std::cout << "linker muis \n";*/ }),
 		EventManager(sf::Keyboard::Num1, 	[&] 	{std::cout << "nummer 1 \n"; }),
 		EventManager(sf::Keyboard::Num2, 	[&] 	{std::cout << "nummer 2 \n"; }),
 		EventManager(sf::Keyboard::Num3, 	[&] 	{std::cout << "nummer 3 \n"; }),
 		EventManager(sf::Keyboard::Num4, 	[&] 	{std::cout << "nummer 4 \n"; }),
-		EventManager(sf::Keyboard::LShift, 	[&] 	{std::cout << "linker shift \n"; }),
+		EventManager(sf::Keyboard::LShift, 	[&] 	{addAction(Character::Action::Run); std::cout << "run\n";}),
 		EventManager(sf::Keyboard::RShift, 	[&] 	{std::cout << "rechter shift \n"; }),
 		EventManager(sf::Keyboard::W, 		[&] 	{std::cout << "w \n"; }),
 		EventManager(sf::Keyboard::A, 		[&] 	{std::cout << "a\n"; }),
