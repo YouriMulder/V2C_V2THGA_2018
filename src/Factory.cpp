@@ -138,6 +138,7 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 				text >> position >> size >> range >> steps >> textureRepeat >> partBool;
 				textureName = mPathPlatform + textureName;
 
+
 				if (partBool) {
 					sf::IntRect part;
 					text >> part;
