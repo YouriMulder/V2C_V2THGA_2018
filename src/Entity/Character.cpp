@@ -21,7 +21,8 @@ Character::Character(
 	mState(Character::State::Idle),
 	mSpriteWidth(size.x),
 	mSpriteHeight(size.y),
-	mCurrentSpriteSheetLocation(0,0,size.x,size.y)
+	mCurrentSpriteSheetLocation(0,0,size.x,size.y),
+	mSelected(false)
 {
 	mTexture.loadFromFile("../res/Textures/Player/player.png");
 	mSprite = sf::Sprite(mTexture, mCurrentSpriteSheetLocation);
@@ -193,15 +194,15 @@ void Character::handleCollision(
 		//std::cout << "Bot\n";
 	} 
 	if(hitSides.top) {
-		std::cout << "Top\n";
+		//std::cout << "Top\n";
 	} 
 	if(hitSides.left) {
 		mVelocity.x = 0;
-		std::cout << "Left\n";
+		//std::cout << "Left\n";
 	} 
 	if(hitSides.right) {
 		mVelocity.x = 0;
-		std::cout << "Right\n";
+		//std::cout << "Right\n";
 	}
 	//std::cout << "\n";
 }
@@ -318,4 +319,12 @@ void Character::draw(sf::RenderWindow& window) {
 void Character::draw(ViewManager& window) {
 	window.selectDrawingScreen(mScreenNumber);
 	window.draw(mSprite);
+}
+
+void Character::select(bool selection) {
+	mSelected = selection;
+}
+
+bool Character::isSelected() {
+	return mSelected;
 }
