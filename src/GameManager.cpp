@@ -52,6 +52,7 @@ void GameManager::readLevelInfo() {
 
 void GameManager::applyLevelSettings() {
 	mViewManager.changeAmountOfScreens(mCurrentSettings.noOfScreens);
+	//mDynamicItems.push_back(std::move(character));
 }
 
 void GameManager::runGame() {

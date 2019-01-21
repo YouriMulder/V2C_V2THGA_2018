@@ -15,7 +15,6 @@ Collision::Collision(	ViewManager & viewManager,
 	for (int i = 1;i <= mAmountOfScreens;i++) {
 		ViewInfo newViewInfo{ i, mViewManager.getViewPosition(i), mViewManager.getViewSize(i) };
 		mViewInfos.push_back(newViewInfo);
-		printViewInfo(newViewInfo);
 	}
 }
 
@@ -113,10 +112,11 @@ void Collision::checkScope() {
 
 // -1 and -2 to fix the bottom collision otherwise the left and right will be detected first.
 CollisionBoxes Collision::createCollisionBoxes(const sf::FloatRect & mainBox) {
-	return CollisionBoxes{	sf::FloatRect(mainBox.left,mainBox.top -1 , 1, mainBox.height -2), //Left
-							sf::FloatRect(mainBox.left + mainBox.width, mainBox.top -1, 1, mainBox.height -2), //Right
-							sf::FloatRect(mainBox.left, mainBox.top, mainBox.width, 1),//Top
-							sf::FloatRect(mainBox.left, mainBox.top + mainBox.height, mainBox.width, 1) }; //Bottom
+	int pixelOffset = 2;
+	return CollisionBoxes{	sf::FloatRect(mainBox.left,mainBox.top - pixelOffset , 1, mainBox.height -pixelOffset), //Left
+							sf::FloatRect(mainBox.left + mainBox.width, mainBox.top - pixelOffset, 1, mainBox.height -pixelOffset), //Right
+							sf::FloatRect(mainBox.left + pixelOffset, mainBox.top, mainBox.width-pixelOffset, 1),//Top
+							sf::FloatRect(mainBox.left+ pixelOffset, mainBox.top + mainBox.height, mainBox.width-pixelOffset, 1) }; //Bottom
 }
 
 void Collision::collisionHandler(std::unique_ptr<EntityBase> & object1, std::unique_ptr<EntityBase> & object2) {
@@ -124,16 +124,16 @@ void Collision::collisionHandler(std::unique_ptr<EntityBase> & object1, std::uni
 	sf::FloatRect box2 = object2->getGlobalBounds();
 	CollisionSides output;
 	if (boxes1.leftBox.intersects(box2)) {
-		output.leftSide = true;
+		output.left = true;
 	} 
 	if (boxes1.rightBox.intersects(box2)) {
-		output.rightSide = true;
+		output.right = true;
 	} 
 	if (boxes1.topBox.intersects(box2)) {
-		output.topSide = true;
+		output.top = true;
 	}
 	if (boxes1.bottomBox.intersects(box2)) {
-		output.bottomSide = true;
+		output.bottom = true;
 	} 
 
 	object1->handleCollision(object2,output);
@@ -143,24 +143,32 @@ void Collision::collisionHandler(std::unique_ptr<EntityBase> & object1, std::uni
 void Collision::checkCollisions() {
 	checkScope();
 	for (const auto & dynamicIndex : mNeedsCheckDynamic) {
+		bool collisionFound = false;		
 		std::unique_ptr<EntityBase> & currentDynamicItem = mDynamicItems[dynamicIndex];
 		for (const auto & staticIndex : mNeedsCheckStatic) {
 			std::unique_ptr<EntityBase> & currentStaticItem = mStaticItems[staticIndex];
-			if (currentDynamicItem->getGlobalBounds().intersects(currentStaticItem->getGlobalBounds())) { //collision detected
-				collisionHandler(currentDynamicItem, currentStaticItem);
-			} else {
-				currentDynamicItem->noCollision();
-			}
-		}
-		for (const auto & dynamicIndex2 : mNeedsCheckDynamic) {
-			std::unique_ptr<EntityBase> & currentDynamicItem2 = mDynamicItems[dynamicIndex2];
-			if (currentDynamicItem != currentDynamicItem2) {
-				if (currentDynamicItem->getGlobalBounds().intersects(currentDynamicItem2->getGlobalBounds())) {//collision detected
-					collisionHandler(currentDynamicItem, currentDynamicItem2);
-				} else {
-					currentDynamicItem->noCollision();
+			if (currentDynamicItem->getScreenNumber() == currentStaticItem->getScreenNumber()) {
+				if (currentDynamicItem->getGlobalBounds().intersects(currentStaticItem->getGlobalBounds())) { //collision detected
+					collisionHandler(currentDynamicItem, currentStaticItem);
+					collisionFound = true;
 				}
 			}
+		}
+
+		for (const auto & dynamicIndex2 : mNeedsCheckDynamic) {
+			std::unique_ptr<EntityBase> & currentDynamicItem2 = mDynamicItems[dynamicIndex2];
+			if (currentDynamicItem->getScreenNumber() == currentDynamicItem2->getScreenNumber()){
+				if (currentDynamicItem != currentDynamicItem2) {
+					if (currentDynamicItem->getGlobalBounds().intersects(currentDynamicItem2->getGlobalBounds())) {//collision detected
+						collisionHandler(currentDynamicItem, currentDynamicItem2);
+						collisionFound = true;
+					}
+				}
+			}
+		}
+
+		if(!collisionFound) {
+			currentDynamicItem->handleNoCollision();
 		}
 	}
 }

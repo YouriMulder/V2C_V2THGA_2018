@@ -2,16 +2,18 @@
 #define SIDE_HPP
 
 enum class Side {
-		Left,
-		Right,
-		Top,
-		Bottom,
-		NoSideDetected
-	};
-struct CollisionSides {
-	bool leftSide;
-	bool rightSide;
-	bool bottomSide;
-	bool topSide;
+	Left,
+	Right,
+	Top,
+	Bottom,
+	NoSideDetected
 };
+
+struct CollisionSides {
+	bool left = false;
+	bool right = false;
+	bool bottom = false;
+	bool top = false;
+};
+
 #endif /*SIDE_HPP*/

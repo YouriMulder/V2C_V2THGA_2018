@@ -8,7 +8,6 @@
 #include "EntityBase.hpp"
 #include "../EventManager.hpp"
 #include "../ViewManager.hpp"
-#include "Animation.hpp"
 
 struct animationSequence {
 	sf::Vector2i start;
@@ -57,7 +56,7 @@ public:
 
 	void addAction(const Action& newAction);
 
-	void move(const sf::Vector2f& delta);
+	void move(sf::Vector2f& delta);
 	void setMoveDirection(const Action& newDirection);
 	void applyMovement(const Action& direction);
 
@@ -73,17 +72,22 @@ public:
 	void attack();
 	void getHurt(int damage);
 	
+	void applyGravity();
 	void updateVelocity(const sf::Vector2f& deltaVelocity);
+	void resetVelocityY();
+	void resetVelocityX();
+
 	void applyFrictionOneAxis(float& axisVelocity, const float& friction);
 	void applyFriction();
 	
 	void performAction(const Action& unperformedAction);
 	virtual void handleCollision(
-		std::unique_ptr<EntityBase>& other, 
-		Side hitSize
+		std::unique_ptr<EntityBase> & other, 
+		CollisionSides hitSides
 	); 
-	virtual sf::FloatRect getGlobalBounds() const;
-	virtual void update(const sf::Time& deltaTime);
+	virtual void handleNoCollision() override;
+	virtual sf::FloatRect getGlobalBounds() const override;
+	virtual void update(const sf::Time& deltaTime) override;
 	virtual void draw(sf::RenderWindow& window) override;
 	virtual void draw(ViewManager& window) override;
 
@@ -92,8 +96,12 @@ public:
 	sf::Vector2f mMaxVelocity;
 	sf::Vector2f mAcceleration;
 
+	sf::Vector2f mGravity = { 0, 0 };
+	sf::Vector2f mJumpForce = { 0, -2 };
+
 	bool mIsFacingRight;
 	bool mIsInAir;
+	bool mIsJumping;
 	State mPreviousState;
 	State mState;
 
@@ -104,6 +112,8 @@ public:
 	sf::Sprite mSprite;
 
 	sf::Time timeSinceLastAnimation;
+
+	CollisionSides restrictedSides;
 
 	std::queue<Action> mUnperformedActions = {};
 	
@@ -163,7 +173,7 @@ public:
 		EventManager(sf::Keyboard::Down, 	[&] 	{std::cout << "onderste pijltje \n";	}),
 		EventManager(sf::Keyboard::Escape,	[&] 	{std::cout << " escape toets "; }),
 		EventManager(sf::Keyboard::Space, 	[&] 	{addAction(Character::Action::Jump);	}),
-		EventManager(sf::Mouse::Left, 		[&] 	{std::cout << "linker muis \n"; }),
+		EventManager(sf::Mouse::Left, 		[&] 	{/*std::cout << "linker muis \n";*/ }),
 		EventManager(sf::Keyboard::Num1, 	[&] 	{std::cout << "nummer 1 \n"; }),
 		EventManager(sf::Keyboard::Num2, 	[&] 	{std::cout << "nummer 2 \n"; }),
 		EventManager(sf::Keyboard::Num3, 	[&] 	{std::cout << "nummer 3 \n"; }),
@@ -175,6 +185,7 @@ public:
 		EventManager(sf::Keyboard::S, 		[&] 	{std::cout << "s \n"; }),
 		EventManager(sf::Keyboard::D, 		[&] 	{std::cout << "d \n"; })
 	};
+
 };
 
 
