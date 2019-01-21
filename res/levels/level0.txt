@@ -10,22 +10,22 @@ movePlatform platform.png (1,1) (100,100) (3,3) 10 1
 SCREEN1
 
 platform platform.png (1,200) (250,25) 1 0
-spike ../res/Textures/Spike/spike.png (50,175) (100,25) 200 0 0
+spike spike.png (50,175) (100,25) 200 0 0
 platform wallLeft.png (250,100) (32,100) 1 0
 platform fillSmal.png (250,200) (32,25) 1 0
 movePlatform platform.png (282,100) (250,25) (200,100) 150 1 0
 
 SCREEN
 
-platform platform.png (1,100) (250,25) 1 0
+platform platform.png (1,200) (250,25) 1 0
 
 SCREEN
 
-platform platform.png (1,100) (250,25) 1 0
+platform platform.png (1,200) (250,25) 1 0
 
 SCREEN
 
-platform platform.png (1,100) (250,25) 1 0
+platform platform.png (1,200) (250,25) 1 0
 
 END
 

@@ -52,6 +52,7 @@ void GameManager::readLevelInfo() {
 
 void GameManager::applyLevelSettings() {
 	mViewManager.changeAmountOfScreens(mCurrentSettings.noOfScreens);
+	findPlayerIndexes();
 	createBackgrounds();
 }
 
@@ -70,6 +71,7 @@ void GameManager::createBackgrounds() {
 }
 
 void GameManager::moveScreens() {
+
 	for (const auto & currentPlayer : mPlayerIndexes) {
 		sf::Vector2f currentPlayerPosition = mDynamicItems[currentPlayer]->getPosition();
 		int currentScreenNo = mDynamicItems[currentPlayer]->getScreenNumber();
@@ -77,9 +79,22 @@ void GameManager::moveScreens() {
 			mViewManager.getViewPosition(currentScreenNo).y + mViewManager.getViewSize(currentScreenNo).y / 2);
 		mViewManager.selectMoveScreen(currentScreenNo);
 		if (currentPlayerPosition.x > relativeScreenPosition.x) {
-			mViewManager.move(sf::Vector2f(currentPlayerPosition.x - relativeScreenPosition.x, 0));
+			sf::Vector2f offset(currentPlayerPosition.x - relativeScreenPosition.x, 0);
+			mViewManager.move(offset);
+			for (auto & background : mBackgrounds) {
+				if (background->getScreenNumber() == currentScreenNo) {
+					background->move(offset);
+				}
+			}
+
 		} else if (currentPlayerPosition.x < relativeScreenPosition.x && mViewManager.getViewPosition(currentScreenNo).x != 0) {
-			mViewManager.move(sf::Vector2f((currentPlayerPosition.x - relativeScreenPosition.x), 0));
+			sf::Vector2f offset((currentPlayerPosition.x - relativeScreenPosition.x), 0);
+			mViewManager.move(offset);
+			for (auto & background : mBackgrounds) {
+				if (background->getScreenNumber() == currentScreenNo) {
+					background->move(offset);
+				}
+			}
 		}
 		mViewManager.selectMoveScreen(currentScreenNo);
 	}
@@ -89,6 +104,7 @@ void GameManager::findPlayerIndexes() {
 	for (unsigned int i = 0; i < mDynamicItems.size();i++) {
 		if (dynamic_cast<Character*>(mDynamicItems[i].get())) {
 			mPlayerIndexes.push_back(i);
+			std::cout << i;
 		}
 	}
 }
@@ -97,11 +113,7 @@ void GameManager::selectScreen(int screenNumber) {
 	mSelectedScreen[screenNumber - 1] = !mSelectedScreen[screenNumber - 1];
 }
 
-void GameManager::runGame() {
-	sf::Clock updateClock; // Clock to monitor the time passed
-	sf::Time passedTime; // Accumulated game time
-	const sf::Time frameTime(sf::milliseconds(10));
-	
+void GameManager::runGame() {	
 	while (mViewManager.isOpen()) {
 
 		for (auto & action : actions) {
@@ -122,24 +134,28 @@ void GameManager::runGame() {
 		}
 
 
-		passedTime += updateClock.restart();
+		mPassedTime += mUpdateClock.restart();
 		int numUpdates = 0;
 	
-		while(passedTime >= frameTime) {
+		while(mPassedTime >= mFrameTime) {
 			if (numUpdates++ < 10) {
 				mCollisionManager.checkCollisions();
 				for(auto& dynamicObject : mDynamicItems) {
 					if (mSelectedScreen[dynamicObject->getScreenNumber() - 1]) {
-						dynamicObject->update(passedTime);
+						dynamicObject->update(mPassedTime);
 					}
 				}
+				moveScreens();
+				for (auto & background : mBackgrounds) {
+					background->update(mPassedTime);
+				}
 			}
-			passedTime -= frameTime;
+			mPassedTime -= mFrameTime;
     	}
 
 
 		mViewManager.clear();
-
+	
 		for (auto& background : mBackgrounds) {
 			background->draw(mViewManager);
 		}
