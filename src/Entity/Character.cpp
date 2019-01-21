@@ -73,9 +73,7 @@ void Character::applyMovement(const Action& direction) {
 			break;
 		}
 		case Action::Jump: {
-			updateVelocity(
-				sf::Vector2f(0.0f, -mMaxVelocity.y)
-			);
+			mVelocity.y = mJumpForce.y;
 			break;
 		}
 	}
@@ -245,21 +243,23 @@ void Character::handleCollision(
 	CollisionSides hitSides
 ) {
 	restrictedSides = hitSides;
+	std::cout << "screennumber other = " << other->getScreenNumber();
 
 	if(hitSides.bottom) {
 		mIsInAir = false;
-		//std::cout << "Bot\n";
+		mVelocity.y = 0;
+		std::cout << "Bot\n";
 	} 
 	if(hitSides.top) {
-		//std::cout << "Top\n";
+		std::cout << "Top\n";
 	} 
 	if(hitSides.left) {
 		mVelocity.x = 0;
-		//std::cout << "Left\n";
+		std::cout << "Left\n";
 	} 
 	if(hitSides.right) {
 		mVelocity.x = 0;
-		//std::cout << "Right\n";
+		std::cout << "Right\n";
 	}
 	//std::cout << "\n";
 }
@@ -275,9 +275,25 @@ sf::FloatRect Character::getGlobalBounds() const {
 }
 
 void Character::update(const sf::Time& deltaTime) {
-	std::cout << "y: " << mVelocity.y << "\n";
-	if(mIsInAir) {
-		applyGravity();
+	mVelocity.x = 0;
+	if (mJumpForce.y >= 0) {
+		mIsJumping = false;
+	}
+	if (mIsJumping && mIsInAir) {
+		mVelocity.y = mJumpForce.y;
+		mJumpForce.y += 0.05;
+	}
+	else if(mIsInAir) {
+		mVelocity.y = mGravity.y;
+		if (mGravity.y < 2) {
+			mGravity.y += 0.05;
+		}
+	}
+	else {
+		mVelocity.y = 0;
+		mJumpForce.y = -2;
+		mGravity.y = 0;
+		mIsJumping = false;
 	}
 	
 	for(auto & EventManager : actions) {
@@ -303,5 +319,6 @@ void Character::draw(sf::RenderWindow& window) {
 }
 
 void Character::draw(ViewManager& window) {
+	window.selectDrawingScreen(mScreenNumber);
 	window.draw(mSprite);
 }

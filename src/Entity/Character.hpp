@@ -93,6 +93,9 @@ public:
 	sf::Vector2f mMaxVelocity;
 	sf::Vector2f mAcceleration;
 
+	sf::Vector2f mGravity = { 0, 0 };
+	sf::Vector2f mJumpForce = { 0, -2 };
+
 	bool mIsFacingRight;
 	bool mIsInAir;
 	bool mIsJumping;
