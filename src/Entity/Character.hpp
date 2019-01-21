@@ -186,10 +186,6 @@ public:
 		EventManager(sf::Keyboard::D, 		[&] 	{std::cout << "d \n"; })
 	};
 
-	const int moveSpeed = 1.0f;
-	const int runSpeed  = 2.0f;
-	const int jumpSpeed = 1.0f;
-
 };
 
 
