@@ -6,10 +6,15 @@
 #include "Entity/EntityBase.hpp"
 #include <iostream>
 #include "operator.hpp"
+#include <array>
+#include <sstream>
 
 SettingsData Factory::readSettings(std::ifstream& text) {
 	std::string name;
 	SettingsData temp;
+	std::array<sf::Vector2f, 4> finishPoint;
+	std::array<sf::Vector2f, 4> totalLevelSizes;
+
 	
 	text >> name;
 	if (name == "SETTINGS:") {
@@ -31,15 +36,41 @@ SettingsData Factory::readSettings(std::ifstream& text) {
 				temp.songName = data;
 			}
 			else if (name == "levelSize") {
-				sf::Vector2f data;
-				text >> data;
-				temp.levelSize = data;
+				sf::Vector2f levelSizeTemp;
+				for (int i = 0; i < temp.noOfScreens; ++i) {
+					levelSizeTemp = sf::Vector2f(0, 0);
+					text >> levelSizeTemp;
+					temp.totalLevelSize[i] = levelSizeTemp;
+				}
+			}
+			else if (name == "finishPoints") {
+				sf::Vector2f finishPointsTemp;
+				for (int i = 0; i < temp.noOfScreens; ++i) {
+					finishPointsTemp = sf::Vector2f(0, 0);
+					text >> finishPointsTemp;
+					temp.finishPoints[i] = finishPointsTemp;
+				}
+			}
+			else if (name == "backgroundImages") {
+				std::string imagesTemp;
+				text.get();
+				char c = text.get();
+				while (c != '\n') {
+					imagesTemp += c;
+					c = text.get();
+				}
+				std::stringstream s(imagesTemp);
+				std::string token;
+				while (std::getline(s, token, ',')) {
+					temp.backgroundImages.push_back(token);
+				}
 			}
 			else if (text.eof()) {
 				return temp;
 			}
 		}
 	}
+
 	return temp;
 }
 
@@ -65,7 +96,7 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 
 				text >> textureName;
 				text >> position >> size >> textureRepeat >> partBool;
-				textureName = "../res/Textures/Platform/" + textureName;
+				textureName = mPathPlatform + textureName;
 
 				if (partBool) {
 					sf::IntRect part;
@@ -84,6 +115,7 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 
 				text >> textureName;
 				text >> position >> size >> damage >> textureRepeat >> partBool;
+				textureName = mPathSpike + textureName;
 
 				if (partBool) {
 					sf::IntRect part;
@@ -104,7 +136,7 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 
 				text >> textureName;
 				text >> position >> size >> range >> steps >> textureRepeat >> partBool;
-				textureName = "../res/Textures/Spike/" + textureName;
+				textureName = mPathPlatform + textureName;
 
 				if (partBool) {
 					sf::IntRect part;
@@ -135,9 +167,9 @@ void Factory::readCharacters(std::ifstream& text, int amountOfScreens, std::vect
 			sf::Vector2f acceleration;
 
 			text >> position >> size >> maxVelocity >> acceleration;
+			std::cout << "screen: " << i << "\n";
 
 			movableObjects.push_back(std::make_unique<Character>(position, size, i, maxVelocity, acceleration));
-			//std::cout << "character constructor: " << position << ", " << size << ", " << i << ", " << maxVelocity << ", " << acceleration << "\n";
 		}
 	}
 	std::cerr << "END CHARACTERS FOUND\n";

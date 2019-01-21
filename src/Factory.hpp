@@ -5,16 +5,21 @@
 #include <string>
 #include <fstream>
 #include <memory>
+#include <array>
 
 struct SettingsData {
 	int noOfScreens;
 	int gameDuration;
 	std::string songName;
-	sf::Vector2f levelSize;
+	std::array<sf::Vector2f, 4> finishPoints;
+	std::array<sf::Vector2f, 4> totalLevelSize;
+	std::vector<std::string> backgroundImages;
 };
 
 class Factory {
 private:
+	std::string mPathPlatform = "../res/Textures/Platform/";
+	std::string mPathSpike = "../res/Textures/Spike/";
 	void readCharacters(std::ifstream& text, int amountOfScreens, std::vector<std::unique_ptr<EntityBase>> & movableObjects);
 public:
 	Factory(){}
