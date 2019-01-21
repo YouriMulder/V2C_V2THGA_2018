@@ -218,17 +218,25 @@ void Character::handleCollision(
 	restrictedSides = hitSides;
 
 	if(hitSides.bottom) {
-		//if (xOffset == -10000) {
-		//	xOffset = mPosition.x - (*bottom[0])->getPosition().x;
-		//}
-		//mPosition = sf::Vector2f{ (*bottom[0])->nextPosition().x + xOffset, (*bottom[0])->nextPosition().y - mSize.y };
-		xOffset = mPosition.x - (*bottom[0])->nextPosition().x;
-		mPosition = sf::Vector2f((*bottom[0])->getPosition().x + xOffset, (*bottom[0])->getPosition().y - mSize.y);
-		setPosition(mPosition);
+		// move along with platforms
+		auto highestBottom = bottom[0];
+		for(const auto& object : bottom) {
+			if((*object)->getPosition().y < (*highestBottom)->getPosition().y) {
+				highestBottom = object; 
+			}
+		}
+
+		setPosition( 
+			sf::Vector2f(
+				mPosition.x - ((*highestBottom)->getPosition().x - (*highestBottom)->getNextPosition().x),
+				(*highestBottom)->getPosition().y - getSize().y
+			) 
+		);
 		mIsInAir = false;
 		mIsJumping = false;
 	} 
 	if(hitSides.top) {
+		// DIE!
 	} 
 	if(hitSides.left) {
 		mVelocity.x = 0;

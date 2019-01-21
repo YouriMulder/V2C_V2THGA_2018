@@ -206,7 +206,7 @@ public:
 		EventManager(sf::Keyboard::Num2, 	[&] 	{std::cout << "nummer 2 \n"; }),
 		EventManager(sf::Keyboard::Num3, 	[&] 	{std::cout << "nummer 3 \n"; }),
 		EventManager(sf::Keyboard::Num4, 	[&] 	{std::cout << "nummer 4 \n"; }),
-		EventManager(sf::Keyboard::LShift, 	[&] 	{addAction(Character::Action::Run); std::cout << "run\n";}),
+		EventManager(sf::Keyboard::LShift, 	[&] 	{addAction(Character::Action::Run);		}),
 		EventManager(sf::Keyboard::RShift, 	[&] 	{std::cout << "rechter shift \n"; }),
 		EventManager(sf::Keyboard::W, 		[&] 	{std::cout << "w \n"; }),
 		EventManager(sf::Keyboard::A, 		[&] 	{std::cout << "a\n"; }),

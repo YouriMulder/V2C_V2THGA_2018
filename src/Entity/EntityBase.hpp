@@ -23,7 +23,9 @@ public:
 	void move(const sf::Vector2f& deltaPosition);
 	void setPosition(float x, float y);
 	void setPosition(const sf::Vector2f& newPosition);
+	virtual sf::Vector2f getSize() const;
 	virtual sf::Vector2f getPosition() const;
+	virtual sf::Vector2f getNextPosition() const;
 	virtual sf::FloatRect getGlobalBounds() const;
 
 	void setScreenNumber(int newScreenNumber);

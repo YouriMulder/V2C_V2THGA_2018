@@ -67,13 +67,11 @@ void GameManager::runGame() {
 			playingLevel = !playingLevel;
 		}
 
-		mCollisionManager.checkCollisions();
 		sf::Event event;
 		while (mViewManager.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				mViewManager.close();
 		}
-
 
 		passedTime += updateClock.restart();
 		int numUpdates = 0;
@@ -82,9 +80,9 @@ void GameManager::runGame() {
 			if (numUpdates++ < 10) {
 				mCollisionManager.checkCollisions();
 				for(auto& dynamicObject : mDynamicItems) {
-
 					dynamicObject->update(passedTime);
 				}
+
 			}
 			passedTime -= frameTime;
     	}

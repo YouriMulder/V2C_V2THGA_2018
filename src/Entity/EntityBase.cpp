@@ -34,6 +34,14 @@ sf::Vector2f EntityBase::getPosition() const {
 	return mPosition;
 }
 
+sf::Vector2f EntityBase::getNextPosition() const {
+	return mPosition;
+}
+
+sf::Vector2f EntityBase::getSize() const {
+	return mSize;
+}
+
 sf::FloatRect EntityBase::getGlobalBounds() const {
 	return sf::FloatRect(mPosition, mSize);
 }
