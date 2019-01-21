@@ -6,26 +6,16 @@
 #include <fstream>
 #include <memory>
 
-
 struct SettingsData {
 	int noOfScreens;
 	int gameDuration;
 	std::string songName;
-};
-
-struct ObjectData {
-	std::vector<std::unique_ptr<EntityBase>> & staticObjects;
-	std::vector<std::unique_ptr<EntityBase>> & movableObjects;
-};
-
-struct FactoryData {
-	SettingsData settings;
-	ObjectData objects;
+	sf::Vector2f levelSize;
 };
 
 class Factory {
 private:
-
+	void readCharacters(std::ifstream& text, int amountOfScreens, std::vector<std::unique_ptr<EntityBase>> & movableObjects);
 public:
 	Factory(){}
 
