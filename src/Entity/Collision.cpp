@@ -146,19 +146,25 @@ void Collision::checkCollisions() {
 		std::unique_ptr<EntityBase> & currentDynamicItem = mDynamicItems[dynamicIndex];
 		for (const auto & staticIndex : mNeedsCheckStatic) {
 			std::unique_ptr<EntityBase> & currentStaticItem = mStaticItems[staticIndex];
-			if (currentDynamicItem->getGlobalBounds().intersects(currentStaticItem->getGlobalBounds())) { //collision detected
-				collisionHandler(currentDynamicItem, currentStaticItem);
-			} else {
-				currentDynamicItem->handleNoCollision();
+			if (currentDynamicItem->getScreenNumber() == currentStaticItem->getScreenNumber()) {
+				if (currentDynamicItem->getGlobalBounds().intersects(currentStaticItem->getGlobalBounds())) { //collision detected
+					collisionHandler(currentDynamicItem, currentStaticItem);
+				}
+				else {
+					currentDynamicItem->handleNoCollision();
+				}
 			}
 		}
 		for (const auto & dynamicIndex2 : mNeedsCheckDynamic) {
 			std::unique_ptr<EntityBase> & currentDynamicItem2 = mDynamicItems[dynamicIndex2];
-			if (currentDynamicItem != currentDynamicItem2) {
-				if (currentDynamicItem->getGlobalBounds().intersects(currentDynamicItem2->getGlobalBounds())) {//collision detected
-					collisionHandler(currentDynamicItem, currentDynamicItem2);
-				} else {
-					currentDynamicItem->handleNoCollision();
+			if (currentDynamicItem->getScreenNumber() == currentDynamicItem2->getScreenNumber()){
+				if (currentDynamicItem != currentDynamicItem2) {
+					if (currentDynamicItem->getGlobalBounds().intersects(currentDynamicItem2->getGlobalBounds())) {//collision detected
+						collisionHandler(currentDynamicItem, currentDynamicItem2);
+					}
+					else {
+						currentDynamicItem->handleNoCollision();
+					}
 				}
 			}
 		}
