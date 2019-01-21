@@ -218,6 +218,13 @@ void Character::handleCollision(
 	restrictedSides = hitSides;
 
 	if(hitSides.bottom) {
+		//if (xOffset == -10000) {
+		//	xOffset = mPosition.x - (*bottom[0])->getPosition().x;
+		//}
+		//mPosition = sf::Vector2f{ (*bottom[0])->nextPosition().x + xOffset, (*bottom[0])->nextPosition().y - mSize.y };
+		xOffset = mPosition.x - (*bottom[0])->nextPosition().x;
+		mPosition = sf::Vector2f((*bottom[0])->getPosition().x + xOffset, (*bottom[0])->getPosition().y - mSize.y);
+		setPosition(mPosition);
 		mIsInAir = false;
 		mIsJumping = false;
 	} 
