@@ -16,7 +16,8 @@
 class GameManager {
 private:
 	int mCurrentLevel;
-	bool playingLevel = false;
+	bool mPlayingLevel = false;
+	bool mPlayerRespawn = false;
 	sf::RenderWindow mMainWindow;
 	ViewManager mViewManager;
 	Factory mFactory;
@@ -33,6 +34,7 @@ private:
 	std::vector<std::unique_ptr<EntityBase>> mDynamicItems = {};
 
 	std::vector<std::unique_ptr<EntityBase>> mBackgrounds = {};
+	std::vector<std::unique_ptr<EntityBase>> mFinish = {};
 
 	std::vector<std::string> mLevelFileNames;
 
@@ -49,10 +51,15 @@ private:
 	void applyLevelSettings();
 
 	void createBackgrounds();
+	void createFinishPoints();
 	
 	void moveScreens();
 	void findPlayerIndexes();
 	void selectScreen(int screenNumber);
+
+	void clearLevel();
+
+	bool checkPlayerOutView();
 
 	EventManager actions[4] = {
 	EventManager(sf::Keyboard::Num1, 	[&] {selectScreen(1); }),

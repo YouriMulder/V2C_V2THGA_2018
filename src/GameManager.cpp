@@ -71,6 +71,12 @@ void GameManager::createBackgrounds() {
 	}
 }
 
+void GameManager::createFinishPoints() {
+	for (unsigned int i = 0;i < mCurrentSettings.finishPoints.size();i++) {
+
+	}
+}
+
 void GameManager::moveScreens() {
 
 	for (const auto & currentPlayer : mPlayerIndexes) {
@@ -102,11 +108,33 @@ void GameManager::moveScreens() {
 	}
 }
 
+void GameManager::clearLevel() {
+	mDynamicItems.clear();
+	mStaticItems.clear();
+	mBackgrounds.clear();
+	for (auto & screen : mSelectedScreen) {
+		screen = false;
+	}
+}
+
+bool GameManager::checkPlayerOutView() {
+	for (const auto & currentPlayer : mPlayerIndexes) {
+		sf::Vector2f currentPlayerPosition = mDynamicItems[currentPlayer]->getPosition();
+		int screenNumber = mDynamicItems[currentPlayer]->getScreenNumber();
+		if (currentPlayerPosition.y > mCurrentSettings.totalLevelSize[screenNumber-1].y) {
+			mPlayerRespawn = true;
+			clearLevel();
+			readLevelInfo();
+			return true;
+		}
+	}
+	return false;
+}
+
 void GameManager::findPlayerIndexes() {
 	for (unsigned int i = 0; i < mDynamicItems.size();i++) {
 		if (dynamic_cast<Character*>(mDynamicItems[i].get())) {
 			mPlayerIndexes.push_back(i);
-			std::cout << i;
 		}
 	}
 }
@@ -116,18 +144,21 @@ void GameManager::selectScreen(int screenNumber) {
 }
 
 void GameManager::runGame() {	
+	int actionCounter = 0;
 	while (mViewManager.isOpen()) {
-
-		for (auto & action : actions) {
-			action();
+		if (actionCounter >= 10) {
+			for (auto & action : actions) {
+				action();
+			}
+			actionCounter = 0;
 		}
 
-		if (!playingLevel) {
+		if (!mPlayingLevel) {
 			readLevelInfo();
-			playingLevel = !playingLevel;
+			mPlayingLevel = !mPlayingLevel;
+		} else if (mPlayerRespawn) {
+			mPlayerRespawn = false;
 		}
-
-		mCollisionManager.checkCollisions();
 
 		sf::Event event;
 		while (mViewManager.pollEvent(event)) {
@@ -151,24 +182,27 @@ void GameManager::runGame() {
 				for (auto & background : mBackgrounds) {
 					background->update(mPassedTime);
 				}
+				checkPlayerOutView();
 			}
 			mPassedTime -= mFrameTime;
     	}
 
 
 		mViewManager.clear();
-	
-		for (auto& background : mBackgrounds) {
-			background->draw(mViewManager);
-		}
+		if (!mPlayerRespawn) {
+			for (auto& background : mBackgrounds) {
+				background->draw(mViewManager);
+			}
 
-		for(auto& staticObject : mStaticItems) {
-			staticObject->draw(mViewManager);
-		}
+			for (auto& staticObject : mStaticItems) {
+				staticObject->draw(mViewManager);
+			}
 
-		for(auto& dynamicObject : mDynamicItems) {
-			dynamicObject->draw(mViewManager);
-		}			
+			for (auto& dynamicObject : mDynamicItems) {
+				dynamicObject->draw(mViewManager);
+			}
+		}
 		mViewManager.display();
+		actionCounter++;
 	}
 }
