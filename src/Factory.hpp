@@ -21,7 +21,7 @@ private:
 	std::array<sf::Vector2f, 4> mFinishPoints;
 	std::string mPathPlatform = "../res/Textures/Platform/";
 	std::string mPathSpike = "../res/Textures/Spike/";
-	std::string mPathFinish = "../res/Textures/Finish";
+	std::string mPathFinish = "../res/Textures/Finish/";
 	void readCharacters(std::ifstream& text, int amountOfScreens, std::vector<std::unique_ptr<EntityBase>> & movableObjects);
 	void createFinishes(std::vector<std::unique_ptr<EntityBase>> & staticObjects);
 	void readObjects(std::ifstream& text, int amountOfScreens, std::vector<std::unique_ptr<EntityBase>> & staticObjects, std::vector<std::unique_ptr<EntityBase>> & movableObjects);

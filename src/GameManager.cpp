@@ -48,17 +48,10 @@ void GameManager::readLevelInfo() {
 	if (static_cast<unsigned int>(mCurrentLevel) >= mLevelFileNames.size()) {
 		std::cout << "no file names";
 		return;
+	} else{
+		mCurrentSettings = mFactory.readLevelFile(mPathLevels + mLevelFileNames[mCurrentLevel], mStaticItems, mDynamicItems);
 	}
-	std::ifstream currentLevelFile(mPathLevels + mLevelFileNames[mCurrentLevel]);
-	mCurrentSettings = mFactory.readSettings(currentLevelFile);
-	currentLevelFile.close();
-	currentLevelFile.open(mPathLevels + mLevelFileNames[mCurrentLevel]);
-	if (!currentLevelFile.is_open()) {
-		std::cout << "error could not open level file";
-	} else {
-		mFactory.readObjects(currentLevelFile, mCurrentSettings.noOfScreens, mStaticItems, mDynamicItems);
-	}
-	currentLevelFile.close();
+	
 }
 
 void GameManager::applyLevelSettings() {
@@ -119,6 +112,9 @@ void GameManager::clearLevel() {
 	for (auto & screen : mSelectedScreen) {
 		screen = false;
 	}
+	for (auto & finish :mFinishedScreen) {
+		finish = false;
+	}
 	mPlayerIndexes.clear();
 }
 bool GameManager::checkLosingConditions() {
@@ -146,6 +142,9 @@ bool GameManager::checkLevelFinished() {
 	for (const auto & currentIndex : mPlayerIndexes){
 		int currentScreen = mDynamicItems[currentIndex] ->getScreenNumber();
 		mFinishedScreen[currentScreen - 1] = mDynamicItems[currentIndex]->isFinished();
+		if (mFinishedScreen[currentScreen - 1]) {
+			mSelectedScreen[currentScreen - 1] = false;
+		}
 	}
 	int finishCounter = 0;
 	for (auto & finished : mFinishedScreen) {
@@ -214,10 +213,11 @@ void GameManager::runGame() {
 					background->update(mPassedTime);
 				}
 				checkLosingConditions();
-				// if (checkLevelFinished()) {
-				// 	mPlayingLevel = false;
-				// 	mCurrentLevel++;
-				// }
+				 if (checkLevelFinished()) {
+					mPlayingLevel = false;
+				 	mCurrentLevel++;
+					break;
+				 }
 				
 			}
 			mPassedTime -= mFrameTime;
