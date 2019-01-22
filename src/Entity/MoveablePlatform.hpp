@@ -17,7 +17,9 @@ public:
 		const sf::IntRect& picturepart, int screenNumber, const sf::Vector2f& moveRange, int amountOfSteps, bool repeated = false);
 	MoveablePlatform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
 		int screenNumber, const sf::Vector2f& moveRange, int amountOfSteps, bool repeated = false);
-	void update(const sf::Time& deltaTime) override;
+	
+	virtual sf::Vector2f getNextPosition() const override;
+	virtual void update(const sf::Time& deltaTime) override;
 };
 
 #endif

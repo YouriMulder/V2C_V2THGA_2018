@@ -1,7 +1,25 @@
 #include "Character.hpp"
 
 #include "../World/Physics.hpp"
+#include "Finish.hpp"
 #include <iostream>
+#include <cstdint>
+
+// static 
+uint_least8_t Character::health = 10;
+
+uint_least8_t Character::getHealth() {
+	return health;
+}
+
+bool Character::isAlive() {
+	return health > 0;
+}
+
+bool Character::isDead() {
+	return !isAlive();
+}
+
 
 Character::Character(
 	const sf::Vector2f& position,
@@ -17,6 +35,8 @@ Character::Character(
 	mIsFacingRight(true),
 	mIsInAir(true),
 	mIsJumping(false),
+	mSelected(false),
+	mIsFinished(false),
 	mPreviousState(Character::State::Idle),
 	mState(Character::State::Idle),
 	mSpriteWidth(size.x),
@@ -25,6 +45,7 @@ Character::Character(
 {
 	mTexture.loadFromFile("../res/Textures/Player/player.png");
 	mSprite = sf::Sprite(mTexture, mCurrentSpriteSheetLocation);
+	mSprite.setPosition(EntityBase::mPosition);
 	mSprite.scale(2.0f, 2.0f);
 	mSize = sf::Vector2f(
 		mSprite.getGlobalBounds().width, 
@@ -34,6 +55,7 @@ Character::Character(
 
 Character::~Character() { }
 
+// non static
 void Character::addAction(const Action& newAction) {
 	mUnperformedActions.push(newAction);
 }
@@ -57,16 +79,18 @@ void Character::move(sf::Vector2f& delta) {
 }
 
 void Character::applyMovement(const Action& direction) {
+	auto deltaVelocity = mAcceleration;
+	
 	switch(direction) {
 		case Action::Left: {
 			updateVelocity(
-				sf::Vector2f(-mAcceleration.x, 0.0f)
+				sf::Vector2f(-deltaVelocity.x, 0.0f)
 			);
 			break;
 		}
 		case Action::Right: {
 			updateVelocity(
-				sf::Vector2f(+mAcceleration.x, 0.0f)
+				sf::Vector2f(+deltaVelocity.x, 0.0f)
 			);
 			break;
 		}
@@ -95,7 +119,7 @@ void Character::updateState(const Action& action) {
 	
 	switch(action) {
 		case Action::Left: {
-			if(mVelocity.x != 0) {
+			if(isMovingX()) {
 				mState = State::Moving;
 			} else {
 				mState = State::Idle;
@@ -103,7 +127,7 @@ void Character::updateState(const Action& action) {
 			break;
 		}
 		case Action::Right: {
-			if(mVelocity.x != 0) {
+			if(isMovingX()) {
 				mState = State::Moving;
 			} else {
 				mState = State::Idle;
@@ -112,6 +136,14 @@ void Character::updateState(const Action& action) {
 		}
 		case Action::Jump: {
 			mState = State::Jumping;
+			break;
+		}
+		case Action::Run: {
+			if(isMovingX()) {
+				mState = State::Running;
+			} else {
+				mState = State::Idle;
+			}
 			break;
 		}
 		case Action::Punch: {
@@ -141,18 +173,29 @@ void Character::jump() {
 	}
 }
 
+void Character::run() {
+	if(!mIsInAir && !mIsJumping && !mIsRunning) {
+		mIsRunning = true;
+		applyMovement(Action::Run);
+	}
+}
+
 void Character::applyGravity() {
 	updateVelocity(sf::Vector2f(mVelocity.x, 2.0f));
 }
 
 void Character::updateVelocity(const sf::Vector2f& deltaVelocity) {
+	auto maxVelocity = mMaxVelocity;
+	if(mIsRunning) {
+		maxVelocity.x *= 2;
+	}
 	mVelocity += sf::Vector2f(deltaVelocity.x, deltaVelocity.y);
 
-	mVelocity.x = mVelocity.x > +mMaxVelocity.x ? +mMaxVelocity.x : mVelocity.x;
-	mVelocity.x = mVelocity.x < -mMaxVelocity.x ? -mMaxVelocity.x : mVelocity.x;
+	mVelocity.x = mVelocity.x > +maxVelocity.x ? +maxVelocity.x : mVelocity.x;
+	mVelocity.x = mVelocity.x < -maxVelocity.x ? -maxVelocity.x : mVelocity.x;
 	
-	mVelocity.y = mVelocity.y > +mMaxVelocity.y ? +mMaxVelocity.y : mVelocity.y;
-	mVelocity.y = mVelocity.y < -mMaxVelocity.y ? -mMaxVelocity.y : mVelocity.y;
+	mVelocity.y = mVelocity.y > +maxVelocity.y ? +maxVelocity.y : mVelocity.y;
+	mVelocity.y = mVelocity.y < -maxVelocity.y ? -maxVelocity.y : mVelocity.y;
 }
 
 void Character::resetVelocityY() {
@@ -161,6 +204,10 @@ void Character::resetVelocityY() {
 
 void Character::resetVelocityX() {
 	mVelocity.x = 0;
+}
+
+bool Character::isMovingX() const {
+	return mVelocity.x != 0;
 }
 
 void Character::updateFacingDirection() {
@@ -182,28 +229,55 @@ void Character::performAction(const Action& unperformedAction) {
 }
 
 void Character::handleCollision(
-	std::unique_ptr<EntityBase> & other, 
+	std::vector<std::unique_ptr<EntityBase>*> top, 
+	std::vector<std::unique_ptr<EntityBase>*> bottom, 
+	std::vector<std::unique_ptr<EntityBase>*> left, 
+	std::vector<std::unique_ptr<EntityBase>*> right, 
+		
 	CollisionSides hitSides
 ) {
 	restrictedSides = hitSides;
 
+	std::vector<
+		std::vector<std::unique_ptr<EntityBase>*>
+	> allObjects = {top, bottom, left, right};
+
+	for(const auto& objectVector: allObjects) {
+		for(const auto& object : objectVector) {
+			if(dynamic_cast<Finish*>((*object).get())) {
+				mIsFinished = true;
+			}
+		}
+	}
+
+
 	if(hitSides.bottom) {
+		// move along with platforms
+		auto highestBottom = bottom[0];
+		for(const auto& object : bottom) {
+			if((*object)->getPosition().y < (*highestBottom)->getPosition().y) {
+				highestBottom = object; 
+			}
+		}
+
+		setPosition( 
+			sf::Vector2f(
+				mPosition.x - ((*highestBottom)->getPosition().x - (*highestBottom)->getNextPosition().x),
+				(*highestBottom)->getPosition().y - getSize().y
+			) 
+		);
 		mIsInAir = false;
 		mIsJumping = false;
-		//std::cout << "Bot\n";
 	} 
 	if(hitSides.top) {
-		std::cout << "Top\n";
+		// DIE!
 	} 
 	if(hitSides.left) {
 		mVelocity.x = 0;
-		std::cout << "Left\n";
 	} 
 	if(hitSides.right) {
-		mVelocity.x = 0;
-		std::cout << "Right\n";
-	}
-	//std::cout << "\n";
+		mVelocity.x = -1;
+	} 
 }
 
 void Character::handleNoCollision() {
@@ -224,14 +298,12 @@ void Character::update(const sf::Time& deltaTime) {
 	if (mIsJumping && mIsInAir) {
 		mVelocity.y = mJumpForce.y;
 		mJumpForce.y += 0.05;
-	}
-	else if(mIsInAir) {
+	} else if(mIsInAir) {
 		mVelocity.y = mGravity.y;
 		if (mGravity.y < 2) {
 			mGravity.y += 0.05;
 		}
-	}
-	else {
+	} else {
 		mVelocity.y = 0;
 		mJumpForce.y = -2;
 		mGravity.y = 0;
@@ -252,9 +324,17 @@ void Character::update(const sf::Time& deltaTime) {
 		updateState(Action::None);
 	}
 
+	bool runningActionFound = false;
 	while(!mUnperformedActions.empty()) {
+		if(mUnperformedActions.front() == Action::Run) {
+			runningActionFound = true;
+		}
 		performAction(mUnperformedActions.front());
 		mUnperformedActions.pop();
+	}
+
+	if(!runningActionFound) {
+		mIsRunning = false;
 	}
 
 	move(mVelocity);
@@ -318,4 +398,12 @@ void Character::draw(sf::RenderWindow& window) {
 void Character::draw(ViewManager& window) {
 	window.selectDrawingScreen(mScreenNumber);
 	window.draw(mSprite);
+}
+
+void Character::select(bool selection) {
+	mSelected = selection;
+}
+
+bool Character::isSelected() {
+	return mSelected;
 }

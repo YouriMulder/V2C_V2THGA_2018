@@ -83,7 +83,7 @@ void GameManager::createBackgrounds() {
 
 void GameManager::createFinishPoints() {
 	for (unsigned int i = 0;i < mCurrentSettings.finishPoints.size();i++) {
-		mFinishPoints.push_back(std::make_unique<Finish>(
+		mStaticItems.push_back(std::make_unique<Finish>(
 			mPathFinish + "finish2.png",
 			mCurrentSettings.finishPoints[i],
 			sf::Vector2f(65, 72),
@@ -232,10 +232,10 @@ void GameManager::runGame() {
 					background->update(mPassedTime);
 				}
 				checkLosingConditions();
-				if (checkLevelFinished()) {
-					mPlayingLevel = false;
-					mCurrentLevel++;
-				}
+				// if (checkLevelFinished()) {
+				// 	mPlayingLevel = false;
+				// 	mCurrentLevel++;
+				// }
 				
 			}
 			mPassedTime -= mFrameTime;
