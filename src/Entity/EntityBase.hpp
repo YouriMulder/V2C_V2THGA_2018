@@ -3,6 +3,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include <vector>
+
 #include "../ViewManager.hpp"
 #include "Side.hpp"
 
@@ -21,7 +23,9 @@ public:
 	void move(const sf::Vector2f& deltaPosition);
 	void setPosition(float x, float y);
 	void setPosition(const sf::Vector2f& newPosition);
+	virtual sf::Vector2f getSize() const;
 	virtual sf::Vector2f getPosition() const;
+	virtual sf::Vector2f getNextPosition() const;
 	virtual sf::FloatRect getGlobalBounds() const;
 
 	void setScreenNumber(int newScreenNumber);
@@ -29,7 +33,10 @@ public:
 
 	virtual void update(const sf::Time& deltaTime) = 0;
 	virtual void handleCollision(
-		std::unique_ptr<EntityBase> & other, 
+		std::vector<std::unique_ptr<EntityBase>*> top, 
+		std::vector<std::unique_ptr<EntityBase>*> bottom, 
+		std::vector<std::unique_ptr<EntityBase>*> left, 
+		std::vector<std::unique_ptr<EntityBase>*> right, 
 		CollisionSides hitSides
 	) {};
 	virtual void handleNoCollision() {};

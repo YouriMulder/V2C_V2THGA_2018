@@ -214,10 +214,10 @@ void GameManager::runGame() {
 					background->update(mPassedTime);
 				}
 				checkLosingConditions();
-				if (checkLevelFinished()) {
-					mPlayingLevel = false;
-					mCurrentLevel++;
-				}
+				// if (checkLevelFinished()) {
+				// 	mPlayingLevel = false;
+				// 	mCurrentLevel++;
+				// }
 				
 			}
 			mPassedTime -= mFrameTime;
