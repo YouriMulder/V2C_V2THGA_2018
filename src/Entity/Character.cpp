@@ -74,10 +74,7 @@ void Character::applyMovement(const Action& direction) {
 			break;
 		}
 		case Action::Jump: {
-			mVelocity.y = mJumpForce.y;
-/*			updateVelocity(
-				sf::Vector2f(0.0f, -10.0f)
-			);*/
+			mVelocity.y = mStartingJumpForce;
 			break;
 		}
 	}
@@ -171,10 +168,7 @@ void Character::updateVelocity(const sf::Vector2f& deltaVelocity) {
 	mVelocity += sf::Vector2f(deltaVelocity.x, deltaVelocity.y);
 
 	mVelocity.x = mVelocity.x > +maxVelocity.x ? +maxVelocity.x : mVelocity.x;
-	mVelocity.x = mVelocity.x < -maxVelocity.x ? -maxVelocity.x : mVelocity.x;
-	
-	mVelocity.y = mVelocity.y > +maxVelocity.y ? +maxVelocity.y : mVelocity.y;
-	mVelocity.y = mVelocity.y < -maxVelocity.y ? -maxVelocity.y : mVelocity.y;
+	mVelocity.x = mVelocity.x < -maxVelocity.x ? -maxVelocity.x : mVelocity.x;	
 }
 
 void Character::resetVelocityY() {
@@ -236,6 +230,9 @@ void Character::handleCollision(
 		mIsJumping = false;
 	} 
 	if(hitSides.top) {
+		mVelocity.y = 0;
+		mIsJumping = false;
+		mIsInAir = true;
 		// DIE!
 	} 
 	if(hitSides.left) {
@@ -258,21 +255,21 @@ sf::FloatRect Character::getGlobalBounds() const {
 
 void Character::update(const sf::Time& deltaTime) {
 	mVelocity.x = 0;
-	if (mJumpForce.y >= 0) {
+	if (mJumpForce >= 0) {
 		mIsJumping = false;
 	}
 	if (mIsJumping && mIsInAir) {
-		mVelocity.y = mJumpForce.y;
-		mJumpForce.y += 0.05;
+		mVelocity.y = mJumpForce;
+		mJumpForce += mJumpAcceleration;
 	} else if(mIsInAir) {
-		mVelocity.y = mGravity.y;
-		if (mGravity.y < 2) {
-			mGravity.y += 0.05;
+		mVelocity.y = mGravity;
+		if (mGravity < mMaxGravity) {
+			mGravity += mGravityAcceleration;
 		}
 	} else {
 		mVelocity.y = 0;
-		mJumpForce.y = -2;
-		mGravity.y = 0;
+		mJumpForce = mStartingJumpForce;
+		mGravity = 0;
 		mIsJumping = false;
 	}
 /*
