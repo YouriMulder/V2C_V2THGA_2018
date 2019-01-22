@@ -27,6 +27,8 @@ private:
 	void readObjects(std::ifstream& text, int amountOfScreens, std::vector<std::unique_ptr<EntityBase>> & staticObjects, std::vector<std::unique_ptr<EntityBase>> & movableObjects);
 	SettingsData readSettings(std::ifstream& text);
 
+	int mAmountOfScreens = 0;
+
 
 public:
 	Factory(){}
