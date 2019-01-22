@@ -221,10 +221,6 @@ void Character::updateFacingDirection() {
 	}
 }
 
-bool Character::isFinished() {
-	return mIsFinished;
-}
-
 void Character::performAction(const Action& unperformedAction) {
 	for(auto& action : mActions) {
 		if(unperformedAction == action.first) {
