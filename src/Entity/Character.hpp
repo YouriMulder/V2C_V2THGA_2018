@@ -122,6 +122,8 @@ private:
 	float mJumpAcceleration = 0.3;
 	float mGravityAcceleration = 0.3;
 
+	bool mCanDoubleJump = false;
+
 	bool mIsFacingRight;
 	bool mIsInAir;
 	bool mIsJumping;

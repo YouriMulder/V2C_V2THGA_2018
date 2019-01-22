@@ -167,6 +167,15 @@ void Character::jump() {
 		mIsInAir = true;
 		mIsJumping = true;
 		applyMovement(Action::Jump);
+		mCanDoubleJump = true;
+	}
+	else if (mCanDoubleJump && !mIsJumping) {
+		std::cout << "doublejump\n";
+		mJumpForce = mStartingJumpForce;
+		mIsInAir = true;
+		mIsJumping = true;
+		applyMovement(Action::Jump);
+		mCanDoubleJump = false;
 	}
 }
 
@@ -262,6 +271,7 @@ void Character::handleCollision(
 		);
 		mIsInAir = false;
 		mIsJumping = false;
+		mCanDoubleJump = true;
 	} 
 	if(hitSides.top) {
 		mVelocity.y = 0;
