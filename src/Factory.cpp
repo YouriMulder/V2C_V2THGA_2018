@@ -50,7 +50,7 @@ SettingsData Factory::readSettings(std::ifstream& text) {
 					finishPointsTemp = sf::Vector2f(0, 0);
 					text >> finishPointsTemp;
 					temp.finishPoints[i] = finishPointsTemp;
-					finishPoint[i] = finishPointsTemp;
+					mFinishPoints[i] = finishPointsTemp;
 				}
 			}
 			else if (name == "backgroundImages") {

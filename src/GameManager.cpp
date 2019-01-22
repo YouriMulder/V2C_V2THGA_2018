@@ -26,7 +26,9 @@ bool GameManager::readLevelFileNames(const std::string & levelFileName) {
 	} else {
 		input >> newFileName;
 		while (newFileName != "END") {
-			mLevelFileNames.push_back(newFileName);
+			if (newFileName != "\n") {
+				mLevelFileNames.push_back(newFileName);
+			}
 			input >> newFileName;
 		}
 	}
@@ -40,24 +42,16 @@ void GameManager::createLevel(){
 	applyLevelSettings();
 	findPlayerIndexes();
 	createBackgrounds();
-	createFinishPoints();
 }
 
 void GameManager::readLevelInfo() {
 	if (static_cast<unsigned int>(mCurrentLevel) >= mLevelFileNames.size()) {
 		std::cout << "no file names";
 		return;
+	} else{
+		mCurrentSettings = mFactory.readLevelFile(mPathLevels + mLevelFileNames[mCurrentLevel], mStaticItems, mDynamicItems);
 	}
-	std::ifstream currentLevelFile(mPathLevels + mLevelFileNames[mCurrentLevel]);
-	mCurrentSettings = mFactory.readSettings(currentLevelFile);
-	currentLevelFile.close();
-	currentLevelFile.open(mPathLevels + mLevelFileNames[mCurrentLevel]);
-	if (!currentLevelFile.is_open()) {
-		std::cout << "error could not open level file";
-	} else {
-		mFactory.readObjects(currentLevelFile, mCurrentSettings.noOfScreens, mStaticItems, mDynamicItems);
-	}
-	currentLevelFile.close();
+	
 }
 
 void GameManager::applyLevelSettings() {
@@ -79,18 +73,6 @@ void GameManager::createBackgrounds() {
 	}
 }
 
-
-
-void GameManager::createFinishPoints() {
-	for (unsigned int i = 0;i < mCurrentSettings.finishPoints.size();i++) {
-		mStaticItems.push_back(std::make_unique<Finish>(
-			mPathFinish + "finish2.png",
-			mCurrentSettings.finishPoints[i],
-			sf::Vector2f(65, 72),
-			i + 1
-			));
-	}
-}
 
 void GameManager::moveScreens() {
 
@@ -127,14 +109,16 @@ void GameManager::clearLevel() {
 	mDynamicItems.clear();
 	mStaticItems.clear();
 	mBackgrounds.clear();
-	mFinishPoints.clear();
 	for (auto & screen : mSelectedScreen) {
 		screen = false;
+	}
+	for (auto & finish :mFinishedScreen) {
+		finish = false;
 	}
 	mPlayerIndexes.clear();
 }
 bool GameManager::checkLosingConditions() {
-	if (checkPlayerOutView()) {
+	if (checkPlayerOutView() || Character::isDead()) {
 		mPlayerRespawn = true;
 		createLevel();
 		return true;
@@ -153,17 +137,14 @@ bool GameManager::checkPlayerOutView() {
 	return false;
 }
 
-bool GameManager::checkScreenFinished(int screenNumber) {
-	if (mFinishPoints[screenNumber - 1]->getGlobalBounds().intersects(mDynamicItems[mPlayerIndexes[screenNumber - 1]]->getGlobalBounds())) {
-		mSelectedScreen[screenNumber - 1] = false;
-		return true;
-	}
-	return false;
-}
 
 bool GameManager::checkLevelFinished() {
-	for (int i = 1; i <= mCurrentSettings.noOfScreens;i++) {
-		mFinishedScreen[i - 1] = checkScreenFinished(i);
+	for (const auto & currentIndex : mPlayerIndexes){
+		int currentScreen = mDynamicItems[currentIndex] ->getScreenNumber();
+		mFinishedScreen[currentScreen - 1] = mDynamicItems[currentIndex]->isFinished();
+		if (mFinishedScreen[currentScreen - 1]) {
+			mSelectedScreen[currentScreen - 1] = false;
+		}
 	}
 	int finishCounter = 0;
 	for (auto & finished : mFinishedScreen) {
@@ -232,10 +213,11 @@ void GameManager::runGame() {
 					background->update(mPassedTime);
 				}
 				checkLosingConditions();
-				// if (checkLevelFinished()) {
-				// 	mPlayingLevel = false;
-				// 	mCurrentLevel++;
-				// }
+				 if (checkLevelFinished()) {
+					mPlayingLevel = false;
+				 	mCurrentLevel++;
+					break;
+				 }
 				
 			}
 			mPassedTime -= mFrameTime;
@@ -254,9 +236,6 @@ void GameManager::runGame() {
 
 			for (auto& dynamicObject : mDynamicItems) {
 				dynamicObject->draw(mViewManager);
-			}
-			for (auto & finishPoint : mFinishPoints) {
-				finishPoint->draw(mViewManager);
 			}
 		}
 		mViewManager.display();

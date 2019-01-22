@@ -32,10 +32,9 @@ private:
 	const sf::Time mFrameTime = sf::milliseconds(10);
 	
 	std::vector<std::unique_ptr<EntityBase>>  mStaticItems = {};
-	std::vector<std::unique_ptr<EntityBase>> mDynamicItems = {};
+	std::vector<std::unique_ptr<EntityBase>>  mDynamicItems = {};
 
 	std::vector<std::unique_ptr<EntityBase>> mBackgrounds = {};
-	std::vector<std::unique_ptr<EntityBase>> mFinishPoints = {};
 
 	std::vector<std::string> mLevelFileNames;
 
@@ -55,7 +54,6 @@ private:
 	void createLevel();
 
 	void createBackgrounds();
-	void createFinishPoints();
 	
 	void moveScreens();
 	void findPlayerIndexes();
@@ -64,7 +62,6 @@ private:
 	void clearLevel();
 
 	bool checkPlayerOutView();
-	bool checkScreenFinished(int screenNumber);
 	bool checkLevelFinished();
 	bool checkLosingConditions();
 
