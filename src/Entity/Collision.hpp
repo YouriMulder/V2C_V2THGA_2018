@@ -15,8 +15,8 @@ struct ViewInfo {
 struct CollisionBoxes {
 	sf::FloatRect leftBox;
 	sf::FloatRect rightBox;
-	sf::FloatRect topBox;
 	sf::FloatRect bottomBox;
+	sf::FloatRect topBox;
 };
 
 

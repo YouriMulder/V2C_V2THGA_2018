@@ -53,3 +53,7 @@ void EntityBase::setScreenNumber(int newScreenNumber) {
 int EntityBase::getScreenNumber() const {
 	return mScreenNumber;
 }
+
+bool EntityBase::isFinished() {
+	return false;
+}
