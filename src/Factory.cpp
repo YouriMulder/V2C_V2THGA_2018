@@ -175,7 +175,6 @@ void Factory::readCharacters(std::ifstream& text, int amountOfScreens, std::vect
 }
 
 void Factory::createFinishes(std::vector<std::unique_ptr<EntityBase>> & staticObjects) {
-	std::cout << "finish point size" << mFinishPoints.size();
 	for (int i = 0; i < mAmountOfScreens; i++) {
 		staticObjects.push_back(std::make_unique<Finish>(
 			mPathFinish + "finish2.png",
