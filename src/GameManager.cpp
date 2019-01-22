@@ -34,7 +34,20 @@ bool GameManager::readLevelFileNames(const std::string & levelFileName) {
 	return true;
 }
 
+void GameManager::createLevel(){
+	clearLevel();
+	readLevelInfo();
+	applyLevelSettings();
+	findPlayerIndexes();
+	createBackgrounds();
+	createFinishPoints();
+}
+
 void GameManager::readLevelInfo() {
+	if (static_cast<unsigned int>(mCurrentLevel) >= mLevelFileNames.size()) {
+		std::cout << "no file names";
+		return;
+	}
 	std::ifstream currentLevelFile(mPathLevels + mLevelFileNames[mCurrentLevel]);
 	mCurrentSettings = mFactory.readSettings(currentLevelFile);
 	currentLevelFile.close();
@@ -45,20 +58,15 @@ void GameManager::readLevelInfo() {
 		mFactory.readObjects(currentLevelFile, mCurrentSettings.noOfScreens, mStaticItems, mDynamicItems);
 	}
 	currentLevelFile.close();
-	applyLevelSettings();
 }
 
 void GameManager::applyLevelSettings() {
 	mViewManager.changeAmountOfScreens(mCurrentSettings.noOfScreens);
-	findPlayerIndexes();
-	createBackgrounds();
 }
 
 
 void GameManager::createBackgrounds() {
-	std::cout << "in function";
 	for (const auto & textureName : mCurrentSettings.backgroundImages) {
-		std::cout << "texturename" << textureName;
 		for (int i = 1; i <= mCurrentSettings.noOfScreens;i++) {
 			mBackgrounds.push_back(std::make_unique<Background>(
 				mPathBackgrounds + textureName,
@@ -71,6 +79,19 @@ void GameManager::createBackgrounds() {
 	}
 }
 
+
+
+void GameManager::createFinishPoints() {
+	for (unsigned int i = 0;i < mCurrentSettings.finishPoints.size();i++) {
+		mFinishPoints.push_back(std::make_unique<Finish>(
+			mPathFinish + "finish2.png",
+			mCurrentSettings.finishPoints[i],
+			sf::Vector2f(65, 72),
+			i + 1
+			));
+	}
+}
+
 void GameManager::moveScreens() {
 
 	for (const auto & currentPlayer : mPlayerIndexes) {
@@ -79,8 +100,8 @@ void GameManager::moveScreens() {
 		sf::Vector2f relativeScreenPosition(mViewManager.getViewPosition(currentScreenNo).x + mViewManager.getViewSize(currentScreenNo).x / 2,
 			mViewManager.getViewPosition(currentScreenNo).y + mViewManager.getViewSize(currentScreenNo).y / 2);
 		mViewManager.selectMoveScreen(currentScreenNo);
-
-		if (currentPlayerPosition.x > relativeScreenPosition.x) {
+	
+		if (currentPlayerPosition.x > relativeScreenPosition.x && !(mViewManager.getViewPosition(currentScreenNo).x + mViewManager.getViewSize(currentScreenNo).x >= mCurrentSettings.totalLevelSize[currentScreenNo-1].x))  {
 			sf::Vector2f offset(currentPlayerPosition.x - relativeScreenPosition.x, 0);
 			mViewManager.move(offset);
 			for (auto & background : mBackgrounds) {
@@ -102,40 +123,99 @@ void GameManager::moveScreens() {
 	}
 }
 
+void GameManager::clearLevel() {
+	mDynamicItems.clear();
+	mStaticItems.clear();
+	mBackgrounds.clear();
+	mFinishPoints.clear();
+	for (auto & screen : mSelectedScreen) {
+		screen = false;
+	}
+	mPlayerIndexes.clear();
+}
+bool GameManager::checkLosingConditions() {
+	if (checkPlayerOutView()) {
+		mPlayerRespawn = true;
+		createLevel();
+		return true;
+	}
+	return false;
+}
+
+bool GameManager::checkPlayerOutView() {
+	for (const auto & currentPlayer : mPlayerIndexes) {
+		sf::Vector2f currentPlayerPosition = mDynamicItems[currentPlayer]->getPosition();
+		int screenNumber = mDynamicItems[currentPlayer]->getScreenNumber();
+		if (currentPlayerPosition.y > mCurrentSettings.totalLevelSize[screenNumber-1].y) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool GameManager::checkScreenFinished(int screenNumber) {
+	if (mFinishPoints[screenNumber - 1]->getGlobalBounds().intersects(mDynamicItems[mPlayerIndexes[screenNumber - 1]]->getGlobalBounds())) {
+		mSelectedScreen[screenNumber - 1] = false;
+		return true;
+	}
+	return false;
+}
+
+bool GameManager::checkLevelFinished() {
+	for (int i = 1; i <= mCurrentSettings.noOfScreens;i++) {
+		mFinishedScreen[i - 1] = checkScreenFinished(i);
+	}
+	int finishCounter = 0;
+	for (auto & finished : mFinishedScreen) {
+		if (finished) {
+			finishCounter++;
+		}
+	}
+	if (finishCounter == mCurrentSettings.noOfScreens) {
+		std::cout << "level finished";
+		return true;
+	}
+	return false;
+}
+
 void GameManager::findPlayerIndexes() {
 	for (unsigned int i = 0; i < mDynamicItems.size();i++) {
 		if (dynamic_cast<Character*>(mDynamicItems[i].get())) {
 			mPlayerIndexes.push_back(i);
-			std::cout << i;
 		}
 	}
 }
 
 void GameManager::selectScreen(int screenNumber) {
-	mSelectedScreen[screenNumber - 1] = !mSelectedScreen[screenNumber - 1];
+	if (!mFinishedScreen[screenNumber - 1]) {
+		mSelectedScreen[screenNumber - 1] = !mSelectedScreen[screenNumber - 1];
+	}
 }
 
 void GameManager::runGame() {	
+
+	int actionCounter = 0;
 	while (mViewManager.isOpen()) {
-
-		for (auto & action : actions) {
-			action();
+		if (!mPlayingLevel) {
+			createLevel();
+			mPlayingLevel = !mPlayingLevel;
+		} else if (mPlayerRespawn) {
+			mPlayerRespawn = false;
 		}
 
-		if (!playingLevel) {
-			readLevelInfo();
-			playingLevel = !playingLevel;
+		if (actionCounter >= 10) {
+			for (auto & action : actions) {
+				action();
+			}
+			actionCounter = 0;
 		}
-
-		mCollisionManager.checkCollisions();
-
+		
 		sf::Event event;
 		while (mViewManager.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				mViewManager.close();
 		}
-
-
+		
 		mPassedTime += mUpdateClock.restart();
 		int numUpdates = 0;
 	
@@ -151,24 +231,35 @@ void GameManager::runGame() {
 				for (auto & background : mBackgrounds) {
 					background->update(mPassedTime);
 				}
+				checkLosingConditions();
+				if (checkLevelFinished()) {
+					mPlayingLevel = false;
+					mCurrentLevel++;
+				}
+				
 			}
 			mPassedTime -= mFrameTime;
     	}
 
 
 		mViewManager.clear();
-	
-		for (auto& background : mBackgrounds) {
-			background->draw(mViewManager);
-		}
+		if (!mPlayerRespawn && mPlayingLevel) {
+			for (auto& background : mBackgrounds) {
+				background->draw(mViewManager);
+			}
 
-		for(auto& staticObject : mStaticItems) {
-			staticObject->draw(mViewManager);
-		}
+			for (auto& staticObject : mStaticItems) {
+				staticObject->draw(mViewManager);
+			}
 
-		for(auto& dynamicObject : mDynamicItems) {
-			dynamicObject->draw(mViewManager);
-		}			
+			for (auto& dynamicObject : mDynamicItems) {
+				dynamicObject->draw(mViewManager);
+			}
+			for (auto & finishPoint : mFinishPoints) {
+				finishPoint->draw(mViewManager);
+			}
+		}
 		mViewManager.display();
+		actionCounter++;
 	}
 }
