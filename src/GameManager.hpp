@@ -32,7 +32,7 @@ private:
 	const sf::Time mFrameTime = sf::milliseconds(10);
 	
 	std::vector<std::unique_ptr<EntityBase>>  mStaticItems = {};
-	std::vector<std::unique_ptr<EntityBase>> mDynamicItems = {};
+	std::vector<std::unique_ptr<EntityBase>>  mDynamicItems = {};
 
 	std::vector<std::unique_ptr<EntityBase>> mBackgrounds = {};
 	std::vector<std::unique_ptr<EntityBase>> mFinishPoints = {};
