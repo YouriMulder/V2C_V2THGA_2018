@@ -115,8 +115,12 @@ private:
 
 	float xOffset;
 
-	sf::Vector2f mGravity = { 0, 0 };
-	sf::Vector2f mJumpForce = { 0, -2 };
+	float mGravity = 0;
+	float mStartingJumpForce = -7;
+	float mJumpForce = mStartingJumpForce;
+	float mMaxGravity = 7;
+	float mJumpAcceleration = 0.3;
+	float mGravityAcceleration = 0.3;
 
 	bool mIsFacingRight;
 	bool mIsInAir;
