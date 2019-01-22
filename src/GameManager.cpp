@@ -56,6 +56,10 @@ void GameManager::readLevelInfo() {
 
 void GameManager::applyLevelSettings() {
 	mViewManager.changeAmountOfScreens(mCurrentSettings.noOfScreens);
+	if (mViewManager.getAmountOfScreens() == 1) {
+		mSelectedScreen[0] = true;
+	}
+	
 }
 
 
@@ -141,9 +145,18 @@ bool GameManager::checkPlayerOutView() {
 bool GameManager::checkLevelFinished() {
 	for (const auto & currentIndex : mPlayerIndexes){
 		int currentScreen = mDynamicItems[currentIndex] ->getScreenNumber();
-		mFinishedScreen[currentScreen - 1] = mDynamicItems[currentIndex]->isFinished();
-		if (mFinishedScreen[currentScreen - 1]) {
+		if (mDynamicItems[currentIndex]->isFinished() && !mFinishedScreen[currentScreen-1]) {
+			mFinishedScreen[currentScreen - 1] = true;
 			mSelectedScreen[currentScreen - 1] = false;
+			mStaticItems.push_back(std::make_unique<Text>(
+				mCurrentSettings.finishPoints[currentScreen - 1] - sf::Vector2f(50, 50),
+				sf::Vector2f(0, 0),
+				currentScreen,
+				"Finished good job",
+				20,
+				"arial.ttf"));
+			mStaticItems[mStaticItems.size() - 1]->draw(mViewManager);
+			mViewManager.display();
 		}
 	}
 	int finishCounter = 0;
@@ -154,6 +167,7 @@ bool GameManager::checkLevelFinished() {
 	}
 	if (finishCounter == mCurrentSettings.noOfScreens) {
 		std::cout << "level finished";
+		sf::sleep(sf::milliseconds(5000));
 		return true;
 	}
 	return false;
