@@ -62,7 +62,6 @@ public:
 	static uint_least8_t getHealth();
 	static bool isDead();
 	static bool isAlive();
-	bool isFinished();
 
 	void addAction(const Action& newAction);
 
@@ -91,17 +90,18 @@ public:
 
 	void applyFrictionOneAxis(float& axisVelocity, const float& friction);
 	void applyFriction();
-	
 	void performAction(const Action& unperformedAction);
+	
+	virtual sf::FloatRect getGlobalBounds() const override;
+	virtual bool isFinished() override;
 	virtual void handleCollision(
 		std::vector<std::unique_ptr<EntityBase>*> top, 
 		std::vector<std::unique_ptr<EntityBase>*> bottom, 
 		std::vector<std::unique_ptr<EntityBase>*> left, 
 		std::vector<std::unique_ptr<EntityBase>*> right,  
 		CollisionSides hitSides
-	); 
-	virtual void handleNoCollision() override;
-	virtual sf::FloatRect getGlobalBounds() const override;
+	) override; 
+	virtual void handleNoCollision() override;	
 	virtual void update(const sf::Time& deltaTime) override;
 	virtual void draw(sf::RenderWindow& window) override;
 	virtual void draw(ViewManager& window) override;

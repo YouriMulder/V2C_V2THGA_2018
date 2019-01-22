@@ -276,7 +276,7 @@ void Character::handleCollision(
 		mVelocity.x = 0;
 	} 
 	if(hitSides.right) {
-		mVelocity.x = -1;
+		mVelocity.x = 0;
 	} 
 }
 
@@ -298,7 +298,8 @@ void Character::update(const sf::Time& deltaTime) {
 	if (mIsJumping && mIsInAir) {
 		mVelocity.y = mJumpForce.y;
 		mJumpForce.y += 0.05;
-	} else if(mIsInAir) {
+	} else if(mIsInAir || !restrictedSides.bottom) {
+		mIsInAir = true;
 		mVelocity.y = mGravity.y;
 		if (mGravity.y < 2) {
 			mGravity.y += 0.05;
@@ -309,13 +310,7 @@ void Character::update(const sf::Time& deltaTime) {
 		mGravity.y = 0;
 		mIsJumping = false;
 	}
-/*
-	if(mIsInAir) {
-		applyGravity();
-	} else {
-		resetVelocityX();
-	}
-*/	
+	
 	for(auto & EventManager : actions) {
 		EventManager();
 	}
@@ -406,4 +401,8 @@ void Character::select(bool selection) {
 
 bool Character::isSelected() {
 	return mSelected;
+}
+
+bool Character::isFinished() {
+	return mIsFinished;
 }
