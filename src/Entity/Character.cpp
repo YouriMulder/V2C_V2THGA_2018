@@ -95,10 +95,7 @@ void Character::applyMovement(const Action& direction) {
 			break;
 		}
 		case Action::Jump: {
-			mVelocity.y = mJumpForce.y;
-/*			updateVelocity(
-				sf::Vector2f(0.0f, -10.0f)
-			);*/
+			mVelocity.y = mStartingJumpForce;
 			break;
 		}
 	}
@@ -170,6 +167,15 @@ void Character::jump() {
 		mIsInAir = true;
 		mIsJumping = true;
 		applyMovement(Action::Jump);
+		mCanDoubleJump = true;
+	}
+	else if (mCanDoubleJump && !mIsJumping) {
+		std::cout << "doublejump\n";
+		mJumpForce = mStartingJumpForce;
+		mIsInAir = true;
+		mIsJumping = true;
+		applyMovement(Action::Jump);
+		mCanDoubleJump = false;
 	}
 }
 
@@ -192,10 +198,7 @@ void Character::updateVelocity(const sf::Vector2f& deltaVelocity) {
 	mVelocity += sf::Vector2f(deltaVelocity.x, deltaVelocity.y);
 
 	mVelocity.x = mVelocity.x > +maxVelocity.x ? +maxVelocity.x : mVelocity.x;
-	mVelocity.x = mVelocity.x < -maxVelocity.x ? -maxVelocity.x : mVelocity.x;
-	
-	mVelocity.y = mVelocity.y > +maxVelocity.y ? +maxVelocity.y : mVelocity.y;
-	mVelocity.y = mVelocity.y < -maxVelocity.y ? -maxVelocity.y : mVelocity.y;
+	mVelocity.x = mVelocity.x < -maxVelocity.x ? -maxVelocity.x : mVelocity.x;	
 }
 
 void Character::resetVelocityY() {
@@ -268,15 +271,19 @@ void Character::handleCollision(
 		);
 		mIsInAir = false;
 		mIsJumping = false;
+		mCanDoubleJump = true;
 	} 
 	if(hitSides.top) {
+		mVelocity.y = 0;
+		mIsJumping = false;
+		mIsInAir = true;
 		// DIE!
 	} 
 	if(hitSides.left) {
 		mVelocity.x = 0;
 	} 
 	if(hitSides.right) {
-		mVelocity.x = -1;
+		mVelocity.x = 0;
 	} 
 }
 
@@ -292,30 +299,25 @@ sf::FloatRect Character::getGlobalBounds() const {
 
 void Character::update(const sf::Time& deltaTime) {
 	mVelocity.x = 0;
-	if (mJumpForce.y >= 0) {
+	if (mJumpForce >= 0) {
 		mIsJumping = false;
 	}
 	if (mIsJumping && mIsInAir) {
-		mVelocity.y = mJumpForce.y;
-		mJumpForce.y += 0.05;
-	} else if(mIsInAir) {
-		mVelocity.y = mGravity.y;
-		if (mGravity.y < 2) {
-			mGravity.y += 0.05;
+		mVelocity.y = mJumpForce;
+		mJumpForce += mJumpAcceleration;
+	} else if(mIsInAir || !restrictedSides.bottom) {
+		mIsInAir = true;
+		mVelocity.y = mGravity;
+		if (mGravity < mMaxGravity) {
+			mGravity += mGravityAcceleration;
 		}
 	} else {
 		mVelocity.y = 0;
-		mJumpForce.y = -2;
-		mGravity.y = 0;
+		mJumpForce = mStartingJumpForce;
+		mGravity = 0;
 		mIsJumping = false;
 	}
-/*
-	if(mIsInAir) {
-		applyGravity();
-	} else {
-		resetVelocityX();
-	}
-*/	
+	
 	for(auto & EventManager : actions) {
 		EventManager();
 	}
@@ -406,4 +408,8 @@ void Character::select(bool selection) {
 
 bool Character::isSelected() {
 	return mSelected;
+}
+
+bool Character::isFinished() {
+	return mIsFinished;
 }

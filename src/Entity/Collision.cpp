@@ -113,11 +113,13 @@ void Collision::checkScope() {
 
 // -1 and -2 to fix the bottom collision otherwise the left and right will be detected first.
 CollisionBoxes Collision::createCollisionBoxes(const sf::FloatRect & mainBox) {
-	int pixelOffset = 2;
-	return CollisionBoxes{	sf::FloatRect(mainBox.left,mainBox.top - pixelOffset , 1, mainBox.height -pixelOffset), //Left
-							sf::FloatRect(mainBox.left + mainBox.width, mainBox.top - pixelOffset, 1, mainBox.height -pixelOffset), //Right
-							sf::FloatRect(mainBox.left + pixelOffset, mainBox.top, mainBox.width-pixelOffset, 1),//Top
-							sf::FloatRect(mainBox.left+ pixelOffset, mainBox.top + mainBox.height, mainBox.width-pixelOffset, 1) }; //Bottom
+	int pixelOffset = 5;
+	auto left = sf::FloatRect(	mainBox.left, mainBox.top + pixelOffset, 1, mainBox.height - pixelOffset * 2);
+	auto right = sf::FloatRect(	mainBox.left + mainBox.width, mainBox.top + pixelOffset, 1, mainBox.height - pixelOffset * 2);
+	auto top = 	sf::FloatRect(	mainBox.left + pixelOffset, mainBox.top, mainBox.width - pixelOffset * 2, 1);
+	auto bot = 	sf::FloatRect(	mainBox.left+ pixelOffset, mainBox.top + mainBox.height, mainBox.width - pixelOffset * 2, 1);
+	
+	return CollisionBoxes{ left, right, bot, top };
 }
 
 void Collision::collisionHandler(std::unique_ptr<EntityBase> & object1, 
