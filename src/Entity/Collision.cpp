@@ -34,7 +34,7 @@ void Collision::printViewInfo(ViewInfo info) {
 
 void Collision::reloadViewInfo() {
 	mViewInfos.clear();
-	for (int i = 1;i < mAmountOfScreens;i++) {
+	for (int i = 1;i <= mAmountOfScreens;i++) {
 		ViewInfo newViewInfo{ i, mViewManager.getViewPosition(i), mViewManager.getViewSize(i) };
 		mViewInfos.push_back(newViewInfo);
 	}
