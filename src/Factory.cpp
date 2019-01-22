@@ -82,7 +82,7 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 
 	createFinishes(staticObjects);
 
-	for (int i = 1; i < amountOfScreens+1; i++) {
+	for (int i = 1; i < amountOfScreens + 1; i++) {
 		name = "skip";
 		while (name != "SCREEN") {
 			text >> name;
