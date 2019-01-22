@@ -8,6 +8,7 @@
 #include "operator.hpp"
 #include <array>
 #include <sstream>
+#include "Entity/Finish.hpp"
 
 SettingsData Factory::readSettings(std::ifstream& text) {
 	std::string name;
@@ -49,6 +50,7 @@ SettingsData Factory::readSettings(std::ifstream& text) {
 					finishPointsTemp = sf::Vector2f(0, 0);
 					text >> finishPointsTemp;
 					temp.finishPoints[i] = finishPointsTemp;
+					finishPoint[i] = finishPointsTemp;
 				}
 			}
 			else if (name == "backgroundImages") {
@@ -70,20 +72,16 @@ SettingsData Factory::readSettings(std::ifstream& text) {
 			}
 		}
 	}
-
 	return temp;
 }
 
 void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<std::unique_ptr<EntityBase>> & staticObjects,
 	std::vector<std::unique_ptr<EntityBase>> & movableObjects) {
 	std::string name;
-	text >> name;
-	while (name != "SCREEN1") {
-		text >> name;
-	}
+
+	createFinishes(staticObjects);
 
 	for (int i = 1; i < amountOfScreens + 1; i++) {
-		int errorCounter = 0;
 		name = "skip";
 		while (name != "SCREEN") {
 			text >> name;
@@ -168,10 +166,31 @@ void Factory::readCharacters(std::ifstream& text, int amountOfScreens, std::vect
 			sf::Vector2f acceleration;
 
 			text >> position >> size >> maxVelocity >> acceleration;
-			std::cout << "screen: " << i << "\n";
 
 			movableObjects.push_back(std::make_unique<Character>(position, size, i, maxVelocity, acceleration));
 		}
 	}
 	std::cerr << "END CHARACTERS FOUND\n";
+}
+
+void Factory::createFinishes(std::vector<std::unique_ptr<EntityBase>> & staticObjects) {
+	for (int i = 0; i < mFinishPoints.size(); i++) {
+		staticObjects.push_back(std::make_unique<Finish>(
+			mPathFinish + "finish2.png",
+			mFinishPoints[i],
+			sf::Vector2f(65, 72),
+			i + 1
+			));
+	}
+}
+
+SettingsData Factory::readLevelFile(std::string fileName, std::vector<std::unique_ptr<EntityBase>> & staticObjects,
+	std::vector<std::unique_ptr<EntityBase>> & movableObjects) {
+
+	std::ifstream text(fileName);
+	SettingsData temp = readSettings(text);
+	readObjects(text, temp.noOfScreens, staticObjects, movableObjects);
+	text.close();
+	return temp;
+
 }
