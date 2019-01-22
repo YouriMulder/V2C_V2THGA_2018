@@ -167,7 +167,7 @@ bool GameManager::checkLevelFinished() {
 	}
 	if (finishCounter == mCurrentSettings.noOfScreens) {
 		std::cout << "level finished";
-		sf::sleep(sf::milliseconds(5000));
+		sf::sleep(sf::milliseconds(1000));
 		return true;
 	}
 	return false;
