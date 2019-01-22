@@ -25,6 +25,7 @@ SettingsData Factory::readSettings(std::ifstream& text) {
 				int data;
 				text >> data;
 				temp.noOfScreens = data;
+				mAmountOfScreens = data;
 			}
 			else if (name == "gameTime") {
 				int data;
@@ -174,7 +175,7 @@ void Factory::readCharacters(std::ifstream& text, int amountOfScreens, std::vect
 }
 
 void Factory::createFinishes(std::vector<std::unique_ptr<EntityBase>> & staticObjects) {
-	for (int i = 0; i < mFinishPoints.size(); i++) {
+	for (int i = 0; i < mAmountOfScreens; i++) {
 		staticObjects.push_back(std::make_unique<Finish>(
 			mPathFinish + "finish2.png",
 			mFinishPoints[i],
