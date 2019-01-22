@@ -60,6 +60,17 @@ void Character::addAction(const Action& newAction) {
 	mUnperformedActions.push(newAction);
 }
 
+void Character::bindAction(const EventManager& event) {
+	actions.push_back(event);
+}
+
+void Character::bindAnimation(
+	const State& state, 
+	const AnimationSequence& animationSequence) 
+{
+	mAnimations.push_back(std::make_pair(state, animationSequence));
+}
+
 void Character::move(sf::Vector2f& delta) {
 	if(delta.x > 0 && restrictedSides.right) {
 		delta.x = 0;
@@ -168,9 +179,7 @@ void Character::jump() {
 		mIsJumping = true;
 		applyMovement(Action::Jump);
 		mCanDoubleJump = true;
-	}
-	else if (mCanDoubleJump && !mIsJumping) {
-		std::cout << "doublejump\n";
+	} else if (mCanDoubleJump && !mIsJumping) {
 		mJumpForce = mStartingJumpForce;
 		mIsInAir = true;
 		mIsJumping = true;
@@ -252,7 +261,6 @@ void Character::handleCollision(
 			}
 		}
 	}
-
 
 	if(hitSides.bottom) {
 		// move along with platforms
