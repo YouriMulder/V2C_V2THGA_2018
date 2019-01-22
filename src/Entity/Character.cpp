@@ -1,7 +1,25 @@
 #include "Character.hpp"
 
 #include "../World/Physics.hpp"
+#include "Finish.hpp"
 #include <iostream>
+#include <cstdint>
+
+// static 
+uint_least8_t Character::health = 10;
+
+uint_least8_t Character::getHealth() {
+	return health;
+}
+
+bool Character::isAlive() {
+	return health > 0;
+}
+
+bool Character::isDead() {
+	return !isAlive();
+}
+
 
 Character::Character(
 	const sf::Vector2f& position,
@@ -17,15 +35,17 @@ Character::Character(
 	mIsFacingRight(true),
 	mIsInAir(true),
 	mIsJumping(false),
+	mSelected(false),
+	mIsFinished(false),
 	mPreviousState(Character::State::Idle),
 	mState(Character::State::Idle),
 	mSpriteWidth(size.x),
 	mSpriteHeight(size.y),
-	mCurrentSpriteSheetLocation(0,0,size.x,size.y),
-	mSelected(false)
+	mCurrentSpriteSheetLocation(0,0,size.x,size.y)
 {
 	mTexture.loadFromFile("../res/Textures/Player/player.png");
 	mSprite = sf::Sprite(mTexture, mCurrentSpriteSheetLocation);
+	mSprite.setPosition(EntityBase::mPosition);
 	mSprite.scale(2.0f, 2.0f);
 	mSize = sf::Vector2f(
 		mSprite.getGlobalBounds().width, 
@@ -35,6 +55,7 @@ Character::Character(
 
 Character::~Character() { }
 
+// non static
 void Character::addAction(const Action& newAction) {
 	mUnperformedActions.push(newAction);
 }
@@ -217,6 +238,19 @@ void Character::handleCollision(
 ) {
 	restrictedSides = hitSides;
 
+	std::vector<
+		std::vector<std::unique_ptr<EntityBase>*>
+	> allObjects = {top, bottom, left, right};
+
+	for(const auto& objectVector: allObjects) {
+		for(const auto& object : objectVector) {
+			if(dynamic_cast<Finish*>((*object).get())) {
+				mIsFinished = true;
+			}
+		}
+	}
+
+
 	if(hitSides.bottom) {
 		// move along with platforms
 		auto highestBottom = bottom[0];
@@ -242,7 +276,7 @@ void Character::handleCollision(
 		mVelocity.x = 0;
 	} 
 	if(hitSides.right) {
-		mVelocity.x = 0;
+		mVelocity.x = -1;
 	} 
 }
 

@@ -51,31 +51,31 @@ void Collision::updateViewInfo() {
 }
 
 bool Collision::checkScopeLeftTop(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo) {
-	return ((currentItem.left >= currentViewInfo.viewPosition.x) &&
-			(currentItem.top >= currentViewInfo.viewPosition.y) &&
-			(currentItem.left <= (currentViewInfo.viewPosition.x + currentViewInfo.viewSize.x)) &&
+	return ((currentItem.left >= currentViewInfo.viewPosition.x) ||
+			(currentItem.top >= currentViewInfo.viewPosition.y) ||
+			(currentItem.left <= (currentViewInfo.viewPosition.x + currentViewInfo.viewSize.x)) ||
 			(currentItem.top <= (currentViewInfo.viewPosition.y + currentViewInfo.viewSize.y)));
 	
 }
 
 bool Collision::checkScopeRightTop(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo) {
-	return ((currentItem.left + currentItem.width >= currentViewInfo.viewPosition.x )&&
-			(currentItem.top >= currentViewInfo.viewPosition.y )&&
-			((currentItem.left + currentItem.width) <= (currentViewInfo.viewPosition.x + currentViewInfo.viewSize.x)) &&
+	return ((currentItem.left + currentItem.width >= currentViewInfo.viewPosition.x )||
+			(currentItem.top >= currentViewInfo.viewPosition.y )||
+			((currentItem.left + currentItem.width) <= (currentViewInfo.viewPosition.x + currentViewInfo.viewSize.x)) ||
 			(currentItem.top <= (currentViewInfo.viewPosition.y + currentViewInfo.viewSize.y)));
 }
 
 bool Collision::checkScopeLeftBottom(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo) {
-	return ((currentItem.left >= currentViewInfo.viewPosition.x )&&
-			((currentItem.top + currentItem.height) >= currentViewInfo.viewPosition.y) &&
-			(currentItem.left <= (currentViewInfo.viewPosition.x + currentViewInfo.viewSize.x)) &&
+	return ((currentItem.left >= currentViewInfo.viewPosition.x )||
+			((currentItem.top + currentItem.height) >= currentViewInfo.viewPosition.y) ||
+			(currentItem.left <= (currentViewInfo.viewPosition.x + currentViewInfo.viewSize.x)) ||
 			((currentItem.top + currentItem.height) <= (currentViewInfo.viewPosition.y + currentViewInfo.viewSize.y)));
 }
 
 bool Collision::checkScopeRightBottom(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo) {
-	return (((currentItem.left + currentItem.left) >= currentViewInfo.viewPosition.x) &&
-			((currentItem.top + currentItem.height) >= currentViewInfo.viewPosition.y )&&
-			((currentItem.left + currentItem.width) <= (currentViewInfo.viewPosition.x + currentViewInfo.viewSize.x)) &&
+	return (((currentItem.left + currentItem.left) >= currentViewInfo.viewPosition.x) ||
+			((currentItem.top + currentItem.height) >= currentViewInfo.viewPosition.y )||
+			((currentItem.left + currentItem.width) <= (currentViewInfo.viewPosition.x + currentViewInfo.viewSize.x)) ||
 			((currentItem.top + currentItem.height) <= (currentViewInfo.viewPosition.y + currentViewInfo.viewSize.y)));
 }
 
