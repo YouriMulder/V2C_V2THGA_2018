@@ -47,7 +47,8 @@ project "MindFuck"
 					"ws2_32.lib",
 					"sfml-audio-s-d.lib",
 				}
-
+		
+		filter {}
 		filter "configurations:Release"
 			defines { "NDEBUG" }
 			optimize "On"
