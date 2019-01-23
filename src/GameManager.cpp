@@ -82,11 +82,15 @@ void GameManager::moveScreens() {
 
 	for (const auto & currentPlayer : mPlayerIndexes) {
 		sf::Vector2f currentPlayerPosition = mDynamicItems[currentPlayer]->getPosition();
+		sf::Vector2f currentPlayerSize = mDynamicItems[currentPlayer]->getSize();
+		currentPlayerPosition.x = currentPlayerPosition.x + currentPlayerSize.x / 2;
+		currentPlayerPosition.y = currentPlayerPosition.y + currentPlayerSize.y / 2;
 		int currentScreenNo = mDynamicItems[currentPlayer]->getScreenNumber();
 		sf::Vector2f relativeScreenPosition(mViewManager.getViewPosition(currentScreenNo).x + mViewManager.getViewSize(currentScreenNo).x / 2,
 			mViewManager.getViewPosition(currentScreenNo).y + mViewManager.getViewSize(currentScreenNo).y / 2);
 		mViewManager.selectMoveScreen(currentScreenNo);
 	
+		//move x
 		if (currentPlayerPosition.x > relativeScreenPosition.x && !(mViewManager.getViewPosition(currentScreenNo).x + mViewManager.getViewSize(currentScreenNo).x >= mCurrentSettings.totalLevelSize[currentScreenNo-1].x))  {
 			sf::Vector2f offset(currentPlayerPosition.x - relativeScreenPosition.x, 0);
 			mViewManager.move(offset);
@@ -96,8 +100,26 @@ void GameManager::moveScreens() {
 				}
 			}
 
-		} else if (currentPlayerPosition.x < relativeScreenPosition.x && mViewManager.getViewPosition(currentScreenNo).x != 0) {
+		} else if (currentPlayerPosition.x < relativeScreenPosition.x && !(mViewManager.getViewPosition(currentScreenNo).x <= 0)) {
 			sf::Vector2f offset((currentPlayerPosition.x - relativeScreenPosition.x), 0);
+			mViewManager.move(offset);
+			for (auto & background : mBackgrounds) {
+				if (background->getScreenNumber() == currentScreenNo) {
+					background->move(offset);
+				}
+			}
+		}
+		//move y
+		if (currentPlayerPosition.y > relativeScreenPosition.y && !(mViewManager.getViewPosition(currentScreenNo).y + mViewManager.getViewSize(currentScreenNo).y >= mCurrentSettings.totalLevelSize[currentScreenNo - 1].y)) {
+			sf::Vector2f offset(0, (currentPlayerPosition.y - relativeScreenPosition.y)/25);
+			mViewManager.move(offset);
+			for (auto & background : mBackgrounds) {
+				if (background->getScreenNumber() == currentScreenNo) {
+					background->move(offset);
+				}
+			}
+		} else if (currentPlayerPosition.y < relativeScreenPosition.y && !(mViewManager.getViewPosition(currentScreenNo).y <= 0)) {
+			sf::Vector2f offset(0,(currentPlayerPosition.y - relativeScreenPosition.y)/25);
 			mViewManager.move(offset);
 			for (auto & background : mBackgrounds) {
 				if (background->getScreenNumber() == currentScreenNo) {
