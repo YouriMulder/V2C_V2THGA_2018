@@ -9,7 +9,7 @@ project "MindFuck"
 
 	files { "src/**.*" }
 	
-	filter "system:windows"
+	filter { "system:windows" }
 		cppdialect "C++17"
 		systemversion "10.0.17763.0"
 		filter "configurations:*"
@@ -18,7 +18,7 @@ project "MindFuck"
 				includedirs { "dependencies/SFML-2.5.1/include" }
 				libdirs { "dependencies/SFML-2.5.1/lib" }
 
-			filter "system:linux"
+			filter { "system:linux" }
 				links {
 					"sfml-graphics", 
 					"sfml-window", 
@@ -26,7 +26,7 @@ project "MindFuck"
 					"sfml-audio"
 				}
 
-		filter "configurations:Debug"
+		filter { "configurations:Debug" }
 			defines { "DEBUG" }
 			symbols "On"
 			filter "system:windows"
@@ -48,8 +48,7 @@ project "MindFuck"
 					"sfml-audio-s-d.lib",
 				}
 		
-		filter {}
-		filter "configurations:Release"
+		filter { "configurations:Release" }
 			defines { "NDEBUG" }
 			optimize "On"
 			filter "system:windows"
