@@ -17,18 +17,6 @@ project "MindFuck"
 			filter "system:windows"
 				includedirs { "dependencies/SFML-2.5.1/include" }
 				libdirs { "dependencies/SFML-2.5.1/lib" }
-				links {
-					"opengl32",					
-					"freetype",
-					"winmm",
-					"gdi32",
-					"flac",
-					"vorbisenc",
-					"vorbisfile",
-					"vorbis",
-					"ogg",
-					"ws2_32"
-				}
 
 			filter "system:linux"
 				links {
@@ -43,11 +31,21 @@ project "MindFuck"
 			symbols "On"
 			filter "system:windows"
 				links {	
-					"sfml-graphics-s-d",
-					"sfml-window-s-d",
-					"sfml-system-s-d",
-					"sfml-audio-s-d",
-					"sfml-network-s-d"
+					"sfml-graphics-s-d.lib",
+					"sfml-window-s-d.lib",
+					"sfml-system-s-d.lib",
+					"opengl32.lib",
+					"freetype.lib",
+					"winmm.lib",
+					"gdi32.lib",
+					"openal32.lib",
+					"flac.lib",
+					"vorbisenc.lib",
+					"vorbisfile.lib",
+					"vorbis.lib",
+					"ogg.lib",
+					"ws2_32.lib",
+					"sfml-audio-s-d.lib",
 				}
 
 		filter "configurations:Release"
@@ -55,10 +53,20 @@ project "MindFuck"
 			optimize "On"
 			filter "system:windows"
 				links {	
-					"sfml-graphics-s",
-					"sfml-window-s",
-					"sfml-system-s",
-					"sfml-audio-s",
-					"sfml-network-s"
+					"sfml-graphics-s.lib",
+					"sfml-window-s.lib",
+					"sfml-system-s.lib",
+					"opengl32.lib",
+					"freetype.lib",
+					"winmm.lib",
+					"gdi32.lib",
+					"openal32.lib",
+					"flac.lib",
+					"vorbisenc.lib",
+					"vorbisfile.lib",
+					"vorbis.lib",
+					"ogg.lib",
+					"ws2_32.lib",
+					"sfml-audio-s.lib",
 				}		
 	
