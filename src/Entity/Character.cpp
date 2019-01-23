@@ -277,10 +277,11 @@ void Character::handleCollision(
 			}
 		}
 
+
 		setPosition( 
 			sf::Vector2f(
 				mPosition.x - ((*highestBottom)->getPosition().x - (*highestBottom)->getNextPosition().x),
-				mPosition.y
+				(*highestBottom)->getPosition().y - getSize().y + 1 // otherwise the player will always fall when standing on moving entities
 			) 
 		);
 

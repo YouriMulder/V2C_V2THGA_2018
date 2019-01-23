@@ -169,7 +169,6 @@ void Factory::readCharacters(std::ifstream& text, int amountOfScreens, std::vect
 		text >> name;
 		if (name == "player") {
 			sf::Vector2f position;
-
 			text >> position;
 
 			movableObjects.push_back(std::make_unique<Player>(position, i));
