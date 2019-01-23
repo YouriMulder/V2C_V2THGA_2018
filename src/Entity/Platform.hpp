@@ -35,10 +35,6 @@ public:
 		int screenNumber, bool repeated = false);
 
 	virtual ~Platform();
-
-	/// \brief
-	/// Returns the outline of the platform
-	sf::FloatRect getGlobalBounds() const override;
 };
 
 #endif /* PLATFORM_HPP */

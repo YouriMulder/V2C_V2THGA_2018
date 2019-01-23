@@ -54,7 +54,8 @@ public:
 		const sf::Vector2f& size,
 		int screenNumber, 
 		const sf::Vector2f& maxVelocity, 
-		const sf::Vector2f& acceleration
+		const sf::Vector2f& acceleration,
+		const std::string& characterSheetPath
 	);
 	
 	virtual ~Character() override;
@@ -97,7 +98,10 @@ public:
 	void applyFriction();
 	void performAction(const Action& unperformedAction);
 	
+	virtual sf::Vector2f getSize() const override;
 	virtual sf::FloatRect getGlobalBounds() const override;
+	void setSpriteScale(float x, float y);
+	void updateSizeUsingSprite();
 	virtual bool isFinished() override;
 	virtual void handleCollision(
 		std::vector<std::unique_ptr<EntityBase>*> top, 

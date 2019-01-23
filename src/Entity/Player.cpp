@@ -6,9 +6,11 @@
 Player::Player(const sf::Vector2f& position, int screenNumber):
 	Character(
 		position, sf::Vector2f(19.0f, 34.0f), 
-		screenNumber, sf::Vector2f(2.0f, 2.0f), sf::Vector2f(20.0f, 10.0f) 
+		screenNumber, sf::Vector2f(2.0f, 2.0f), sf::Vector2f(20.0f, 10.0f),
+		"../res/Textures/Player/player.png"
 	)
 {
+	setSpriteScale(2.0f, 2.0f);
 	bindActions();
 	bindAnimations();
 }

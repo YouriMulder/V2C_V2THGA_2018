@@ -64,6 +64,10 @@ void LevelObject::update(const sf::Time& deltaTime) {
 	mSprite.setPosition(mPosition);
 }
 
+sf::Vector2f LevelObject::getPosition() const {
+	return mSprite.getPosition();
+}
+
 sf::FloatRect LevelObject::getGlobalBounds() const {
 	return mSprite.getGlobalBounds();
 }

@@ -148,9 +148,10 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 					movableObjects.push_back(std::make_unique <MoveablePlatform>(textureName, position, size, i, range, steps, textureRepeat));
 				}
 			} else if (name == "NPC") {
-				sf::Vector2f position;
-				text >> position;
-				movableObjects.push_back(std::make_unique<NPC>(position, i));
+				sf::Vector2f startPoint;
+				float deltaXMovement;
+				text >> startPoint >> deltaXMovement;
+				movableObjects.push_back(std::make_unique<NPC>(startPoint, deltaXMovement, i));
 			} else if (name == "CHARACTERS") {
 				std::cerr << "END OBJECTS FOUND\n";
 				readCharacters(text, amountOfScreens, movableObjects);
