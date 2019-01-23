@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TEXT_HPP 
+#define TEXT_HPP
 #include "EntityBase.hpp"
 #include <string> 
 class Text : public EntityBase {  
@@ -21,4 +22,6 @@ public:
 	void setColor(sf::Color newColor) override;
 
 };
+
+#endif /*TEXT_HPP */
 
