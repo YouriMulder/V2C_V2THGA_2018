@@ -28,6 +28,7 @@ private:
 	SettingsData readSettings(std::ifstream& text);
 
 	int mAmountOfScreens = 0;
+	int noOfLines = 0;
 
 
 public:
@@ -35,6 +36,8 @@ public:
 	
 	SettingsData readLevelFile(std::string fileName, std::vector<std::unique_ptr<EntityBase>> & staticObjects,
 		std::vector<std::unique_ptr<EntityBase>> & movableObjects);
+
+	int getNoLines(std::string fileName);
 };
 
 #endif /*FACTORY_HPP*/
