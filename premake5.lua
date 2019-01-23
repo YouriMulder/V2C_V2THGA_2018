@@ -51,7 +51,7 @@ project "MindFuck"
 	filter { "configurations:Release" }
 		defines { "NDEBUG" }
 		optimize "On"
-	filter { "system:windows", "system:windows" }
+	filter { "configurations:Release", "system:windows" }
 		links {	
 			"sfml-graphics-s.lib",
 			"sfml-window-s.lib",
