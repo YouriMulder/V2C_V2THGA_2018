@@ -1,0 +1,22 @@
+SETTINGS:
+noOfScreens 1
+gameTime 3
+songName yolo
+levelSize (2200,1000)
+finishPoints (2050,123) 
+
+backgroundImages plx-1.png,plx-2.png,plx-3.png,plx-4.png,plx-5.png
+
+SCREEN1
+platform platform.png (0,695) (300,25) 1 0
+platform platform.png (400,595) (300,25) 1 0
+platform platform.png (750,495) (300,25) 1 0
+platform platform.png (1100,395) (300,25) 1 0
+platform platform.png (1450,295) (300,25) 1 0
+platform platform.png (1800,195) (300,25) 1 0
+platform wallRight.png (0,0) (1,720) 1 0
+
+END
+
+CHARACTERS
+player (0,629)
