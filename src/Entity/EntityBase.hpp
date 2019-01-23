@@ -43,7 +43,7 @@ public:
 	) {};
 	virtual void handleNoCollision() {};
 
-	virtual void setColor(sf::Color newColor) {};
+	virtual void setColor(const sf::Color& newColor) {};
 	virtual void draw(sf::RenderWindow& window) = 0;
 	virtual void draw(ViewManager& window) = 0;
 	virtual ~EntityBase();

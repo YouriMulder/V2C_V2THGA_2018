@@ -1,6 +1,8 @@
 #include "Factory.hpp"
 #include "Entity/Platform.hpp"
 #include "Entity/Character.hpp"
+#include "Entity/Player.hpp"
+#include "Entity/NPC.hpp"
 #include "Entity/MoveablePlatform.hpp"
 #include "Entity/Spikes.hpp"
 #include "Entity/EntityBase.hpp"
@@ -145,6 +147,11 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 				} else {
 					movableObjects.push_back(std::make_unique <MoveablePlatform>(textureName, position, size, i, range, steps, textureRepeat));
 				}
+			} else if (name == "NPC") {
+				sf::Vector2f startPoint;
+				float deltaXMovement;
+				text >> startPoint >> deltaXMovement;
+				movableObjects.push_back(std::make_unique<NPC>(startPoint, deltaXMovement, i));
 			} else if (name == "CHARACTERS") {
 				std::cerr << "END OBJECTS FOUND\n";
 				readCharacters(text, amountOfScreens, movableObjects);
@@ -162,13 +169,9 @@ void Factory::readCharacters(std::ifstream& text, int amountOfScreens, std::vect
 		text >> name;
 		if (name == "player") {
 			sf::Vector2f position;
-			sf::Vector2f size;
-			sf::Vector2f maxVelocity;
-			sf::Vector2f acceleration;
+			text >> position;
 
-			text >> position >> size >> maxVelocity >> acceleration;
-
-			movableObjects.push_back(std::make_unique<Character>(position, size, i, maxVelocity, acceleration));
+			movableObjects.push_back(std::make_unique<Player>(position, i));
 		}
 	}
 	std::cerr << "END CHARACTERS FOUND\n";

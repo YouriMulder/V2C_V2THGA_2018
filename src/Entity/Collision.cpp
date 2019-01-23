@@ -113,11 +113,13 @@ void Collision::checkScope() {
 
 // -1 and -2 to fix the bottom collision otherwise the left and right will be detected first.
 CollisionBoxes Collision::createCollisionBoxes(const sf::FloatRect & mainBox) {
-	int pixelOffset = 5;
-	auto left = sf::FloatRect(	mainBox.left, mainBox.top + pixelOffset, 1, mainBox.height - pixelOffset * 2);
-	auto right = sf::FloatRect(	mainBox.left + mainBox.width, mainBox.top + pixelOffset, 1, mainBox.height - pixelOffset * 2);
-	auto top = 	sf::FloatRect(	mainBox.left + pixelOffset, mainBox.top, mainBox.width - pixelOffset * 2, 1);
-	auto bot = 	sf::FloatRect(	mainBox.left+ pixelOffset, mainBox.top + mainBox.height, mainBox.width - pixelOffset * 2, 1);
+	int pixelOffsetWidth = mainBox.width * 0.2;
+	int pixelOffsetHeight = mainBox.height * 0.2;
+
+	auto left = sf::FloatRect(	mainBox.left, mainBox.top + pixelOffsetWidth, 1, mainBox.height - pixelOffsetWidth * 2);
+	auto right = sf::FloatRect(	mainBox.left + mainBox.width, mainBox.top + pixelOffsetWidth, 1, mainBox.height - pixelOffsetWidth * 2);
+	auto top = 	sf::FloatRect(	mainBox.left + pixelOffsetHeight, mainBox.top, mainBox.width - pixelOffsetHeight * 2, 1);
+	auto bot = 	sf::FloatRect(	mainBox.left+ pixelOffsetHeight, mainBox.top + mainBox.height, mainBox.width - pixelOffsetHeight * 2, 1);
 	
 	return CollisionBoxes{ left, right, bot, top };
 }
@@ -129,7 +131,6 @@ void Collision::collisionHandler(std::unique_ptr<EntityBase> & object1,
 	std::vector<std::unique_ptr<EntityBase>*>& left, 
 	std::vector<std::unique_ptr<EntityBase>*>& right, 
 	CollisionSides& collisionSides
-	
 ) {
 	CollisionBoxes boxes1 = createCollisionBoxes(object1->getGlobalBounds());
 	sf::FloatRect box2 = object2->getGlobalBounds();

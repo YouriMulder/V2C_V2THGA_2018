@@ -12,13 +12,13 @@
 #include "../EventManager.hpp"
 #include "../ViewManager.hpp"
 
-struct animationSequence {
+struct AnimationSequence {
 	sf::Vector2i start;
 	sf::Vector2i end;
 	sf::Vector2f size;
 	sf::Time displayTime;
 
-	animationSequence(	
+	AnimationSequence(	
 		sf::Vector2i start,
 		sf::Vector2i end,
 		sf::Vector2f size,
@@ -54,7 +54,8 @@ public:
 		const sf::Vector2f& size,
 		int screenNumber, 
 		const sf::Vector2f& maxVelocity, 
-		const sf::Vector2f& acceleration
+		const sf::Vector2f& acceleration,
+		const std::string& characterSheetPath
 	);
 	
 	virtual ~Character() override;
@@ -64,6 +65,11 @@ public:
 	static bool isAlive();
 
 	void addAction(const Action& newAction);
+	void bindAction(const EventManager& event);
+	void bindAnimation(
+		const State& state, 
+		const AnimationSequence& animationSequence
+	);
 
 	void move(sf::Vector2f& delta);
 	void setMoveDirection(const Action& newDirection);
@@ -92,7 +98,10 @@ public:
 	void applyFriction();
 	void performAction(const Action& unperformedAction);
 	
+	virtual sf::Vector2f getSize() const override;
 	virtual sf::FloatRect getGlobalBounds() const override;
+	void setSpriteScale(float x, float y);
+	void updateSizeUsingSprite();
 	virtual bool isFinished() override;
 	virtual void handleCollision(
 		std::vector<std::unique_ptr<EntityBase>*> top, 
@@ -105,7 +114,10 @@ public:
 	virtual void update(const sf::Time& deltaTime) override;
 	virtual void draw(sf::RenderWindow& window) override;
 	virtual void draw(ViewManager& window) override;
-private:
+
+	virtual void bindActions() {};
+	virtual void bindAnimations() {};
+protected:
 	// static
 	static uint_least8_t health;
 	
@@ -165,69 +177,8 @@ private:
 		),
 	};
 
-	std::vector<std::pair<State, animationSequence>> mAnimations = {
-		std::make_pair(State::Idle, 
-			animationSequence(
-				sf::Vector2i(0,0),
-				sf::Vector2i(12,0),
-				sf::Vector2f(20.0f, 35.0f),
-				sf::milliseconds(100)
-			)
-		),
-		std::make_pair(State::Moving, 
-			animationSequence(
-				sf::Vector2i(0,1),
-				sf::Vector2i(8,1),
-				sf::Vector2f(21.0f, 35.0f),
-				sf::milliseconds(125)
-			)
-		),
-		std::make_pair(State::Running, 
-			animationSequence(
-				sf::Vector2i(0,1),
-				sf::Vector2i(8,1),
-				sf::Vector2f(21.0f, 35.0f),
-				sf::milliseconds(75)
-			)
-		),
-		std::make_pair(State::Jumping, 
-			animationSequence(
-				sf::Vector2i(0,2),
-				sf::Vector2i(1,2),
-				sf::Vector2f(21.0f, 35.0f),
-				sf::milliseconds(10)
-			)
-		),
-		std::make_pair(State::Falling, 
-			animationSequence(
-				sf::Vector2i(0,4),
-				sf::Vector2i(1,4),
-				sf::Vector2f(21.0f, 35.0f),
-				sf::milliseconds(10)
-			)
-		),
-	};
-
-	EventManager actions[17] = {
-		EventManager(sf::Keyboard::Left, 	[&] 	{addAction(Character::Action::Left);	}),
-		EventManager(sf::Keyboard::Right, 	[&] 	{addAction(Character::Action::Right);	}),
-		EventManager(sf::Keyboard::Up, 		[&] 	{addAction(Character::Action::Jump);	}),
-		EventManager(sf::Keyboard::Down, 	[&] 	{}),
-		EventManager(sf::Keyboard::Escape,	[&] 	{}),
-		EventManager(sf::Keyboard::Space, 	[&] 	{addAction(Character::Action::Jump);}),
-		EventManager(sf::Mouse::Left, 		[&] 	{}),
-		EventManager(sf::Keyboard::Num1, 	[&] 	{}),
-		EventManager(sf::Keyboard::Num2, 	[&] 	{}),
-		EventManager(sf::Keyboard::Num3, 	[&] 	{}),
-		EventManager(sf::Keyboard::Num4, 	[&] 	{}),
-		EventManager(sf::Keyboard::LShift, 	[&] 	{addAction(Character::Action::Run);		}),
-		EventManager(sf::Keyboard::RShift, 	[&] 	{}),
-		EventManager(sf::Keyboard::W, 		[&] 	{}),
-		EventManager(sf::Keyboard::A, 		[&] 	{}),
-		EventManager(sf::Keyboard::S, 		[&] 	{}),
-		EventManager(sf::Keyboard::D, 		[&] 	{})
-	};
-
+	std::vector<std::pair<State, AnimationSequence>> mAnimations = {};
+	std::vector<EventManager> actions = {};
 };
 
 

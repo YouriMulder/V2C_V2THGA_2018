@@ -33,12 +33,13 @@ void Text::update(const sf::Time& deltaTime) {
 
 }
 
-void Text::setString(std::string newString) {
+void Text::setString(const std::string& newString) {
 	mText.setString(newString);
 }
 
-void Text::setColor(sf::Color newColor) {
-	mText.setColor(newColor);
+void Text::setColor(const sf::Color& newColor) {
+	mText.setFillColor(newColor);
+	mText.setOutlineColor(newColor);
 }
 
 sf::FloatRect Text::getGlobalBounds() const {

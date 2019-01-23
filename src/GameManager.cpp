@@ -203,7 +203,6 @@ bool GameManager::checkLevelFinished() {
 		}
 	}
 	if (finishCounter == mCurrentSettings.noOfScreens) {
-		std::cout << "level finished";
 		sf::sleep(sf::milliseconds(1000));
 		return true;
 	}
@@ -212,7 +211,7 @@ bool GameManager::checkLevelFinished() {
 
 void GameManager::findPlayerIndexes() {
 	for (unsigned int i = 0; i < mDynamicItems.size();i++) {
-		if (dynamic_cast<Character*>(mDynamicItems[i].get())) {
+		if (dynamic_cast<Player*>(mDynamicItems[i].get())) {
 			mPlayerIndexes.push_back(i);
 		}
 	}
@@ -225,7 +224,6 @@ void GameManager::selectScreen(int screenNumber) {
 }
 
 void GameManager::runGame() {	
-
 	int actionCounter = 0;
 	while (mViewManager.isOpen()) {
 		if (!mPlayingLevel) {

@@ -11,6 +11,7 @@
 #include "Entity/Collision.hpp"
 #include "Entity/EntityBase.hpp"
 #include "Entity/Background.hpp"
+#include "Entity/Player.hpp"
 #include "Entity/Text.hpp"
 #include "Factory.hpp"
 #include "HUD.hpp"

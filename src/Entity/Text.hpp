@@ -18,8 +18,8 @@ public:
 	virtual void draw(sf::RenderWindow& window) override;
 	void draw(ViewManager& window) override;
 	virtual void update(const sf::Time& deltaTime) override;
-	void setString(std::string newString);
-	void setColor(sf::Color newColor) override;
+	void setString(const std::string& newString);
+	void setColor(const sf::Color& newColor) override;
 	sf::FloatRect getGlobalBounds() const override;
 
 };
