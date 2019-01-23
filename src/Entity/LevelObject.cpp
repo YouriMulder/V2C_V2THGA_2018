@@ -63,3 +63,7 @@ void LevelObject::draw(ViewManager& window) {
 void LevelObject::update(const sf::Time& deltaTime) {
 	mSprite.setPosition(mPosition);
 }
+
+sf::FloatRect LevelObject::getGlobalBounds() const {
+	return mSprite.getGlobalBounds();
+}

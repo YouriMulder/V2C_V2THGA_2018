@@ -8,10 +8,11 @@ GameManager::GameManager(const std::string& levelFileName) :
 	mMainWindow(sf::VideoMode(1280, 720), "MiNdF*cK"),
 	mViewManager(mMainWindow, 1),
 	mFactory(),
+	mHUD(),
 	mCollisionManager(mViewManager,mStaticItems, mDynamicItems)
 {
 	if (!readLevelFileNames(levelFileName)) {
-		std::cout << "levelFileNames not read" << std::endl ;
+		std::cerr << "levelFileNames not read" << std::endl ;
 	}
 }
 
@@ -46,7 +47,7 @@ void GameManager::createLevel(){
 
 void GameManager::readLevelInfo() {
 	if (static_cast<unsigned int>(mCurrentLevel) >= mLevelFileNames.size()) {
-		std::cout << "no file names";
+		std::cerr << "no file names";
 		return;
 	} else{
 		mCurrentSettings = mFactory.readLevelFile(mPathLevels + mLevelFileNames[mCurrentLevel], mStaticItems, mDynamicItems);
@@ -62,7 +63,6 @@ void GameManager::applyLevelSettings() {
 	
 }
 
-
 void GameManager::createBackgrounds() {
 	for (const auto & textureName : mCurrentSettings.backgroundImages) {
 		for (int i = 1; i <= mCurrentSettings.noOfScreens;i++) {
@@ -77,7 +77,6 @@ void GameManager::createBackgrounds() {
 	}
 }
 
-
 void GameManager::moveScreens() {
 
 	for (const auto & currentPlayer : mPlayerIndexes) {
@@ -89,43 +88,45 @@ void GameManager::moveScreens() {
 		sf::Vector2f relativeScreenPosition(mViewManager.getViewPosition(currentScreenNo).x + mViewManager.getViewSize(currentScreenNo).x / 2,
 			mViewManager.getViewPosition(currentScreenNo).y + mViewManager.getViewSize(currentScreenNo).y / 2);
 		mViewManager.selectMoveScreen(currentScreenNo);
-	
 		//move x
-		if (currentPlayerPosition.x > relativeScreenPosition.x && !(mViewManager.getViewPosition(currentScreenNo).x + mViewManager.getViewSize(currentScreenNo).x >= mCurrentSettings.totalLevelSize[currentScreenNo-1].x))  {
-			sf::Vector2f offset(currentPlayerPosition.x - relativeScreenPosition.x, 0);
-			mViewManager.move(offset);
-			for (auto & background : mBackgrounds) {
-				if (background->getScreenNumber() == currentScreenNo) {
-					background->move(offset);
+		if (!mFinishedScreen[currentScreenNo - 1]) {
+			if (currentPlayerPosition.x > relativeScreenPosition.x && !(mViewManager.getViewPosition(currentScreenNo).x + mViewManager.getViewSize(currentScreenNo).x >= mCurrentSettings.totalLevelSize[currentScreenNo - 1].x)) {
+				sf::Vector2f offset(currentPlayerPosition.x - relativeScreenPosition.x, 0);
+				mViewManager.move(offset);
+				for (auto & background : mBackgrounds) {
+					if (background->getScreenNumber() == currentScreenNo) {
+						background->move(offset);
+					}
 				}
-			}
 
-		} else if (currentPlayerPosition.x < relativeScreenPosition.x && !(mViewManager.getViewPosition(currentScreenNo).x <= 0)) {
-			sf::Vector2f offset((currentPlayerPosition.x - relativeScreenPosition.x), 0);
-			mViewManager.move(offset);
-			for (auto & background : mBackgrounds) {
-				if (background->getScreenNumber() == currentScreenNo) {
-					background->move(offset);
+			} else if (currentPlayerPosition.x < relativeScreenPosition.x && !(mViewManager.getViewPosition(currentScreenNo).x <= 0)) {
+				sf::Vector2f offset((currentPlayerPosition.x - relativeScreenPosition.x), 0);
+				mViewManager.move(offset);
+				for (auto & background : mBackgrounds) {
+					if (background->getScreenNumber() == currentScreenNo) {
+						background->move(offset);
+					}
 				}
 			}
-		}
-		//move y
-		if (currentPlayerPosition.y > relativeScreenPosition.y && !(mViewManager.getViewPosition(currentScreenNo).y + mViewManager.getViewSize(currentScreenNo).y >= mCurrentSettings.totalLevelSize[currentScreenNo - 1].y)) {
-			sf::Vector2f offset(0, (currentPlayerPosition.y - relativeScreenPosition.y)/25);
-			mViewManager.move(offset);
-			for (auto & background : mBackgrounds) {
-				if (background->getScreenNumber() == currentScreenNo) {
-					background->move(offset);
+			//move y
+			if (currentPlayerPosition.y > relativeScreenPosition.y && !(mViewManager.getViewPosition(currentScreenNo).y + mViewManager.getViewSize(currentScreenNo).y >= mCurrentSettings.totalLevelSize[currentScreenNo - 1].y)) {
+				sf::Vector2f offset(0, (currentPlayerPosition.y - relativeScreenPosition.y) / 25);
+				mViewManager.move(offset);
+				for (auto & background : mBackgrounds) {
+					if (background->getScreenNumber() == currentScreenNo) {
+						background->move(offset);
+					}
+				}
+			} else if (currentPlayerPosition.y < relativeScreenPosition.y && !(mViewManager.getViewPosition(currentScreenNo).y <= 0)) {
+				sf::Vector2f offset(0, (currentPlayerPosition.y - relativeScreenPosition.y) / 25);
+				mViewManager.move(offset);
+				for (auto & background : mBackgrounds) {
+					if (background->getScreenNumber() == currentScreenNo) {
+						background->move(offset);
+					}
 				}
 			}
-		} else if (currentPlayerPosition.y < relativeScreenPosition.y && !(mViewManager.getViewPosition(currentScreenNo).y <= 0)) {
-			sf::Vector2f offset(0,(currentPlayerPosition.y - relativeScreenPosition.y)/25);
-			mViewManager.move(offset);
-			for (auto & background : mBackgrounds) {
-				if (background->getScreenNumber() == currentScreenNo) {
-					background->move(offset);
-				}
-			}
+			
 		}
 		mViewManager.selectMoveScreen(currentScreenNo);
 	}
@@ -135,6 +136,7 @@ void GameManager::clearLevel() {
 	mDynamicItems.clear();
 	mStaticItems.clear();
 	mBackgrounds.clear();
+	mFinishTexts.clear();
 	for (auto & screen : mSelectedScreen) {
 		screen = false;
 	}
@@ -145,8 +147,6 @@ void GameManager::clearLevel() {
 }
 bool GameManager::checkLosingConditions() {
 	if (checkPlayerOutView() || Character::isDead()) {
-		mPlayerRespawn = true;
-		createLevel();
 		return true;
 	}
 	return false;
@@ -167,22 +167,37 @@ bool GameManager::checkPlayerOutView() {
 bool GameManager::checkLevelFinished() {
 	for (const auto & currentIndex : mPlayerIndexes){
 		int currentScreen = mDynamicItems[currentIndex] ->getScreenNumber();
+		sf::Vector2f relativeScreenPosition(mViewManager.getViewPosition(currentScreen).x + mViewManager.getViewSize(currentScreen).x / 2,
+			mViewManager.getViewPosition(currentScreen).y + mViewManager.getViewSize(currentScreen).y / 2);
+
 		if (mDynamicItems[currentIndex]->isFinished() && !mFinishedScreen[currentScreen-1]) {
 			mFinishedScreen[currentScreen - 1] = true;
 			mSelectedScreen[currentScreen - 1] = false;
-			mStaticItems.push_back(std::make_unique<Text>(
-				mCurrentSettings.finishPoints[currentScreen - 1] - sf::Vector2f(50, 50),
+			mFinishTexts.push_back(std::make_unique<Text>(
+				relativeScreenPosition,
 				sf::Vector2f(0, 0),
 				currentScreen,
 				"Finished good job",
-				20,
+				30,
 				"arial.ttf"));
+			auto currentTextRect = mFinishTexts[mFinishTexts.size() - 1]->getGlobalBounds();
+			mFinishTexts[mFinishTexts.size() - 1]->move(sf::Vector2f(-(currentTextRect.width / 2),-( currentTextRect.height / 2)));
+			mStaticItems.push_back(std::make_unique<Background>(
+				mPathOverlay + "transparantGrey.png",
+				mViewManager.getViewPosition(currentScreen),
+				mViewManager.getViewSize(currentScreen),
+				mViewManager.getViewSize(currentScreen),
+				currentScreen
+				));
 			mStaticItems[mStaticItems.size() - 1]->draw(mViewManager);
+			for (const auto& finishText : mFinishTexts) {
+				finishText->draw(mViewManager);
+			}
 			mViewManager.display();
 		}
 	}
 	int finishCounter = 0;
-	for (auto & finished : mFinishedScreen) {
+	for (const auto & finished : mFinishedScreen) {
 		if (finished) {
 			finishCounter++;
 		}
@@ -215,6 +230,8 @@ void GameManager::runGame() {
 	while (mViewManager.isOpen()) {
 		if (!mPlayingLevel) {
 			createLevel();
+			mCurrentDeathCount = 0;
+			mHUD.updateDeathCount(mCurrentDeathCount);
 			mPlayingLevel = !mPlayingLevel;
 		} else if (mPlayerRespawn) {
 			mPlayerRespawn = false;
@@ -248,7 +265,13 @@ void GameManager::runGame() {
 				for (auto & background : mBackgrounds) {
 					background->update(mPassedTime);
 				}
-				checkLosingConditions();
+				if (checkLosingConditions()) {
+					mPlayerRespawn = true;
+					createLevel();
+					mCurrentDeathCount++;
+					mHUD.updateDeathCount(mCurrentDeathCount);
+					break;
+				}
 				 if (checkLevelFinished()) {
 					mPlayingLevel = false;
 				 	mCurrentLevel++;
@@ -259,20 +282,25 @@ void GameManager::runGame() {
 			mPassedTime -= mFrameTime;
     	}
 
-
+		mHUD.updateHealth(Character::getHealth());
 		mViewManager.clear();
 		if (!mPlayerRespawn && mPlayingLevel) {
-			for (auto& background : mBackgrounds) {
+			for (const auto& background : mBackgrounds) {
 				background->draw(mViewManager);
 			}
 
-			for (auto& staticObject : mStaticItems) {
+			for (const auto& dynamicObject : mDynamicItems) {
+				dynamicObject->draw(mViewManager);
+			}
+
+			for (const auto& staticObject : mStaticItems) {
 				staticObject->draw(mViewManager);
 			}
 
-			for (auto& dynamicObject : mDynamicItems) {
-				dynamicObject->draw(mViewManager);
-			}
+			for (const auto& finishText : mFinishTexts) {
+				finishText->draw(mViewManager);
+			}	
+			mHUD.draw(mViewManager);
 		}
 		mViewManager.display();
 		actionCounter++;

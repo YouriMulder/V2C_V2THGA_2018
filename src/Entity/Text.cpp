@@ -20,6 +20,7 @@ Text::~Text()
 }
 
 void Text::draw(ViewManager & window) {
+	mText.setPosition(mPosition);
 	window.selectDrawingScreen(mScreenNumber);
 	window.draw(mText);
 }
@@ -38,4 +39,8 @@ void Text::setString(std::string newString) {
 
 void Text::setColor(sf::Color newColor) {
 	mText.setColor(newColor);
+}
+
+sf::FloatRect Text::getGlobalBounds() const {
+	return mText.getGlobalBounds();
 }

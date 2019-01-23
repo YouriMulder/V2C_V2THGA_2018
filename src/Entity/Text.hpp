@@ -20,6 +20,7 @@ public:
 	virtual void update(const sf::Time& deltaTime) override;
 	void setString(std::string newString);
 	void setColor(sf::Color newColor) override;
+	sf::FloatRect getGlobalBounds() const override;
 
 };
 
