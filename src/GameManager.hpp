@@ -11,17 +11,20 @@
 #include "Entity/Collision.hpp"
 #include "Entity/EntityBase.hpp"
 #include "Entity/Background.hpp"
-#include "Entity/Finish.hpp"
+#include "Entity/Text.hpp"
 #include "Factory.hpp"
+#include "HUD.hpp"
 
 class GameManager {
 private:
 	int mCurrentLevel;
+	int mCurrentDeathCount = 0;
 	bool mPlayingLevel = false;
 	bool mPlayerRespawn = false;
 	sf::RenderWindow mMainWindow;
 	ViewManager mViewManager;
 	Factory mFactory;
+	HUD mHUD;
 
 	Collision mCollisionManager;
 
@@ -34,13 +37,14 @@ private:
 	std::vector<std::unique_ptr<EntityBase>>  mStaticItems = {};
 	std::vector<std::unique_ptr<EntityBase>>  mDynamicItems = {};
 
-	std::vector<std::unique_ptr<EntityBase>> mBackgrounds = {};
-
+	std::vector<std::unique_ptr<EntityBase>> mBackgrounds  = {};
+	std::vector<std::unique_ptr<EntityBase>> mFinishTexts = {};
 	std::vector<std::string> mLevelFileNames;
 
 	std::string mPathLevels = "../res/levels/";
 	std::string mPathBackgrounds = "../res/Textures/Background/";
 	std::string mPathFinish = "../res/Textures/Finish/";
+	std::string mPathOverlay = "../res/Textures/Overlay/";
 
 	std::vector<int> mPlayerIndexes = {};
 

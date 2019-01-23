@@ -74,7 +74,7 @@ public:
 
 	/// \brief
 	/// Returns the outline of the platform
-	virtual sf::FloatRect getGlobalBounds() const = 0;
+	virtual sf::FloatRect getGlobalBounds() const;
 };
 
 #endif /* LEVELOBJECT_HPP */
