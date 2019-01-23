@@ -11,7 +11,7 @@
 #include "Entity/Collision.hpp"
 #include "Entity/EntityBase.hpp"
 #include "Entity/Background.hpp"
-#include "Entity/Finish.hpp"
+#include "Entity/Text.hpp"
 #include "Factory.hpp"
 
 class GameManager {
@@ -34,8 +34,7 @@ private:
 	std::vector<std::unique_ptr<EntityBase>>  mStaticItems = {};
 	std::vector<std::unique_ptr<EntityBase>>  mDynamicItems = {};
 
-	std::vector<std::unique_ptr<EntityBase>> mBackgrounds = {};
-
+	std::vector<std::unique_ptr<EntityBase>> mBackgrounds  = {};
 	std::vector<std::string> mLevelFileNames;
 
 	std::string mPathLevels = "../res/levels/";

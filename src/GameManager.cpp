@@ -56,6 +56,10 @@ void GameManager::readLevelInfo() {
 
 void GameManager::applyLevelSettings() {
 	mViewManager.changeAmountOfScreens(mCurrentSettings.noOfScreens);
+	if (mViewManager.getAmountOfScreens() == 1) {
+		mSelectedScreen[0] = true;
+	}
+	
 }
 
 
@@ -78,11 +82,15 @@ void GameManager::moveScreens() {
 
 	for (const auto & currentPlayer : mPlayerIndexes) {
 		sf::Vector2f currentPlayerPosition = mDynamicItems[currentPlayer]->getPosition();
+		sf::Vector2f currentPlayerSize = mDynamicItems[currentPlayer]->getSize();
+		currentPlayerPosition.x = currentPlayerPosition.x + currentPlayerSize.x / 2;
+		currentPlayerPosition.y = currentPlayerPosition.y + currentPlayerSize.y / 2;
 		int currentScreenNo = mDynamicItems[currentPlayer]->getScreenNumber();
 		sf::Vector2f relativeScreenPosition(mViewManager.getViewPosition(currentScreenNo).x + mViewManager.getViewSize(currentScreenNo).x / 2,
 			mViewManager.getViewPosition(currentScreenNo).y + mViewManager.getViewSize(currentScreenNo).y / 2);
 		mViewManager.selectMoveScreen(currentScreenNo);
 	
+		//move x
 		if (currentPlayerPosition.x > relativeScreenPosition.x && !(mViewManager.getViewPosition(currentScreenNo).x + mViewManager.getViewSize(currentScreenNo).x >= mCurrentSettings.totalLevelSize[currentScreenNo-1].x))  {
 			sf::Vector2f offset(currentPlayerPosition.x - relativeScreenPosition.x, 0);
 			mViewManager.move(offset);
@@ -92,8 +100,26 @@ void GameManager::moveScreens() {
 				}
 			}
 
-		} else if (currentPlayerPosition.x < relativeScreenPosition.x && mViewManager.getViewPosition(currentScreenNo).x != 0) {
+		} else if (currentPlayerPosition.x < relativeScreenPosition.x && !(mViewManager.getViewPosition(currentScreenNo).x <= 0)) {
 			sf::Vector2f offset((currentPlayerPosition.x - relativeScreenPosition.x), 0);
+			mViewManager.move(offset);
+			for (auto & background : mBackgrounds) {
+				if (background->getScreenNumber() == currentScreenNo) {
+					background->move(offset);
+				}
+			}
+		}
+		//move y
+		if (currentPlayerPosition.y > relativeScreenPosition.y && !(mViewManager.getViewPosition(currentScreenNo).y + mViewManager.getViewSize(currentScreenNo).y >= mCurrentSettings.totalLevelSize[currentScreenNo - 1].y)) {
+			sf::Vector2f offset(0, (currentPlayerPosition.y - relativeScreenPosition.y)/25);
+			mViewManager.move(offset);
+			for (auto & background : mBackgrounds) {
+				if (background->getScreenNumber() == currentScreenNo) {
+					background->move(offset);
+				}
+			}
+		} else if (currentPlayerPosition.y < relativeScreenPosition.y && !(mViewManager.getViewPosition(currentScreenNo).y <= 0)) {
+			sf::Vector2f offset(0,(currentPlayerPosition.y - relativeScreenPosition.y)/25);
 			mViewManager.move(offset);
 			for (auto & background : mBackgrounds) {
 				if (background->getScreenNumber() == currentScreenNo) {
@@ -141,9 +167,18 @@ bool GameManager::checkPlayerOutView() {
 bool GameManager::checkLevelFinished() {
 	for (const auto & currentIndex : mPlayerIndexes){
 		int currentScreen = mDynamicItems[currentIndex] ->getScreenNumber();
-		mFinishedScreen[currentScreen - 1] = mDynamicItems[currentIndex]->isFinished();
-		if (mFinishedScreen[currentScreen - 1]) {
+		if (mDynamicItems[currentIndex]->isFinished() && !mFinishedScreen[currentScreen-1]) {
+			mFinishedScreen[currentScreen - 1] = true;
 			mSelectedScreen[currentScreen - 1] = false;
+			mStaticItems.push_back(std::make_unique<Text>(
+				mCurrentSettings.finishPoints[currentScreen - 1] - sf::Vector2f(50, 50),
+				sf::Vector2f(0, 0),
+				currentScreen,
+				"Finished good job",
+				20,
+				"arial.ttf"));
+			mStaticItems[mStaticItems.size() - 1]->draw(mViewManager);
+			mViewManager.display();
 		}
 	}
 	int finishCounter = 0;
@@ -154,6 +189,7 @@ bool GameManager::checkLevelFinished() {
 	}
 	if (finishCounter == mCurrentSettings.noOfScreens) {
 		std::cout << "level finished";
+		sf::sleep(sf::milliseconds(1000));
 		return true;
 	}
 	return false;
