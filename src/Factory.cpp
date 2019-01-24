@@ -153,7 +153,7 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 				text >> startPoint >> deltaXMovement;
 				movableObjects.push_back(std::make_unique<NPC>(startPoint, deltaXMovement, i));
 			} else if (name == "CHARACTERS") {
-				std::cerr << "END OBJECTS FOUND\n";
+				//std::cerr << "END OBJECTS FOUND\n";
 				readCharacters(text, amountOfScreens, movableObjects);
 				break;
 			} else {
@@ -174,7 +174,7 @@ void Factory::readCharacters(std::ifstream& text, int amountOfScreens, std::vect
 			movableObjects.push_back(std::make_unique<Player>(position, i));
 		}
 	}
-	std::cerr << "END CHARACTERS FOUND\n";
+	//std::cerr << "END CHARACTERS FOUND\n";
 }
 
 void Factory::createFinishes(std::vector<std::unique_ptr<EntityBase>> & staticObjects) {

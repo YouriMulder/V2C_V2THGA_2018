@@ -113,8 +113,8 @@ void Collision::checkScope() {
 
 // -1 and -2 to fix the bottom collision otherwise the left and right will be detected first.
 CollisionBoxes Collision::createCollisionBoxes(const sf::FloatRect & mainBox) {
-	int pixelOffsetWidth = mainBox.width * 0.2;
-	int pixelOffsetHeight = mainBox.height * 0.2;
+	int pixelOffsetWidth = mainBox.width * 0.2f;
+	int pixelOffsetHeight = mainBox.height * 0.2f;
 
 	auto left = sf::FloatRect(	mainBox.left, mainBox.top + pixelOffsetWidth, 1, mainBox.height - pixelOffsetWidth * 2);
 	auto right = sf::FloatRect(	mainBox.left + mainBox.width, mainBox.top + pixelOffsetWidth, 1, mainBox.height - pixelOffsetWidth * 2);
@@ -155,13 +155,13 @@ void Collision::collisionHandler(std::unique_ptr<EntityBase> & object1,
 
 void Collision::checkCollisions() {
 	checkScope();
+	// check dynamic items with static and dynamic
 	for (const auto & dynamicIndex : mNeedsCheckDynamic) {
 		bool collisionFound = false;		
 		std::vector<std::unique_ptr<EntityBase>*> top;
 		std::vector<std::unique_ptr<EntityBase>*> bottom;
 		std::vector<std::unique_ptr<EntityBase>*> left;
 		std::vector<std::unique_ptr<EntityBase>*> right;
-		
 		CollisionSides collisionSides;
 		
 
@@ -192,6 +192,34 @@ void Collision::checkCollisions() {
 			currentDynamicItem->handleCollision(top, bottom, left, right, collisionSides);
 		} else {
 			currentDynamicItem->handleNoCollision();
+		}
+	}
+	
+	// check for screen selection
+	for (const auto & staticIndex : mNeedsCheckStatic) {
+		bool collisionFound = false;		
+		std::vector<std::unique_ptr<EntityBase>*> top;
+		std::vector<std::unique_ptr<EntityBase>*> bottom;
+		std::vector<std::unique_ptr<EntityBase>*> left;
+		std::vector<std::unique_ptr<EntityBase>*> right;
+		CollisionSides collisionSides;
+		
+		std::unique_ptr<EntityBase> & currentStaticItem = mStaticItems[staticIndex];
+		
+		for (const auto & dynamicIndex : mNeedsCheckDynamic) {
+			std::unique_ptr<EntityBase> & currentDynamicItem = mDynamicItems[dynamicIndex];
+			if (currentStaticItem->getScreenNumber() == currentDynamicItem->getScreenNumber()) {
+				if (currentStaticItem->getGlobalBounds().intersects(currentDynamicItem->getGlobalBounds())) {//collision detected
+					collisionHandler(currentStaticItem, currentDynamicItem, top, bottom, left, right, collisionSides);
+					collisionFound = true;
+				}
+			}
+		}
+		
+		if(collisionFound) {
+			currentStaticItem->handleCollision(top, bottom, left, right, collisionSides);
+		} else {
+			currentStaticItem->handleNoCollision();
 		}
 	}
 }

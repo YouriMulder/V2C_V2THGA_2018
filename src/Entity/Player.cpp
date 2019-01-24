@@ -3,6 +3,26 @@
 #include "../EventManager.hpp"
 #include <SFML/Graphics.hpp>
 
+// static 
+uint_least8_t Player::maxHealth = 10;
+uint_least8_t Player::health = maxHealth;
+
+uint_least8_t Player::getHealth() {
+	return health;
+}
+
+void Player::resetHealth() {
+	health = maxHealth;
+}
+
+bool Player::isAlive() {
+	return health > 0;
+}
+
+bool Player::isDead() {
+	return !isAlive();
+}
+
 Player::Player(const sf::Vector2f& position, int screenNumber):
 	Character(
 		position, sf::Vector2f(19.0f, 34.0f), 
@@ -17,10 +37,22 @@ Player::Player(const sf::Vector2f& position, int screenNumber):
 
 Player::~Player() {}
 
+void Player::hurt(uint_least8_t damage) {
+	if(damage >= Player::health) {
+		Player::health = 0;
+	} else {
+		Player::health -= damage;
+	}
+}
+
 void Player::bindActions() {
 	Character::bindAction(EventManager(sf::Keyboard::Left, 		[&] 	{addAction(Character::Action::Left);	}));
 	Character::bindAction(EventManager(sf::Keyboard::Right, 	[&] 	{addAction(Character::Action::Right);	}));
 	Character::bindAction(EventManager(sf::Keyboard::Up, 		[&] 	{addAction(Character::Action::Jump);	}));
+	Character::bindAction(EventManager(sf::Keyboard::A, 		[&] 	{addAction(Character::Action::Left);	}));
+	Character::bindAction(EventManager(sf::Keyboard::D, 		[&] 	{addAction(Character::Action::Right);	}));
+	Character::bindAction(EventManager(sf::Keyboard::W, 		[&] 	{addAction(Character::Action::Jump);	}));
+	
 	Character::bindAction(EventManager(sf::Keyboard::Space, 	[&] 	{addAction(Character::Action::Jump);	}));
 	Character::bindAction(EventManager(sf::Keyboard::LShift, 	[&] 	{addAction(Character::Action::Run);		}));
 }
