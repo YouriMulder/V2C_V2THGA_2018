@@ -107,6 +107,7 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 				} else {
 					staticObjects.push_back(std::make_unique<Platform>(textureName, position, size, i, textureRepeat));
 				}
+				std::cout << "position: " << position << std::endl;
 			} else if (name == "spike") {
 				std::string textureName;
 				sf::Vector2f position;
