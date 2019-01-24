@@ -1,11 +1,10 @@
 #include "GameManager.hpp"
 #include <fstream>
-#include "Entity/Character.hpp"
-
+#include "Entity/Player.hpp"
 
 GameManager::GameManager(const std::string& levelFileName) :
 	mCurrentLevel(0),
-	mMainWindow(sf::VideoMode(1280, 720), "MiNdF*cK"),
+	mMainWindow(sf::VideoMode(1920, 1080), "MiNdF*cK",sf::Style::Fullscreen),
 	mViewManager(mMainWindow, 1),
 	mFactory(),
 	mHUD(),
@@ -59,8 +58,14 @@ void GameManager::applyLevelSettings() {
 	mViewManager.changeAmountOfScreens(mCurrentSettings.noOfScreens);
 	if (mViewManager.getAmountOfScreens() == 1) {
 		mSelectedScreen[0] = true;
+	} else if (mViewManager.getAmountOfScreens() == 2) {
+		mSelectedScreen[0] = true;
+		mSelectedScreen[1] = true;
 	}
-	
+	mCurrentScreensNotFinished = mCurrentSettings.noOfScreens;
+	if (!mMusic.openFromFile(mPathMusic + mCurrentSettings.songName)) {
+		std::cerr << "faild loading music";
+	}
 }
 
 void GameManager::createBackgrounds() {
@@ -72,7 +77,7 @@ void GameManager::createBackgrounds() {
 				sf::Vector2f(384,216),
 				mViewManager.getViewSize(i),
 				i
-				));
+			));
 		}
 	}
 }
@@ -146,7 +151,7 @@ void GameManager::clearLevel() {
 	mPlayerIndexes.clear();
 }
 bool GameManager::checkLosingConditions() {
-	if (checkPlayerOutView() || Character::isDead()) {
+	if (checkPlayerOutView() || Player::isDead()) {
 		return true;
 	}
 	return false;
@@ -189,6 +194,7 @@ bool GameManager::checkLevelFinished() {
 				mViewManager.getViewSize(currentScreen),
 				currentScreen
 				));
+			mCurrentScreensNotFinished--;
 			mStaticItems[mStaticItems.size() - 1]->draw(mViewManager);
 			for (const auto& finishText : mFinishTexts) {
 				finishText->draw(mViewManager);
@@ -223,11 +229,28 @@ void GameManager::selectScreen(int screenNumber) {
 	}
 }
 
+bool GameManager::check2Selected() {
+	int count = 0;
+	if (mCurrentScreensNotFinished <= 1) {
+		return true;
+	}
+	for (auto & selected : mSelectedScreen) {
+		if (selected) {
+			count++;
+		}
+	}
+	if (count >= 2) {
+		return true;
+	}
+	return false;
+}
+
 void GameManager::runGame() {	
-	int actionCounter = 0;
+	sf::Event event;
 	while (mViewManager.isOpen()) {
 		if (!mPlayingLevel) {
 			createLevel();
+			mMusic.play();
 			mCurrentDeathCount = 0;
 			mHUD.updateDeathCount(mCurrentDeathCount);
 			mPlayingLevel = !mPlayingLevel;
@@ -235,17 +258,14 @@ void GameManager::runGame() {
 			mPlayerRespawn = false;
 		}
 
-		if (actionCounter >= 10) {
-			for (auto & action : actions) {
-				action();
-			}
-			actionCounter = 0;
-		}
-		
-		sf::Event event;
 		while (mViewManager.pollEvent(event)) {
-			if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed) {
 				mViewManager.close();
+			}
+
+			for (auto & action : actions) {
+				action(event);
+			}
 		}
 		
 		mPassedTime += mUpdateClock.restart();
@@ -255,7 +275,7 @@ void GameManager::runGame() {
 			if (numUpdates++ < 10) {
 				mCollisionManager.checkCollisions();
 				for(auto& dynamicObject : mDynamicItems) {
-					if (mSelectedScreen[dynamicObject->getScreenNumber() - 1]) {
+					if (mSelectedScreen[dynamicObject->getScreenNumber() - 1] && check2Selected()) {
 						dynamicObject->update(mPassedTime);
 					}
 				}
@@ -268,20 +288,31 @@ void GameManager::runGame() {
 					createLevel();
 					mCurrentDeathCount++;
 					mHUD.updateDeathCount(mCurrentDeathCount);
+					Player::resetHealth();
 					break;
 				}
-				 if (checkLevelFinished()) {
+				if (checkLevelFinished()) {
 					mPlayingLevel = false;
 				 	mCurrentLevel++;
+					EntityBase::backToStartId();
 					break;
-				 }
+				}
 				
 			}
 			mPassedTime -= mFrameTime;
     	}
 
-		mHUD.updateHealth(Character::getHealth());
+		mHUD.updateHealth(Player::getHealth());
 		mViewManager.clear();
+		int count = 1;
+		for (const auto & selected : mSelectedScreen) {
+			if (selected) {
+				mViewManager.setBordorColor(count);
+			} else {
+				mViewManager.resetBordorColor(count);
+			}
+			count++;
+		}
 		if (!mPlayerRespawn && mPlayingLevel) {
 			for (const auto& background : mBackgrounds) {
 				background->draw(mViewManager);
@@ -301,6 +332,5 @@ void GameManager::runGame() {
 			mHUD.draw(mViewManager);
 		}
 		mViewManager.display();
-		actionCounter++;
 	}
 }

@@ -1,7 +1,10 @@
 #ifndef TEXT_HPP 
 #define TEXT_HPP
-#include "EntityBase.hpp"
 #include <string> 
+
+#include "EntityBase.hpp"
+#include "../ViewManager.hpp"
+
 class Text : public EntityBase {  
 private:
 	sf::Text mText;
@@ -16,10 +19,10 @@ public:
 	virtual ~Text();
 
 	virtual void draw(sf::RenderWindow& window) override;
-	void draw(ViewManager& window) override;
+	virtual void draw(ViewManager& window) override;
 	virtual void update(const sf::Time& deltaTime) override;
 	void setString(const std::string& newString);
-	void setColor(const sf::Color& newColor) override;
+	virtual void setColor(const sf::Color& newColor) override;
 	sf::FloatRect getGlobalBounds() const override;
 
 };

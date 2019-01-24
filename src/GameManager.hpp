@@ -6,6 +6,7 @@
 #include <array>
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "EventManager.hpp"
 #include "ViewManager.hpp"
 #include "Entity/Collision.hpp"
@@ -20,16 +21,17 @@ class GameManager {
 private:
 	int mCurrentLevel;
 	int mCurrentDeathCount = 0;
+	int mCurrentScreensNotFinished;
 	bool mPlayingLevel = false;
 	bool mPlayerRespawn = false;
 	sf::RenderWindow mMainWindow;
 	ViewManager mViewManager;
 	Factory mFactory;
 	HUD mHUD;
-
 	Collision mCollisionManager;
 
 	SettingsData mCurrentSettings;
+	sf::Music mMusic;
 
 	sf::Clock mUpdateClock;
 	sf::Time mPassedTime;
@@ -46,6 +48,7 @@ private:
 	std::string mPathBackgrounds = "../res/Textures/Background/";
 	std::string mPathFinish = "../res/Textures/Finish/";
 	std::string mPathOverlay = "../res/Textures/Overlay/";
+	std::string mPathMusic = "../res/Sounds/Music/";
 
 	std::vector<int> mPlayerIndexes = {};
 
@@ -69,13 +72,16 @@ private:
 	bool checkPlayerOutView();
 	bool checkLevelFinished();
 	bool checkLosingConditions();
+	bool check2Selected();
 
 
-	EventManager actions[4] = {
-	EventManager(sf::Keyboard::Num1, 	[&] {selectScreen(1); }),
-	EventManager(sf::Keyboard::Num2, 	[&] {selectScreen(2); }),
-	EventManager(sf::Keyboard::Num3, 	[&] {selectScreen(3); }),
-	EventManager(sf::Keyboard::Num4, 	[&] {selectScreen(4); })
+
+	EventManager actions[5] = {
+		EventManager(sf::Keyboard::Num1, 	[&] {selectScreen(1); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Num2, 	[&] {selectScreen(2); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Num3, 	[&] {selectScreen(3); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Num4, 	[&] {selectScreen(4); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Escape, 	[&] {mViewManager.close(); })
 	};
 
 public:

@@ -20,6 +20,7 @@ private:
 
 	int sizeOffset = 17;
 	int textOffset = 65;
+	sf::Vector2f startOffset = sf::Vector2f(4, 4);
 	sf::Color mHealthColor = sf::Color(255, 32, 1);
 
 	std::string mPathHUD = "../res/Textures/HUD/";

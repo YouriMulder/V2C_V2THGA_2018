@@ -1,4 +1,11 @@
 #include "EntityBase.hpp"
+#include <iostream>
+
+uint_least64_t EntityBase::nextId = 0;
+
+void EntityBase::increaseNextId() {
+	nextId++;
+}
 
 EntityBase::EntityBase(
 	const sf::Vector2f& position, 
@@ -6,10 +13,18 @@ EntityBase::EntityBase(
 	int screenNumber 
 ):
 	mPosition(position), mSize(size), mScreenNumber(screenNumber)
-{}
+{
+	increaseNextId();
+}
 
-EntityBase::~EntityBase() {
+EntityBase::~EntityBase() {}
 
+uint_least64_t EntityBase::getId() const {
+	return id;
+}
+
+void EntityBase::backToStartId() {
+	nextId = 0;
 }
 
 void EntityBase::move(float deltaX, float deltaY) {

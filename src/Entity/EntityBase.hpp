@@ -4,21 +4,32 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <vector>
+#include <cstdint>
 
 #include "../ViewManager.hpp"
 #include "Side.hpp"
 
 class EntityBase {
+private: 
+	static void increaseNextId();
+
 protected:
+	uint_least64_t id;
 	sf::Vector2f mPosition;
 	sf::Vector2f mSize;
 	int mScreenNumber;
+	
+	static uint_least64_t nextId;
 public:
+	static void backToStartId();
+
 	EntityBase(
 		const sf::Vector2f& mPosition, 
 		const sf::Vector2f mSize, 
 		int mScreenNumber 
 	);
+	
+	uint_least64_t getId() const;
 	void move(float deltaX, float deltaY);
 	void move(const sf::Vector2f& deltaPosition);
 	void setPosition(float x, float y);
@@ -26,6 +37,8 @@ public:
 
 	void setScreenNumber(int newScreenNumber);
 	int getScreenNumber() const;
+
+	virtual void hurt(uint_least8_t damage) {};
 
 	virtual sf::Vector2f getSize() const;
 	virtual sf::Vector2f getPosition() const;

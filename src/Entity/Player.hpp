@@ -5,9 +5,20 @@
 
 class Player : public Character {
 public:
+	static uint_least8_t getHealth();
+	static void resetHealth();
+	static bool isDead();
+	static bool isAlive();
+
+protected:
+	// static
+	static uint_least8_t maxHealth;
+	static uint_least8_t health;
+public:
 	Player(const sf::Vector2f& position, int screenNumber);
 	virtual ~Player();
 
+	virtual void hurt(uint_least8_t damage);
 	virtual void bindActions() override;
 	virtual void bindAnimations() override;
 };
