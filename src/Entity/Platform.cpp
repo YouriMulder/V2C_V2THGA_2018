@@ -13,7 +13,3 @@ Platform::Platform(const std::string& filename, const sf::Vector2f& position, co
 {}
 
 Platform::~Platform() {}
-
-sf::FloatRect Platform::getGlobalBounds() const {
-	return mSprite.getGlobalBounds();
-}

@@ -20,13 +20,19 @@ bool Character::isDead() {
 	return !isAlive();
 }
 
+template<typename T>
+std::ostream& operator<<(typename std::enable_if<std::is_enum<T>::value, std::ostream>::type& stream, const T& e) {
+    return stream << static_cast<typename std::underlying_type<T>::type>(e);
+}
+
 
 Character::Character(
 	const sf::Vector2f& position,
 	const sf::Vector2f& size,
 	int screenNumber,
 	const sf::Vector2f& maxVelocity, 
-	const sf::Vector2f& acceleration
+	const sf::Vector2f& acceleration,
+	const std::string& characterSheetPath
 ):
 	EntityBase(position, size, screenNumber),
 	mVelocity(0.0f, 0.0f),
@@ -43,10 +49,9 @@ Character::Character(
 	mSpriteHeight(size.y),
 	mCurrentSpriteSheetLocation(0,0,size.x,size.y)
 {
-	mTexture.loadFromFile("../res/Textures/Player/player.png");
+	mTexture.loadFromFile(characterSheetPath);
 	mSprite = sf::Sprite(mTexture, mCurrentSpriteSheetLocation);
 	mSprite.setPosition(EntityBase::mPosition);
-	mSprite.scale(2.0f, 2.0f);
 	mSize = sf::Vector2f(
 		mSprite.getGlobalBounds().width, 
 		mSprite.getGlobalBounds().height
@@ -58,6 +63,17 @@ Character::~Character() { }
 // non static
 void Character::addAction(const Action& newAction) {
 	mUnperformedActions.push(newAction);
+}
+
+void Character::bindAction(const EventManager& event) {
+	actions.push_back(event);
+}
+
+void Character::bindAnimation(
+	const State& state, 
+	const AnimationSequence& animationSequence) 
+{
+	mAnimations.push_back(std::make_pair(state, animationSequence));
 }
 
 void Character::move(sf::Vector2f& delta) {
@@ -118,6 +134,7 @@ void Character::updateState(const Action& action) {
 		case Action::Left: {
 			if(isMovingX()) {
 				mState = State::Moving;
+				updateFacingDirection();
 			} else {
 				mState = State::Idle;
 			}
@@ -126,6 +143,7 @@ void Character::updateState(const Action& action) {
 		case Action::Right: {
 			if(isMovingX()) {
 				mState = State::Moving;
+				updateFacingDirection();
 			} else {
 				mState = State::Idle;
 			}			
@@ -168,9 +186,7 @@ void Character::jump() {
 		mIsJumping = true;
 		applyMovement(Action::Jump);
 		mCanDoubleJump = true;
-	}
-	else if (mCanDoubleJump && !mIsJumping) {
-		std::cout << "doublejump\n";
+	} else if (mCanDoubleJump && !mIsJumping) {
 		mJumpForce = mStartingJumpForce;
 		mIsInAir = true;
 		mIsJumping = true;
@@ -236,7 +252,6 @@ void Character::handleCollision(
 	std::vector<std::unique_ptr<EntityBase>*> bottom, 
 	std::vector<std::unique_ptr<EntityBase>*> left, 
 	std::vector<std::unique_ptr<EntityBase>*> right, 
-		
 	CollisionSides hitSides
 ) {
 	restrictedSides = hitSides;
@@ -253,7 +268,6 @@ void Character::handleCollision(
 		}
 	}
 
-
 	if(hitSides.bottom) {
 		// move along with platforms
 		auto highestBottom = bottom[0];
@@ -263,12 +277,14 @@ void Character::handleCollision(
 			}
 		}
 
+
 		setPosition( 
 			sf::Vector2f(
 				mPosition.x - ((*highestBottom)->getPosition().x - (*highestBottom)->getNextPosition().x),
-				(*highestBottom)->getPosition().y - getSize().y
+				(*highestBottom)->getPosition().y - getSize().y + 1 // otherwise the player will always fall when standing on moving entities
 			) 
 		);
+
 		mIsInAir = false;
 		mIsJumping = false;
 		mCanDoubleJump = true;
@@ -292,10 +308,29 @@ void Character::handleNoCollision() {
 	mIsInAir = true;
 }
 
+sf::Vector2f Character::getSize() const {
+	return sf::Vector2f(
+		mSprite.getGlobalBounds().width,
+		mSprite.getGlobalBounds().height
+	);
+}
 
 sf::FloatRect Character::getGlobalBounds() const {
 	return mSprite.getGlobalBounds();
 }
+
+void Character::setSpriteScale(float x, float y) {
+	mSprite.setScale(x, y);
+	updateSizeUsingSprite();
+}
+
+void Character::updateSizeUsingSprite() {
+	EntityBase::mSize = sf::Vector2f(
+		mSprite.getGlobalBounds().width,
+		mSprite.getGlobalBounds().height	
+	);
+}
+
 
 void Character::update(const sf::Time& deltaTime) {
 	mVelocity.x = 0;
@@ -347,7 +382,6 @@ void Character::animate(const sf::Time& deltaTime) {
 	timeSinceLastAnimation += deltaTime;
 
 	updateFacingDirection();
-
 	if(mState != mPreviousState) {
 		for(const auto& animation : mAnimations) {
 			if(mState == animation.first) {
@@ -391,6 +425,10 @@ void Character::animate(const sf::Time& deltaTime) {
 		}
 	}
 	mPreviousState = mState;
+	mSize = sf::Vector2f(
+		mSprite.getGlobalBounds().width, 
+		mSprite.getGlobalBounds().height
+	);
 }
 
 void Character::draw(sf::RenderWindow& window) {
