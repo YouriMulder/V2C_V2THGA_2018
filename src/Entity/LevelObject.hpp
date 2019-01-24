@@ -3,7 +3,7 @@
 
 #include "SFML/Graphics.hpp"
 #include "EntityBase.hpp"
-#include "ViewManager.hpp"
+#include "../ViewManager.hpp"
 #include <string>
 
 class LevelObject : public EntityBase {
@@ -42,6 +42,8 @@ public:
 	LevelObject(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
 		int screenNumber, bool repeated = false);
 
+	virtual ~LevelObject();
+
 	/// \brief
 	/// Changes the size of the platform
 	void resize(float width, float height);
@@ -60,19 +62,23 @@ public:
 
 	/// \brief
 	/// Draws the platform in the given window
-	void draw(sf::RenderWindow& window) override;
+	virtual void draw(sf::RenderWindow& window) override;
 
 	/// \brief
 	/// Draws the platform in the given window
-	void draw(ViewManager& window) override;
+	virtual void draw(ViewManager& window) override;
 
 	/// \brief
 	/// Updates the position of the platform
-	void update() override;
+	virtual void update(const sf::Time& deltaTime) override;
+
+	/// \brief
+	/// Return the position of the sprite
+	virtual sf::Vector2f getPosition() const override;
 
 	/// \brief
 	/// Returns the outline of the platform
-	virtual sf::FloatRect getGlobalBounds() const = 0;
+	virtual sf::FloatRect getGlobalBounds() const override;
 };
 
 #endif /* LEVELOBJECT_HPP */

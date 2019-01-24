@@ -3,7 +3,7 @@
 
 #include "SFML/Graphics.hpp"
 #include "LevelObject.hpp"
-#include "ViewManager.hpp"
+#include "../ViewManager.hpp"
 #include <string>
 
 class Spikes : public LevelObject {

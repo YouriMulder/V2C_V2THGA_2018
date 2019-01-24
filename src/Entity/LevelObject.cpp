@@ -24,6 +24,8 @@ LevelObject::LevelObject(const std::string& filename, const sf::Vector2f& positi
 	mSprite.setPosition(position);
 }
 
+LevelObject::~LevelObject() {}
+
 void LevelObject::resize(float width, float height) {
 	mSize = { width, height };
 	mSprite.setScale(width / mSprite.getGlobalBounds().width, height / mSprite.getGlobalBounds().height);
@@ -45,6 +47,11 @@ void LevelObject::resizeHeight(float height) {
 }
 
 void LevelObject::draw(sf::RenderWindow& window) {
+	sf::RectangleShape test;
+	test.setSize(sf::Vector2f(getGlobalBounds().width, getGlobalBounds().height));
+	test.setPosition(sf::Vector2f(getGlobalBounds().left, getGlobalBounds().top));
+	test.setOutlineColor(sf::Color::Red);
+	window.draw(test);
 	window.draw(mSprite);
 }
 
@@ -53,6 +60,14 @@ void LevelObject::draw(ViewManager& window) {
 	window.draw(mSprite);
 }
 
-void LevelObject::update() {
+void LevelObject::update(const sf::Time& deltaTime) {
 	mSprite.setPosition(mPosition);
+}
+
+sf::Vector2f LevelObject::getPosition() const {
+	return mSprite.getPosition();
+}
+
+sf::FloatRect LevelObject::getGlobalBounds() const {
+	return mSprite.getGlobalBounds();
 }

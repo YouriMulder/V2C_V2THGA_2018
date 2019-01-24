@@ -8,51 +8,14 @@ sf::Vector2f ViewManager::convertVector2u(const sf::Vector2u & input) {
 
 
 ViewManager::ViewManager(sf::RenderWindow & mainWindow, const int & noOfScreens):
-	mMainWindow(mainWindow)
+	mMainWindow(mainWindow),
+	mAmountOfScreens(noOfScreens)
 {
 	mMainWindow.setFramerateLimit(60);
 	mScreens.reserve(4);
-	sf::Vector2f mainWindowSize = convertVector2u(mainWindow.getSize());
+	changeAmountOfScreens(mAmountOfScreens);
 
-	if (noOfScreens == 1) {	
-		mScreens.push_back(screen{ 1,mainWindow.getDefaultView() });
-		resetDrawingScreen();
-	} else if (noOfScreens == 2) {
-		screen newScreen1{ 1, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y / 2)) };
-		screen newScreen2{ 2, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y)) };
-		newScreen1.view.setViewport(sf::FloatRect(0, 0, 1, 0.5));
-		newScreen2.view.setViewport(sf::FloatRect(0, 0.5, 1, 1));
-
-		mScreens.push_back(newScreen1);
-		mScreens.push_back(newScreen2);
-
-		mLines[0].position = sf::Vector2f(0.0, mainWindowSize.y / 2);
-		mLines[1].position = sf::Vector2f(mainWindowSize.x, mainWindowSize.y / 2);
-	} else if (noOfScreens == 4) {
-		screen newScreen1{ 1, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
-		newScreen1.view.setViewport(sf::FloatRect(0, 0, 0.5, 0.5));
-
-		screen newScreen2{ 2, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y / 2)) };
-		newScreen2.view.setViewport(sf::FloatRect(0.5, 0, 1, 0.5));
-
-		screen newScreen3{ 3, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y)) };
-		newScreen3.view.setViewport(sf::FloatRect(0, 0.5, 0.5, 1));
-
-		screen newScreen4{ 4, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y)) };
-		newScreen4.view.setViewport(sf::FloatRect(0.5, 0.5, 1, 1));
-
-		mScreens.push_back(newScreen1);
-		mScreens.push_back(newScreen2);
-		mScreens.push_back(newScreen3);
-		mScreens.push_back(newScreen4);
-
-		mLines[0].position = sf::Vector2f(mainWindowSize.x / 2, 0.0);
-		mLines[1].position = sf::Vector2f(mainWindowSize.x / 2, mainWindowSize.y);
-		mLines[2].position = sf::Vector2f(0.0, mainWindowSize.y / 2);
-		mLines[3].position = sf::Vector2f(mainWindowSize.x, mainWindowSize.y / 2);
-	} else {
-		std::cout << "not a correct amount of screens" << noOfScreens << std::endl;
-	}
+	
 }
 
 
@@ -110,7 +73,9 @@ void ViewManager::move(const sf::Vector2f & offset) {
 
 void ViewManager::display() {
 	resetDrawingScreen();
-	mMainWindow.draw(mLines, 4, sf::Lines);
+	if (mScreens.size() > 1) {
+		mMainWindow.draw(mLines, 4, sf::Lines);
+	}
 	mMainWindow.display();
 }
 
@@ -153,3 +118,53 @@ sf::Vector2f ViewManager::getViewSize(const int & screenNumber) const{
 	}
 	return sf::Vector2f(0.f, 0.f);
 }
+
+int ViewManager::getAmountOfScreens() {
+	return mAmountOfScreens;
+}
+
+void ViewManager::changeAmountOfScreens(int newAmount) {
+	sf::Vector2f mainWindowSize = convertVector2u(mMainWindow.getSize());
+	mScreens.clear();
+	mAmountOfScreens = newAmount;
+	if (newAmount== 1) {
+		mScreens.push_back(screen{ 1,mMainWindow.getDefaultView() });
+		resetDrawingScreen();
+	} else if (newAmount == 2) {
+		screen newScreen1{ 1, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y / 2)) };
+		screen newScreen2{ 2, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y / 2)) };
+		newScreen1.view.setViewport(sf::FloatRect(0, 0, 1, 0.5));
+		newScreen2.view.setViewport(sf::FloatRect(0, 0.5, 1, 0.5));
+
+		mScreens.push_back(newScreen1);
+		mScreens.push_back(newScreen2);
+
+		mLines[0].position = sf::Vector2f(0.0, mainWindowSize.y / 2);
+		mLines[1].position = sf::Vector2f(mainWindowSize.x, mainWindowSize.y / 2);
+	} else if (newAmount == 4) {
+		screen newScreen1{ 1, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
+		newScreen1.view.setViewport(sf::FloatRect(0, 0, 0.5, 0.5));
+
+		screen newScreen2{ 2, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
+		newScreen2.view.setViewport(sf::FloatRect(0.5, 0, 0.5, 0.5));
+
+		screen newScreen3{ 3, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
+		newScreen3.view.setViewport(sf::FloatRect(0, 0.5, 0.5, 0.5));
+
+		screen newScreen4{ 4, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
+		newScreen4.view.setViewport(sf::FloatRect(0.5, 0.5, 0.5, 0.5));
+
+		mScreens.push_back(newScreen1);
+		mScreens.push_back(newScreen2);
+		mScreens.push_back(newScreen3);
+		mScreens.push_back(newScreen4);
+
+		mLines[0].position = sf::Vector2f(mainWindowSize.x / 2, 0.0);
+		mLines[1].position = sf::Vector2f(mainWindowSize.x / 2, mainWindowSize.y);
+		mLines[2].position = sf::Vector2f(0.0, mainWindowSize.y / 2);
+		mLines[3].position = sf::Vector2f(mainWindowSize.x, mainWindowSize.y / 2);
+	} else {
+		std::cout << "not a correct amount of screens" << newAmount << std::endl;
+	}	
+}
+

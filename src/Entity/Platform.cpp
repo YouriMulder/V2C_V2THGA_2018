@@ -12,6 +12,4 @@ Platform::Platform(const std::string& filename, const sf::Vector2f& position, co
 	LevelObject(filename, position, size, screenNumber, repeated)
 {}
 
-sf::FloatRect Platform::getGlobalBounds() const {
-	return mSprite.getGlobalBounds();
-}
+Platform::~Platform() {}

@@ -3,7 +3,7 @@
 
 #include "SFML/Graphics.hpp"
 #include "LevelObject.hpp"
-#include "ViewManager.hpp"
+#include "../ViewManager.hpp"
 #include <string>
 
 class Platform : public LevelObject {
@@ -34,9 +34,7 @@ public:
 	Platform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
 		int screenNumber, bool repeated = false);
 
-	/// \brief
-	/// Returns the outline of the platform
-	sf::FloatRect getGlobalBounds() const override;
+	virtual ~Platform();
 };
 
 #endif /* PLATFORM_HPP */

@@ -28,29 +28,45 @@ MoveablePlatform::MoveablePlatform(const std::string& filename, const sf::Vector
 	speed.y /= amountOfSteps;
 }
 
-void MoveablePlatform::update() {
+sf::Vector2f MoveablePlatform::getNextPosition() const {
+	auto s = speed;
+	if (!reverse) {
+		if (goingForward && mPosition.x >= endpoint.x && mPosition.y >= endpoint.y) {
+			s = -s;
+		}
+		else if (!goingForward && mPosition.x <= beginpoint.x && mPosition.y <= beginpoint.y) {
+			s = -s;
+		}
+	} else {
+		if (goingForward && mPosition.x <= endpoint.x && mPosition.y <= endpoint.y) {
+			s = -s;
+		}
+		else if (!goingForward && mPosition.x >= beginpoint.x && mPosition.y >= beginpoint.y) {
+			s = -s;
+		}
+	}
+	return mPosition + s;
+}
+
+void MoveablePlatform::update(const sf::Time& deltaTime) {
 	if (!reverse) {
 		if (goingForward && mPosition.x >= endpoint.x && mPosition.y >= endpoint.y) {
 			goingForward = false;
-			speed.x *= -1;
-			speed.y *= -1;
+			speed = -speed;
 		}
 		else if (!goingForward && mPosition.x <= beginpoint.x && mPosition.y <= beginpoint.y) {
 			goingForward = true;
-			speed.x *= -1;
-			speed.y *= -1;
+			speed = -speed;
 		}
 	}
 	else {
 		if (goingForward && mPosition.x <= endpoint.x && mPosition.y <= endpoint.y) {
 			goingForward = false;
-			speed.x *= -1;
-			speed.y *= -1;
+			speed = -speed;
 		}
 		else if (!goingForward && mPosition.x >= beginpoint.x && mPosition.y >= beginpoint.y) {
 			goingForward = true;
-			speed.x *= -1;
-			speed.y *= -1;
+			speed = -speed;
 		}
 	}
 	mPosition += speed;
