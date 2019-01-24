@@ -1,11 +1,12 @@
 #include "GameManager.hpp"
 #include <fstream>
 #include "Entity/Character.hpp"
+#include <SFML/Audio.hpp>
 
 
 GameManager::GameManager(const std::string& levelFileName) :
 	mCurrentLevel(0),
-	mMainWindow(sf::VideoMode(1280, 720), "MiNdF*cK"),
+	mMainWindow(sf::VideoMode(1920, 1080), "MiNdF*cK",sf::Style::Fullscreen),
 	mViewManager(mMainWindow, 1),
 	mFactory(),
 	mHUD(),
@@ -59,8 +60,10 @@ void GameManager::applyLevelSettings() {
 	mViewManager.changeAmountOfScreens(mCurrentSettings.noOfScreens);
 	if (mViewManager.getAmountOfScreens() == 1) {
 		mSelectedScreen[0] = true;
+	} else if (mViewManager.getAmountOfScreens() == 2) {
+		mSelectedScreen[0] = true;
+		mSelectedScreen[1] = true;
 	}
-	
 }
 
 void GameManager::createBackgrounds() {
@@ -223,7 +226,28 @@ void GameManager::selectScreen(int screenNumber) {
 	}
 }
 
+bool GameManager::check2Selected() {
+	int count = 0;
+	if (mCurrentSettings.noOfScreens <= 1) {
+		return true;
+	}
+	for (auto & selected : mSelectedScreen) {
+		if (selected) {
+			count++;
+		}
+	}
+	if (count >= 2) {
+		return true;
+	}
+	return false;
+}
+
 void GameManager::runGame() {	
+	sf::Music music;
+	if (!music.openFromFile("../res/Sounds/Music/music.ogg")) {
+		std::cerr << "error loading music";
+	}
+	music.play();
 	int actionCounter = 0;
 	while (mViewManager.isOpen()) {
 		if (!mPlayingLevel) {
@@ -235,7 +259,7 @@ void GameManager::runGame() {
 			mPlayerRespawn = false;
 		}
 
-		if (actionCounter >= 10) {
+		if (actionCounter >= 15) {
 			for (auto & action : actions) {
 				action();
 			}
@@ -255,7 +279,7 @@ void GameManager::runGame() {
 			if (numUpdates++ < 10) {
 				mCollisionManager.checkCollisions();
 				for(auto& dynamicObject : mDynamicItems) {
-					if (mSelectedScreen[dynamicObject->getScreenNumber() - 1]) {
+					if (mSelectedScreen[dynamicObject->getScreenNumber() - 1] && check2Selected()) {
 						dynamicObject->update(mPassedTime);
 					}
 				}
@@ -282,6 +306,15 @@ void GameManager::runGame() {
 
 		mHUD.updateHealth(Character::getHealth());
 		mViewManager.clear();
+		int count = 1;
+		for (const auto & selected : mSelectedScreen) {
+			if (selected) {
+				mViewManager.setBordorColor(count);
+			} else {
+				mViewManager.resetBordorColor(count);
+			}
+			count++;
+		}
 		if (!mPlayerRespawn && mPlayingLevel) {
 			for (const auto& background : mBackgrounds) {
 				background->draw(mViewManager);

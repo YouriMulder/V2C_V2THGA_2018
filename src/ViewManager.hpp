@@ -3,7 +3,8 @@
 
 #include <SFML/Graphics.hpp> 
 #include <vector>
-
+#include <array>
+#include <memory>
 struct screen {
 	int number;
 	sf::View view;
@@ -19,6 +20,8 @@ private:
 
 	int mAmountOfScreens;
 
+	sf::Vector2f mOffset = sf::Vector2f(20.f, 20.f);
+
 	/// \brief
 	/// A vector that contains all the separate screens
 	/// \details
@@ -29,11 +32,12 @@ private:
 	/// \brief
 	/// A vertex that is used for lines between the screens
 	sf::Vertex mLines[4];
+
+	std::array<sf::RectangleShape, 4> mBorders;
 	
 	/// \brief
 	/// Function that converts a given sf::Vector2u to a Vector2f
 	sf::Vector2f convertVector2u(const sf::Vector2u & input);
-
 	
 
 public:
@@ -162,6 +166,9 @@ public:
 	int getAmountOfScreens();
 
 	void changeAmountOfScreens(int newAmount);
+	void createScreenBorders();
+	void setBordorColor(int screenNumber);
+	void resetBordorColor(int screenNumber);
 
 	virtual ~ViewManager();
 };

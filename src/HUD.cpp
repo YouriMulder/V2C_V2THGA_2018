@@ -5,7 +5,7 @@
 HUD::HUD()
 {
 	mTexts.push_back(std::make_unique<Text> (
-		sf::Vector2f(0, 0),
+		startOffset,
 		sf::Vector2f(0, 0),
 		0,
 		"HEALTH: ",
@@ -14,7 +14,7 @@ HUD::HUD()
 		));
 	mTexts[0]->setColor(mHealthColor);
 	mTexts.push_back(std::make_unique<Text>(
-		sf::Vector2f(0, 20),
+		startOffset + sf::Vector2f(0, 20),
 		sf::Vector2f(0, 0),
 		0,
 		"ENERGY: ",
@@ -23,7 +23,7 @@ HUD::HUD()
 		));
 	mTexts[1]->setColor(sf::Color::Cyan);
 	mTexts.push_back(std::make_unique<Text>(
-		sf::Vector2f(0, 40),
+		startOffset + sf::Vector2f(0, 40),
 		sf::Vector2f(0, 0),
 		0,
 		mBaseDeath + std::to_string(mCurrentDeathCount),
@@ -34,14 +34,14 @@ HUD::HUD()
 	for (int i = 0;i < mCurrentHealth;i++) {
 		mHearts.push_back(std::make_unique<LevelObject>(
 			mPathHUD + "heart.png",
-			sf::Vector2f(textOffset + i*sizeOffset, 3),
+			startOffset + sf::Vector2f(textOffset + i*sizeOffset, 3),
 			sf::Vector2f(sizeOffset, sizeOffset),
 			0));
 	}
 	for (int i = 0;i < mCurrentEnergy;i++) {
 		mEnergy.push_back(std::make_unique<LevelObject>(
 			mPathHUD + "energy.png",
-			sf::Vector2f(textOffset + i*sizeOffset, 20),
+			startOffset + sf::Vector2f(textOffset + i*sizeOffset, 20),
 			sf::Vector2f(sizeOffset, sizeOffset),
 			0));
 	}
