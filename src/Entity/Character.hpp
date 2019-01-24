@@ -60,10 +60,6 @@ public:
 	
 	virtual ~Character() override;
 
-	static uint_least8_t getHealth();
-	static bool isDead();
-	static bool isAlive();
-
 	void addAction(const Action& newAction);
 	void bindAction(const EventManager& event);
 	void bindAnimation(
@@ -86,7 +82,6 @@ public:
 	void run();
 
 	void attack();
-	void getHurt(int damage);
 	
 	void applyGravity();
 	void updateVelocity(const sf::Vector2f& deltaVelocity);
@@ -118,21 +113,20 @@ public:
 	virtual void bindActions() {};
 	virtual void bindAnimations() {};
 protected:
-	// static
-	static uint_least8_t health;
-	
+	uint_least64_t id;
+
 	sf::Vector2f mVelocity;
 	sf::Vector2f mMaxVelocity;
 	sf::Vector2f mAcceleration;
 
 	float xOffset;
 
-	float mGravity = 0;
-	float mStartingJumpForce = -7;
+	float mGravity = 0.0f;
+	float mStartingJumpForce = -7.0f;
 	float mJumpForce = mStartingJumpForce;
-	float mMaxGravity = 7;
-	float mJumpAcceleration = 0.3;
-	float mGravityAcceleration = 0.3;
+	float mMaxGravity = 7.0f;
+	float mJumpAcceleration = 0.3f;
+	float mGravityAcceleration = 0.3f;
 
 	bool mCanDoubleJump = false;
 

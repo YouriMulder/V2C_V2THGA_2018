@@ -1,8 +1,7 @@
 #include "GameManager.hpp"
 #include <fstream>
-#include "Entity/Character.hpp"
 #include <SFML/Audio.hpp>
-
+#include "Entity/Player.hpp"
 
 GameManager::GameManager(const std::string& levelFileName) :
 	mCurrentLevel(0),
@@ -75,7 +74,7 @@ void GameManager::createBackgrounds() {
 				sf::Vector2f(384,216),
 				mViewManager.getViewSize(i),
 				i
-				));
+			));
 		}
 	}
 }
@@ -149,7 +148,7 @@ void GameManager::clearLevel() {
 	mPlayerIndexes.clear();
 }
 bool GameManager::checkLosingConditions() {
-	if (checkPlayerOutView() || Character::isDead()) {
+	if (checkPlayerOutView() || Player::isDead()) {
 		return true;
 	}
 	return false;
@@ -292,19 +291,21 @@ void GameManager::runGame() {
 					createLevel();
 					mCurrentDeathCount++;
 					mHUD.updateDeathCount(mCurrentDeathCount);
+					Player::resetHealth();
 					break;
 				}
-				 if (checkLevelFinished()) {
+				if (checkLevelFinished()) {
 					mPlayingLevel = false;
 				 	mCurrentLevel++;
+					EntityBase::backToStartId();
 					break;
-				 }
+				}
 				
 			}
 			mPassedTime -= mFrameTime;
     	}
 
-		mHUD.updateHealth(Character::getHealth());
+		mHUD.updateHealth(Player::getHealth());
 		mViewManager.clear();
 		int count = 1;
 		for (const auto & selected : mSelectedScreen) {
