@@ -153,11 +153,38 @@ public:
 	/// \return return the size of the view
 	sf::Vector2f getViewSize(const int & screenNumber) const;
 
+	/// \brief
+	/// Function to get the current Amount of screens present in ViewMangager.
+	/// \details
+	/// \return Returns the current amount of screens.
 	int getAmountOfScreens();
 
+	/// \brief
+	/// Function to change the amount of screens.
+	/// \details
+	/// This function changes the amount of screens dynamicly.
+	/// \param newAmount
+	/// The new amount of screens that need to be created.
 	void changeAmountOfScreens(int newAmount);
+
+	/// \brief
+	/// Function to create the borders around the screens.
 	void createScreenBorders();
+
+	/// \brief
+	/// Function to set the bordercolor when selected.
+	/// \details
+	/// Bordor color is Red when selected.
+	/// \param screenNumber
+	/// The screen number of the screen the color needs to be set
 	void setBordorColor(int screenNumber);
+
+	/// \brief
+	/// Function to set the bordercolor when selected.
+	/// \details
+	/// Bordor color is White when deselected.
+	/// \param screenNumber
+	/// The screen number of the screen the color needs to be set
 	void resetBordorColor(int screenNumber);
 
 	virtual ~ViewManager();

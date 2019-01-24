@@ -128,27 +128,90 @@ private:
 	/// Array to see which screens are finished.
 	std::array<bool, 4> mFinishedScreen = { false,false,false,false };
 
+	/// \brief
+	/// Function to read all the levelfile names form a all file.
+	/// \details
+	/// \param levelFileName 
+	/// The file Name of the all file.
+	/// \return
+	/// Returns false when error has occured.
 	bool readLevelFileNames(const std::string & levelFileName);
 
+	/// \brief
+	/// Function to read all the level information using the factory
 	void readLevelInfo();
+
+	/// \brief
+	/// Function to apply all the settings.
+	/// \details
+	/// Applies settings such as amount of screens and resets the Health.
 	void applyLevelSettings();
+
+	/// \brief
+	/// Function to create a level 
+	/// \details
+	/// Uses other functions such as clearLevel and readLevelInfo.
 	void createLevel();
 
+	/// \brief
+	/// Function to create all the backgrounds.
 	void createBackgrounds();
 	
+	/// \brief
+	/// Function to move the screens according to player position.
 	void moveScreens();
+
+	/// \brief
+	/// Function to search where the players are in the mDynamic items.
 	void findPlayerIndexes();
+
+	/// \brief
+	/// Function to select a screen.
+	/// \details
+	/// \param screenNumber
+	/// The screen you want to select.
 	void selectScreen(int screenNumber);
 
+	/// \brief
+	/// Function to clear all the level information.
+	/// \details
+	/// Clears all the level information 
 	void clearLevel();
 
+	/// \brief
+	/// Funcion te check if a player falls beyond the maximum size of a level.
+	/// \details
+	/// \return returs true if player is out of bounds.
 	bool checkPlayerOutView();
+
+	/// \brief
+	/// Function to check if the level is Finished.
+	/// \details
+	/// Checks if all the finishpoints are reached.
+	/// \return Returns true if level is finished.
 	bool checkLevelFinished();
+
+	/// \brief
+	/// Function to check if the player is death.
+	/// \details
+	/// \return Returns true if player lost.
 	bool checkLosingConditions();
+
+	/// \brief
+	/// Function te check if player selecter 2 or more screens.
+	/// \details
+	/// This function checks if 2 screens or more are selected.\n
+	/// If there is only one or 2 screen(s) both are selected.
+	/// \return Returns true if contions are met.
 	bool check2Selected();
 
 
-
+	/// \brief
+	/// Array of actions
+	/// \details
+	/// This array contains all the key bindings nessecary.\n
+	/// Numbers 1-4 for selecting screens 1-4.\n
+	/// Escape for closing the game.
 	EventManager actions[5] = {
 		EventManager(sf::Keyboard::Num1, 	[&] {selectScreen(1); }, sf::Event::KeyReleased),
 		EventManager(sf::Keyboard::Num2, 	[&] {selectScreen(2); }, sf::Event::KeyReleased),
@@ -158,9 +221,18 @@ private:
 	};
 
 public:
+	/// \brief
+	/// Constructor for GameManager class.
+	/// \details
+	/// This constructor constructs a GameManager using the given txt file.
+	/// \param levelFileName
+	/// This parameter contains the file name of the all text file.
 	GameManager(const std::string& levelFileName);
 	
 	virtual ~GameManager();
+
+	/// \brief
+	/// Function to start the game.
 	void runGame();
 
 };
