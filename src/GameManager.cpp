@@ -245,8 +245,8 @@ bool GameManager::check2Selected() {
 	return false;
 }
 
-void GameManager::runGame() {		
-	int actionCounter = 0;
+void GameManager::runGame() {	
+	sf::Event event;
 	while (mViewManager.isOpen()) {
 		if (!mPlayingLevel) {
 			createLevel();
@@ -258,17 +258,14 @@ void GameManager::runGame() {
 			mPlayerRespawn = false;
 		}
 
-		if (actionCounter >= 15) {
-			for (auto & action : actions) {
-				action();
-			}
-			actionCounter = 0;
-		}
-		
-		sf::Event event;
 		while (mViewManager.pollEvent(event)) {
-			if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed) {
 				mViewManager.close();
+			}
+
+			for (auto & action : actions) {
+				action(event);
+			}
 		}
 		
 		mPassedTime += mUpdateClock.restart();
@@ -335,6 +332,5 @@ void GameManager::runGame() {
 			mHUD.draw(mViewManager);
 		}
 		mViewManager.display();
-		actionCounter++;
 	}
 }

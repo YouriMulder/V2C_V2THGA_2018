@@ -77,11 +77,11 @@ private:
 
 
 	EventManager actions[5] = {
-	EventManager(sf::Keyboard::Num1, 	[&] {selectScreen(1); }),
-	EventManager(sf::Keyboard::Num2, 	[&] {selectScreen(2); }),
-	EventManager(sf::Keyboard::Num3, 	[&] {selectScreen(3); }),
-	EventManager(sf::Keyboard::Num4, 	[&] {selectScreen(4); }),
-	EventManager(sf::Keyboard::Escape, 	[&] {mViewManager.close(); })
+		EventManager(sf::Keyboard::Num1, 	[&] {selectScreen(1); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Num2, 	[&] {selectScreen(2); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Num3, 	[&] {selectScreen(3); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Num4, 	[&] {selectScreen(4); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Escape, 	[&] {mViewManager.close(); })
 	};
 
 public:
