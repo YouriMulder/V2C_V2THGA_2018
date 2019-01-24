@@ -9,28 +9,38 @@
 class Platform : public LevelObject {
 public:
 	/// \brief
-	/// Constructor for Platform
+	/// Constructor for Platform.
 	/// \details
-	/// Constructs a platform based on the given parameters
+	/// Constructs a platform based on the given parameters.
 	/// \param filename
-	/// Filename of the picture that is used as a texture for the platform
+	/// Filename of the picture that is used as a texture for the platform.
+	/// \param position
+	/// The position where the platform is drawn (x/y).
+	/// \param size
+	/// The size of the platform (width/height).
 	/// \param picturepart
-	/// The part of the picture that is used as a texture for the platform
+	/// The part of the picture that is used as a texture for the platform.
 	/// \param screenNumber
-	/// 
+	/// The screen on which the platorm is drawn.
 	/// \param repeated
-	/// A boolean that decides if the picture is repeated default is false
+	/// A boolean that decides if the picture is repeated default is false.
 	Platform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
 		const sf::IntRect& picturepart, int screenNumber, bool repeated = false);
 
 	/// \brief
-	/// Constructor for Platform
+	/// Constructor for Platform.
 	/// \details
-	/// Constructs a platform based on the given parameters
+	/// Constructs a platform based on the given parameters.
 	/// \param filename
-	/// Filename of the picture that is used as a texture for the platform
+	/// Filename of the picture that is used as a texture for the platform.
+	/// \param position
+	/// The position where the platform is drawn (x/y).
+	/// \param size
+	/// The size of the platform (width/height).
+	/// \param screenNumber
+	/// The screen on which the platorm is drawn.
 	/// \param repeated
-	/// A boolean that decides if the picture is repeated default is false
+	/// A boolean that decides if the picture is repeated default is false.
 	Platform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
 		int screenNumber, bool repeated = false);
 
