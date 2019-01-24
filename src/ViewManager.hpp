@@ -5,6 +5,8 @@
 #include <vector>
 #include <array>
 #include <memory>
+
+
 struct screen {
 	int number;
 	sf::View view;
@@ -13,7 +15,6 @@ struct screen {
 
 class ViewManager{
 private:
-	///
 	/// \brief
 	/// a reference to the main window
 	sf::RenderWindow & mMainWindow;

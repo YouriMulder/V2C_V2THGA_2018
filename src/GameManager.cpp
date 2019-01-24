@@ -1,6 +1,5 @@
 #include "GameManager.hpp"
 #include <fstream>
-#include <SFML/Audio.hpp>
 #include "Entity/Player.hpp"
 
 GameManager::GameManager(const std::string& levelFileName) :
@@ -62,6 +61,10 @@ void GameManager::applyLevelSettings() {
 	} else if (mViewManager.getAmountOfScreens() == 2) {
 		mSelectedScreen[0] = true;
 		mSelectedScreen[1] = true;
+	}
+	mCurrentScreensNotFinished = mCurrentSettings.noOfScreens;
+	if (!mMusic.openFromFile(mPathMusic + mCurrentSettings.songName)) {
+		std::cerr << "faild loading music";
 	}
 }
 
@@ -191,6 +194,7 @@ bool GameManager::checkLevelFinished() {
 				mViewManager.getViewSize(currentScreen),
 				currentScreen
 				));
+			mCurrentScreensNotFinished--;
 			mStaticItems[mStaticItems.size() - 1]->draw(mViewManager);
 			for (const auto& finishText : mFinishTexts) {
 				finishText->draw(mViewManager);
@@ -227,7 +231,7 @@ void GameManager::selectScreen(int screenNumber) {
 
 bool GameManager::check2Selected() {
 	int count = 0;
-	if (mCurrentSettings.noOfScreens <= 1) {
+	if (mCurrentScreensNotFinished <= 1) {
 		return true;
 	}
 	for (auto & selected : mSelectedScreen) {
@@ -241,16 +245,12 @@ bool GameManager::check2Selected() {
 	return false;
 }
 
-void GameManager::runGame() {	
-	sf::Music music;
-	if (!music.openFromFile("../res/Sounds/Music/music.ogg")) {
-		std::cerr << "error loading music";
-	}
-	music.play();
+void GameManager::runGame() {		
 	int actionCounter = 0;
 	while (mViewManager.isOpen()) {
 		if (!mPlayingLevel) {
 			createLevel();
+			mMusic.play();
 			mCurrentDeathCount = 0;
 			mHUD.updateDeathCount(mCurrentDeathCount);
 			mPlayingLevel = !mPlayingLevel;
