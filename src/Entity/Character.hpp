@@ -74,6 +74,7 @@ public:
 	void updateFacingDirection();
 	void setState(const State& newState);
 	void updateState(const Action& action);
+	void startHurtAnimation();
 	void animate(const sf::Time& deltaTime);
 	
 	void left();
@@ -146,6 +147,9 @@ protected:
 	sf::Sprite mSprite;
 
 	sf::Time timeSinceLastAnimation;
+	sf::Clock hurtClock;
+	bool mIsHurting = false;
+	sf::Time totalHurtTime = sf::seconds(1);
 
 	CollisionSides restrictedSides;
 

@@ -315,19 +315,19 @@ void GameManager::runGame() {
 		}
 		if (!mPlayerRespawn && mPlayingLevel) {
 			for (const auto& background : mBackgrounds) {
-				background->draw(mViewManager);
+				background->drawIfVisible(mViewManager);
 			}
 
 			for (const auto& dynamicObject : mDynamicItems) {
-				dynamicObject->draw(mViewManager);
+				dynamicObject->drawIfVisible(mViewManager);
 			}
 
 			for (const auto& staticObject : mStaticItems) {
-				staticObject->draw(mViewManager);
+				staticObject->drawIfVisible(mViewManager);
 			}
 
 			for (const auto& finishText : mFinishTexts) {
-				finishText->draw(mViewManager);
+				finishText->drawIfVisible(mViewManager);
 			}	
 			mHUD.draw(mViewManager);
 		}
