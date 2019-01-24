@@ -5,26 +5,10 @@
 #include <iostream>
 #include <cstdint>
 
-// static 
-uint_least8_t Character::health = 10;
-
-uint_least8_t Character::getHealth() {
-	return health;
-}
-
-bool Character::isAlive() {
-	return health > 0;
-}
-
-bool Character::isDead() {
-	return !isAlive();
-}
-
 template<typename T>
 std::ostream& operator<<(typename std::enable_if<std::is_enum<T>::value, std::ostream>::type& stream, const T& e) {
     return stream << static_cast<typename std::underlying_type<T>::type>(e);
 }
-
 
 Character::Character(
 	const sf::Vector2f& position,
@@ -35,6 +19,7 @@ Character::Character(
 	const std::string& characterSheetPath
 ):
 	EntityBase(position, size, screenNumber),
+	id(nextId),
 	mVelocity(0.0f, 0.0f),
 	mMaxVelocity(maxVelocity), 
 	mAcceleration(acceleration),
@@ -60,7 +45,6 @@ Character::Character(
 
 Character::~Character() { }
 
-// non static
 void Character::addAction(const Action& newAction) {
 	mUnperformedActions.push(newAction);
 }
@@ -277,7 +261,7 @@ void Character::handleCollision(
 			}
 		}
 
-
+		// move to next update
 		setPosition( 
 			sf::Vector2f(
 				mPosition.x - ((*highestBottom)->getPosition().x - (*highestBottom)->getNextPosition().x),
