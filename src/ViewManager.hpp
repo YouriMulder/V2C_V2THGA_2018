@@ -29,10 +29,6 @@ private:
 	/// The most screens at this point in time is 4
 	std::vector<screen> mScreens;
 
-	/// \brief
-	/// A vertex that is used for lines between the screens
-	sf::Vertex mLines[4];
-
 	std::array<sf::RectangleShape, 4> mBorders;
 	
 	/// \brief
@@ -139,13 +135,6 @@ public:
 	/// Adaptor function to poll events in the window
 	bool pollEvent(sf::Event & e);
 
-	/// \brief
-	/// Function to change the color of the lines that seperate the screens
-	/// \details
-	/// This function changes the color of the lines to the new color
-	/// \param newColor
-	/// The new color the lines need to become
-	void changeLineColor(const sf::Color & newColor);
 
 	/// \brief
 	/// Function to get the current possition of the given view

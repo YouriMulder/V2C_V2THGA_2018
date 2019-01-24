@@ -122,9 +122,6 @@ void ViewManager::move(const sf::Vector2f & offset) {
 
 void ViewManager::display() {
 	resetDrawingScreen();
-	//if (mScreens.size() > 1) {
-	//	mMainWindow.draw(mLines, 4, sf::Lines);
-	//}
 	for (int i = 0; i < mAmountOfScreens; i++) {
 		mMainWindow.draw(mBorders[i]);
 	}
@@ -145,12 +142,6 @@ bool ViewManager::isOpen() {
 
 bool ViewManager::pollEvent(sf::Event & e) {
 	return mMainWindow.pollEvent(e);
-}
-
-void ViewManager::changeLineColor(const sf::Color & newColor) {
-	for (auto & line : mLines) {
-		line.color = newColor;
-	}
 }
 
 sf::Vector2f ViewManager::getViewPosition(const int & screenNumber) const{
@@ -191,9 +182,6 @@ void ViewManager::changeAmountOfScreens(int newAmount) {
 
 		mScreens.push_back(newScreen1);
 		mScreens.push_back(newScreen2);
-
-		mLines[0].position = sf::Vector2f(0.0, mainWindowSize.y / 2);
-		mLines[1].position = sf::Vector2f(mainWindowSize.x, mainWindowSize.y / 2);
 	} else if (newAmount == 4) {
 		screen newScreen1{ 1, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
 		newScreen1.view.setViewport(sf::FloatRect(0, 0, 0.5, 0.5));
@@ -212,10 +200,6 @@ void ViewManager::changeAmountOfScreens(int newAmount) {
 		mScreens.push_back(newScreen3);
 		mScreens.push_back(newScreen4);
 
-		mLines[0].position = sf::Vector2f(mainWindowSize.x / 2, 0.0);
-		mLines[1].position = sf::Vector2f(mainWindowSize.x / 2, mainWindowSize.y);
-		mLines[2].position = sf::Vector2f(0.0, mainWindowSize.y / 2);
-		mLines[3].position = sf::Vector2f(mainWindowSize.x, mainWindowSize.y / 2);
 	} else {
 		std::cout << "not a correct amount of screens" << newAmount << std::endl;
 	}	
