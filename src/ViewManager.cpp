@@ -14,8 +14,6 @@ ViewManager::ViewManager(sf::RenderWindow & mainWindow, const int & noOfScreens)
 	mMainWindow.setFramerateLimit(60);
 	mScreens.reserve(4);
 	changeAmountOfScreens(mAmountOfScreens);
-
-	
 }
 
 
@@ -23,10 +21,61 @@ ViewManager::~ViewManager()
 {
 }
 
+void ViewManager::createScreenBorders() {
+	switch (mAmountOfScreens){
+	case 1:
+		mBorders[0] = sf::RectangleShape(mScreens[0].view.getSize() - sf::Vector2f(4,4));
+		mBorders[0].setPosition(sf::Vector2f(2, 2));
+		mBorders[0].setOutlineThickness(2);
+		mBorders[0].setFillColor(sf::Color::Transparent);
+		break;
+	case 2:
+		mBorders[0] = sf::RectangleShape(mScreens[0].view.getSize() - sf::Vector2f(4, 4));
+		mBorders[0].setPosition(sf::Vector2f(2, 2));
+		mBorders[0].setOutlineThickness(2);
+		mBorders[0].setFillColor(sf::Color::Transparent);
+		mBorders[1] = sf::RectangleShape(mScreens[1].view.getSize() - sf::Vector2f(4, 4));
+		mBorders[1].setPosition(sf::Vector2f(0,mMainWindow.getSize().y/2) + sf::Vector2f(2,2));
+		mBorders[1].setOutlineThickness(2);
+		mBorders[1].setFillColor(sf::Color::Transparent);
+		break;
+	case 4:
+		mBorders[0] = sf::RectangleShape(mScreens[0].view.getSize() - sf::Vector2f(4, 4));
+		mBorders[0].setPosition(sf::Vector2f(2, 2));
+		mBorders[0].setOutlineThickness(2);
+		mBorders[0].setFillColor(sf::Color::Transparent);
+		mBorders[1] = sf::RectangleShape(mScreens[1].view.getSize() - sf::Vector2f(8, 4));
+		mBorders[1].setPosition(sf::Vector2f(mMainWindow.getSize().x/2,0)+ sf::Vector2f(4, 2));
+		mBorders[1].setOutlineThickness(2);
+		mBorders[1].setFillColor(sf::Color::Transparent);
+		mBorders[2] = sf::RectangleShape(mScreens[2].view.getSize() - sf::Vector2f(4, 8));
+		mBorders[2].setPosition(sf::Vector2f(0, mMainWindow.getSize().y/2) + sf::Vector2f(2, 4));
+		mBorders[2].setOutlineThickness(2);
+		mBorders[2].setFillColor(sf::Color::Transparent);
+		mBorders[3] = sf::RectangleShape(mScreens[3].view.getSize() - sf::Vector2f(8, 8));
+		mBorders[3].setPosition(sf::Vector2f(mMainWindow.getSize().x / 2, mMainWindow.getSize().y / 2) + sf::Vector2f(4, 4));
+		mBorders[3].setOutlineThickness(2);
+		mBorders[3].setFillColor(sf::Color::Transparent);
+		break;
+	}
+}
+
+void ViewManager::setBordorColor(int screenNumber) {
+	if (mBorders[screenNumber - 1].getOutlineColor() == sf::Color::White) {
+		mBorders[screenNumber - 1].setOutlineColor(sf::Color::Red);
+	}
+}
+
+void ViewManager::resetBordorColor(int screenNumber) {
+	if (mBorders[screenNumber - 1].getOutlineColor() == sf::Color::Red) {
+		mBorders[screenNumber - 1].setOutlineColor(sf::Color::White);
+	}
+}
+
 void ViewManager::selectMoveScreen(const int & screenNumber) {
 	for (auto & s : mScreens) {
 		if (s.number == screenNumber) {
-			s.selected = !s.selected;
+			s.selected = !s.selected;	
 		}
 	}
 }
@@ -73,8 +122,8 @@ void ViewManager::move(const sf::Vector2f & offset) {
 
 void ViewManager::display() {
 	resetDrawingScreen();
-	if (mScreens.size() > 1) {
-		mMainWindow.draw(mLines, 4, sf::Lines);
+	for (int i = 0; i < mAmountOfScreens; i++) {
+		mMainWindow.draw(mBorders[i]);
 	}
 	mMainWindow.display();
 }
@@ -93,12 +142,6 @@ bool ViewManager::isOpen() {
 
 bool ViewManager::pollEvent(sf::Event & e) {
 	return mMainWindow.pollEvent(e);
-}
-
-void ViewManager::changeLineColor(const sf::Color & newColor) {
-	for (auto & line : mLines) {
-		line.color = newColor;
-	}
 }
 
 sf::Vector2f ViewManager::getViewPosition(const int & screenNumber) const{
@@ -127,6 +170,7 @@ void ViewManager::changeAmountOfScreens(int newAmount) {
 	sf::Vector2f mainWindowSize = convertVector2u(mMainWindow.getSize());
 	mScreens.clear();
 	mAmountOfScreens = newAmount;
+	
 	if (newAmount== 1) {
 		mScreens.push_back(screen{ 1,mMainWindow.getDefaultView() });
 		resetDrawingScreen();
@@ -138,9 +182,6 @@ void ViewManager::changeAmountOfScreens(int newAmount) {
 
 		mScreens.push_back(newScreen1);
 		mScreens.push_back(newScreen2);
-
-		mLines[0].position = sf::Vector2f(0.0, mainWindowSize.y / 2);
-		mLines[1].position = sf::Vector2f(mainWindowSize.x, mainWindowSize.y / 2);
 	} else if (newAmount == 4) {
 		screen newScreen1{ 1, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
 		newScreen1.view.setViewport(sf::FloatRect(0, 0, 0.5, 0.5));
@@ -159,12 +200,9 @@ void ViewManager::changeAmountOfScreens(int newAmount) {
 		mScreens.push_back(newScreen3);
 		mScreens.push_back(newScreen4);
 
-		mLines[0].position = sf::Vector2f(mainWindowSize.x / 2, 0.0);
-		mLines[1].position = sf::Vector2f(mainWindowSize.x / 2, mainWindowSize.y);
-		mLines[2].position = sf::Vector2f(0.0, mainWindowSize.y / 2);
-		mLines[3].position = sf::Vector2f(mainWindowSize.x, mainWindowSize.y / 2);
 	} else {
 		std::cout << "not a correct amount of screens" << newAmount << std::endl;
 	}	
+	createScreenBorders();
 }
 

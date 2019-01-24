@@ -26,7 +26,6 @@ private:
 	ViewManager mViewManager;
 	Factory mFactory;
 	HUD mHUD;
-
 	Collision mCollisionManager;
 
 	SettingsData mCurrentSettings;
@@ -69,6 +68,8 @@ private:
 	bool checkPlayerOutView();
 	bool checkLevelFinished();
 	bool checkLosingConditions();
+	bool check2Selected();
+
 
 
 	EventManager actions[4] = {
