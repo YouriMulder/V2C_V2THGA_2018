@@ -11,7 +11,7 @@ SCREEN1
 
 platform platform.png (1,695) (615,25) 1 0
 platform platform.png (745,695) (615,25) 1 0
-spike spike.png (1100,671) (100,25) 200 0 0
+spike spike.png (1100,671) (100,25) 1 0 0
 NPC (100,100) 150
 
 END

@@ -80,7 +80,6 @@ void ViewManager::selectMoveScreen(const int & screenNumber) {
 	}
 }
 
-
 void ViewManager::selectDrawingScreen(const int & screenNumber) {
 	if (screenNumber == 0) {
 		resetDrawingScreen();
