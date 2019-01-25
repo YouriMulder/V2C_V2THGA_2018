@@ -32,7 +32,7 @@ private:
 	std::vector<std::unique_ptr<EntityBase>> mEnergy = {};
 
 	/// \brief
-	/// Vector that contains all the texts that need to be displayed.
+	/// Vector that contains all the texts that needs to be displayed.
 	std::vector<std::unique_ptr<Text>> mTexts = {};
 	
 	/// \brief
@@ -48,11 +48,11 @@ private:
 	sf::Vector2f startOffset = sf::Vector2f(4.f, 4.f);
 
 	/// \brief
-	/// Color for the health text
+	/// Color for the health text.
 	sf::Color mHealthColor = sf::Color(255, 32, 1);
 
 	/// \brief
-	/// The path where all the Hud sprites can be found.
+	/// The path where all the hud sprites can be found.
 	std::string mPathHUD = "../res/Textures/HUD/";
 
 	/// \brief
@@ -61,7 +61,7 @@ private:
 
 public:
 	/// \brief
-	/// Constructor for HUD
+	/// Constructor for HUD.
 	HUD();
 
 	~HUD();
