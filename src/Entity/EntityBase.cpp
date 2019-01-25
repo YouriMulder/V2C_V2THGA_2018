@@ -11,11 +11,13 @@ EntityBase::EntityBase(
 	const sf::Vector2f& position, 
 	const sf::Vector2f size, 
 	int screenNumber,
+	bool isSolid,
 	bool isVisible
 ):
 	mPosition(position), 
 	mSize(size), 
 	mScreenNumber(screenNumber),
+	mIsSolid(isSolid),
 	mIsVisible(isVisible)
 {
 	increaseNextId();
@@ -79,6 +81,14 @@ void EntityBase::setIsVisible(bool isVisible) {
 
 bool EntityBase::getIsVisible() {
 	return mIsVisible;
+}
+
+void EntityBase::setIsSolid(bool isSolid) {
+	mIsSolid = isSolid;
+}
+
+bool EntityBase::getIsSolid() {
+	return mIsSolid;
 }
 
 bool EntityBase::isFinished() {
