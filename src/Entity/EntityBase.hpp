@@ -47,9 +47,9 @@ public:
 	void setScreenNumber(int newScreenNumber);
 	int getScreenNumber() const;
 	void setIsVisible(bool isVisible);
-	bool getIsVisible();
+	bool isVisible() const;
 	void setIsSolid(bool isSolid);
-	bool getIsSolid();
+	bool isSolid() const;
 
 	virtual void hurt(uint_least8_t damage) {};
 
@@ -57,7 +57,7 @@ public:
 	virtual sf::Vector2f getPosition() const;
 	virtual sf::Vector2f getNextPosition() const;
 	virtual sf::FloatRect getGlobalBounds() const;
-	virtual bool isFinished();
+	virtual bool isFinished() const;
 	
 	virtual void update(const sf::Time& deltaTime) = 0;
 	virtual void handleCollision(
@@ -68,6 +68,13 @@ public:
 		CollisionSides hitSides
 	) {};
 	virtual void handleNoCollision() {};
+	void removeNonSolid(
+		std::vector<std::unique_ptr<EntityBase>*>& top, 
+		std::vector<std::unique_ptr<EntityBase>*>& bottom, 
+		std::vector<std::unique_ptr<EntityBase>*>& left, 
+		std::vector<std::unique_ptr<EntityBase>*>& right, 
+		CollisionSides& hitSides
+	) const;
 
 	virtual void setColor(const sf::Color& newColor) {};
 	

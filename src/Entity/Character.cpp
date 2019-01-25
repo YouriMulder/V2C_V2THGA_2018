@@ -238,14 +238,15 @@ void Character::handleCollision(
 	std::vector<std::unique_ptr<EntityBase>*> right, 
 	CollisionSides hitSides
 ) {
-	restrictedSides = hitSides;
+
+	EntityBase::removeNonSolid(top, bottom, left, right, hitSides);
 
 	std::vector<
 		std::vector<std::unique_ptr<EntityBase>*>
 	> allObjects = {top, bottom, left, right};
 
 	for(const auto& objectVector: allObjects) {
-		for(const auto& object : objectVector) {
+		for(const auto& object : (objectVector)) {
 			if(dynamic_cast<Finish*>((*object).get())) {
 				mIsFinished = true;
 			}
@@ -285,6 +286,9 @@ void Character::handleCollision(
 	if(hitSides.right) {
 		mVelocity.x = 0;
 	} 
+	
+	restrictedSides = hitSides;
+
 }
 
 void Character::handleNoCollision() {
@@ -388,7 +392,7 @@ void Character::animate(const sf::Time& deltaTime) {
 						mIsHurting = false;
 						setIsVisible(true);
 					} else {
-						setIsVisible(!getIsVisible());
+						setIsVisible(!isVisible());
 					}
 				}
 				
@@ -446,6 +450,6 @@ bool Character::isSelected() {
 	return mSelected;
 }
 
-bool Character::isFinished() {
+bool Character::isFinished() const {
 	return mIsFinished;
 }

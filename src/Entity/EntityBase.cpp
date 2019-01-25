@@ -79,7 +79,7 @@ void EntityBase::setIsVisible(bool isVisible) {
 	mIsVisible = isVisible;
 }
 
-bool EntityBase::getIsVisible() {
+bool EntityBase::isVisible() const {
 	return mIsVisible;
 }
 
@@ -87,12 +87,50 @@ void EntityBase::setIsSolid(bool isSolid) {
 	mIsSolid = isSolid;
 }
 
-bool EntityBase::getIsSolid() {
+bool EntityBase::isSolid() const {
 	return mIsSolid;
 }
 
-bool EntityBase::isFinished() {
+bool EntityBase::isFinished() const {
 	return false;
+}
+
+void EntityBase::removeNonSolid(
+	std::vector<std::unique_ptr<EntityBase>*>& top, 
+	std::vector<std::unique_ptr<EntityBase>*>& bottom, 
+	std::vector<std::unique_ptr<EntityBase>*>& left, 
+	std::vector<std::unique_ptr<EntityBase>*>& right, 
+	CollisionSides& hitSides
+) const {
+	for(size_t i = 0; i < top.size(); ++i) {
+		if(!(*top[i])->isSolid()) {
+			top.erase(top.begin() + i);
+		}
+	}
+
+	for(size_t i = 0; i < bottom.size(); ++i) {
+		if(!(*bottom[i])->isSolid()) {	
+			bottom.erase(bottom.begin() + i);
+		}
+	}
+
+	for(size_t i = 0; i < left.size(); ++i) {
+		if(!(*left[i])->isSolid()) {
+			left.erase(left.begin() + i);
+		}
+	}
+
+	for(size_t i = 0; i < right.size(); ++i) {
+		if(!(*right[i])->isSolid()) {
+			right.erase(right.begin() + i);
+		}
+	}
+
+	hitSides.top 	= top.size();
+	hitSides.bottom = bottom.size();
+	hitSides.left 	= left.size();
+	hitSides.right 	= right.size();
+
 }
 
 void EntityBase::drawIfVisible(sf::RenderWindow& window) {

@@ -98,7 +98,7 @@ public:
 	virtual sf::FloatRect getGlobalBounds() const override;
 	void setSpriteScale(float x, float y);
 	void updateSizeUsingSprite();
-	virtual bool isFinished() override;
+	virtual bool isFinished() const override;
 	virtual void handleCollision(
 		std::vector<std::unique_ptr<EntityBase>*> top, 
 		std::vector<std::unique_ptr<EntityBase>*> bottom, 
