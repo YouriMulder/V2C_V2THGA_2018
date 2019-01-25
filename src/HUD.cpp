@@ -34,14 +34,14 @@ HUD::HUD()
 	for (int i = 0;i < mCurrentHealth;i++) {
 		mHearts.push_back(std::make_unique<LevelObject>(
 			mPathHUD + "heart.png",
-			startOffset + sf::Vector2f(textOffset + i*sizeOffset, 3),
+			startOffset + sf::Vector2f(textOffset + i*sizeOffset, 3.f),
 			sf::Vector2f(sizeOffset, sizeOffset),
 			0));
 	}
 	for (int i = 0;i < mCurrentEnergy;i++) {
 		mEnergy.push_back(std::make_unique<LevelObject>(
 			mPathHUD + "energy.png",
-			startOffset + sf::Vector2f(textOffset + i*sizeOffset, 20),
+			startOffset + sf::Vector2f(textOffset + i*sizeOffset, 20.f),
 			sf::Vector2f(sizeOffset, sizeOffset),
 			0));
 	}

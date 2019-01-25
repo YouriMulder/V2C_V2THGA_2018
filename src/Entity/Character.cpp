@@ -30,9 +30,9 @@ Character::Character(
 	mIsFinished(false),
 	mPreviousState(Character::State::Idle),
 	mState(Character::State::Idle),
-	mSpriteWidth(size.x),
-	mSpriteHeight(size.y),
-	mCurrentSpriteSheetLocation(0,0,size.x,size.y)
+	mSpriteWidth(static_cast<unsigned int>(size.x)),
+	mSpriteHeight(static_cast<unsigned int>(size.y)),
+	mCurrentSpriteSheetLocation(0,0, static_cast<unsigned int>(size.x), static_cast<unsigned int>(size.y))
 {
 	mTexture.loadFromFile(characterSheetPath);
 	mSprite = sf::Sprite(mTexture, mCurrentSpriteSheetLocation);
@@ -389,19 +389,19 @@ void Character::animate(const sf::Time& deltaTime) {
 				if(mIsFacingRight) {
 					mSprite.setTextureRect(
 						sf::IntRect(
-							currentSprite.x * animation.second.size.x,
-							currentSprite.y * animation.second.size.y,
-							animation.second.size.x,
-							animation.second.size.y
+							static_cast<int>(currentSprite.x * animation.second.size.x),
+							static_cast<int>(currentSprite.y * animation.second.size.y),
+							static_cast<int>(animation.second.size.x),
+							static_cast<int>(animation.second.size.y)
 						)
 					);
 				} else {
 					mSprite.setTextureRect(
 						sf::IntRect(
-							(currentSprite.x + 1) * animation.second.size.x,
-							currentSprite.y * animation.second.size.y,
-							-animation.second.size.x,
-							animation.second.size.y
+							static_cast<int>((currentSprite.x + 1) * animation.second.size.x),
+							static_cast<int>(currentSprite.y * animation.second.size.y),
+							static_cast<int>(-animation.second.size.x),
+							static_cast<int>(animation.second.size.y)
 						)
 					);
 				}
