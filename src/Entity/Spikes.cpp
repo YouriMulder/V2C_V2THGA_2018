@@ -6,37 +6,14 @@ Spikes::Spikes(const std::string& filename, const sf::Vector2f& position, const 
 
 	LevelObject(filename, position, size, picturepart, screenNumber, repeated),
 	mDamage(damage)
-{
-	hitClocks.reserve(10);
-}
+{}
 
 Spikes::Spikes(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
 	int screenNumber, uint_least8_t damage, bool repeated) :
 
 	LevelObject(filename, position, size, screenNumber, repeated),
 	mDamage(damage)
-{
-	hitClocks.reserve(10);
-}
-
-void Spikes::addClock(uint_least64_t entityId) {
-	hitClocks.push_back(
-		std::make_pair(entityId, sf::Clock())
-	);
-}
-
-bool Spikes::isClocked(uint_least64_t entityId) {
-	for(unsigned int i = 0; i < hitClocks.size(); ++i) {
-		if(hitClocks[i].first == entityId) {
-			if(hitClocks[i].second.getElapsedTime() > timeBetweenHits) {
-				hitClocks.erase(hitClocks.begin() + i);
-				return false; 
-			}
-			return true;
-		}
-	}
-	return false;
-}
+{}
 
 void Spikes::handleCollision(
 	std::vector<std::unique_ptr<EntityBase>*> top, 
@@ -46,19 +23,15 @@ void Spikes::handleCollision(
 	CollisionSides hitSides
 ) {
 	for(auto& object : top) {
-		if(!isClocked((*object)->getId())) {
+		if(!hitClocks.isClocked((*object)->getId())) {
 			(*object)->hurt(mDamage);
-			addClock((*object)->getId());
+			hitClocks.addClock((*object)->getId());
 		}
 	}
 }
 
 void Spikes::update(const sf::Time& deltaTime) {
-	for(unsigned int i = 0; i < hitClocks.size(); ++i) {
-		if(hitClocks[i].second.getElapsedTime() > timeBetweenHits) {
-			hitClocks.erase(hitClocks.begin() + i);
-		}
-	}
+	hitClocks.deleteExpired();
 }
 
 

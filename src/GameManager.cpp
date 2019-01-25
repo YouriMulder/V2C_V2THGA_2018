@@ -47,8 +47,7 @@ void GameManager::createLevel(){
 void GameManager::readLevelInfo() {
 	if (static_cast<unsigned int>(mCurrentLevel) >= mLevelFileNames.size()) {
 		std::cerr << "no file names";
-		return;
-	} else{
+	} else {
 		mCurrentSettings = mFactory.readLevelFile(mPathLevels + mLevelFileNames[mCurrentLevel], mStaticItems, mDynamicItems);
 	}
 	
@@ -64,6 +63,9 @@ void GameManager::applyLevelSettings() {
 	}
 	mCurrentScreensNotFinished = mCurrentSettings.noOfScreens;
 	Player::resetHealth();
+	if (!mMusic.openFromFile(mPathMusic + mCurrentSettings.songName)) {
+		std::cerr << "failed loading music";
+	}
 }
 
 void GameManager::createBackgrounds() {

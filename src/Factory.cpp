@@ -107,7 +107,6 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 				} else {
 					staticObjects.push_back(std::make_unique<Platform>(textureName, position, size, i, textureRepeat));
 				}
-				std::cout << "position: " << position << std::endl;
 			} else if (name == "spike") {
 				std::string textureName;
 				sf::Vector2f position;
@@ -152,7 +151,6 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 					movableObjects.push_back(std::make_unique <MoveablePlatform>(textureName, position, size, i, range, steps, textureRepeat));
 				}
 			} else if (name == "textBox") {
-				//std::cout << "ben in textbox swa\n";
 				sf::Vector2f position;
 				sf::Vector2f size;
 				std::string s;
@@ -173,7 +171,6 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 
 				text >> fontSize >> fontFile;
 				//staticObjects.push_back(std::make_unique <Text>(position, size, i, s, fontSize, fontFile));
-				std::cout << "text constructor: " << position << " " << size << " " << i << " " << s << " " << fontSize << " " << fontFile << "\n";
 			} else if (name == "NPC") {
 				sf::Vector2f startPoint;
 				float deltaXMovement;
