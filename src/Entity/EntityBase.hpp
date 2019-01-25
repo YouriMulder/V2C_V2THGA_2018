@@ -13,11 +13,17 @@ class EntityBase {
 private: 
 	static void increaseNextId();
 
+	sf::Clock mHurtClock = sf::Clock();
+	sf::Time mHurtingDuration = sf::seconds(1);
+	sf::Time timeSinceLastHurt = mHurtingDuration/8.0f;
+	bool mIsHurting = false;
+
 protected:
 	uint_least64_t id;
 	sf::Vector2f mPosition;
 	sf::Vector2f mSize;
 	int mScreenNumber;
+	bool mIsVisible;
 	
 	static uint_least64_t nextId;
 public:
@@ -26,7 +32,8 @@ public:
 	EntityBase(
 		const sf::Vector2f& mPosition, 
 		const sf::Vector2f mSize, 
-		int mScreenNumber 
+		int mScreenNumber,
+		bool mIsVisible = true
 	);
 	
 	uint_least64_t getId() const;
@@ -37,6 +44,8 @@ public:
 
 	void setScreenNumber(int newScreenNumber);
 	int getScreenNumber() const;
+	void setIsVisible(bool isVisible);
+	bool getIsVisible();
 
 	virtual void hurt(uint_least8_t damage) {};
 
@@ -57,6 +66,9 @@ public:
 	virtual void handleNoCollision() {};
 
 	virtual void setColor(const sf::Color& newColor) {};
+	
+	void drawIfVisible(sf::RenderWindow& window); 
+	void drawIfVisible(ViewManager& window); 	
 	virtual void draw(sf::RenderWindow& window) = 0;
 	virtual void draw(ViewManager& window) = 0;
 	virtual ~EntityBase();

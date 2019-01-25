@@ -8,6 +8,7 @@ project "MindFuck"
 	targetdir "bin/%{cfg.buildcfg}"
 
 	files { "src/**.*" }
+	flags { "FatalCompileWarnings", "FatalLinkWarnings", "FatalWarnings",  }
 	
 	filter { "system:windows" }
 		cppdialect "C++17"

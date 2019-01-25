@@ -5,6 +5,7 @@
 
 #include "EntityBase.hpp"
 #include "LevelObject.hpp"
+#include "Timers.hpp"
 #include "../ViewManager.hpp"
 #include <string>
 #include <vector>
@@ -13,14 +14,7 @@
 class Spikes : public LevelObject {
 private:
 	uint_least8_t mDamage;
-	sf::Time timeBetweenHits = sf::seconds(1);
-
-	std::vector<
-		std::pair<uint_fast64_t, sf::Clock>
-	> hitClocks = {};
-
-	void addClock(uint_least64_t entityId);
-	bool isClocked(uint_least64_t entityId);
+	Timers hitClocks;
 	
 public:
 	Spikes(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,

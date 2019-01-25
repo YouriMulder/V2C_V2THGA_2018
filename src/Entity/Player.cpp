@@ -38,11 +38,13 @@ Player::Player(const sf::Vector2f& position, int screenNumber):
 Player::~Player() {}
 
 void Player::hurt(uint_least8_t damage) {
+	Character::startHurtAnimation();
 	if(damage >= Player::health) {
 		Player::health = 0;
 	} else {
 		Player::health -= damage;
 	}
+
 }
 
 void Player::bindActions() {
@@ -61,19 +63,19 @@ void Player::bindAnimations() {
 	Character::bindAnimation(
 		Character::State::Idle, 
 		AnimationSequence(
-				sf::Vector2i(0,0),
-				sf::Vector2i(12,0),
-				sf::Vector2f(20.0f, 35.0f),
-				sf::milliseconds(100)
+			sf::Vector2i(0,0),
+			sf::Vector2i(12,0),
+			sf::Vector2f(20.0f, 35.0f),
+			sf::milliseconds(100)
 		)
 	);
 	Character::bindAnimation(
 		Character::State::Moving, 
 		AnimationSequence(
-				sf::Vector2i(0,1),
-				sf::Vector2i(8,1),
-				sf::Vector2f(21.0f, 35.0f),
-				sf::milliseconds(125)
+			sf::Vector2i(0,1),
+			sf::Vector2i(8,1),
+			sf::Vector2f(21.0f, 35.0f),
+			sf::milliseconds(125)
 		)
 	);
 	Character::bindAnimation(

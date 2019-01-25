@@ -10,9 +10,13 @@ void EntityBase::increaseNextId() {
 EntityBase::EntityBase(
 	const sf::Vector2f& position, 
 	const sf::Vector2f size, 
-	int screenNumber 
+	int screenNumber,
+	bool isVisible
 ):
-	mPosition(position), mSize(size), mScreenNumber(screenNumber)
+	mPosition(position), 
+	mSize(size), 
+	mScreenNumber(screenNumber),
+	mIsVisible(isVisible)
 {
 	increaseNextId();
 }
@@ -69,6 +73,26 @@ int EntityBase::getScreenNumber() const {
 	return mScreenNumber;
 }
 
+void EntityBase::setIsVisible(bool isVisible) {
+	mIsVisible = isVisible;
+}
+
+bool EntityBase::getIsVisible() {
+	return mIsVisible;
+}
+
 bool EntityBase::isFinished() {
 	return false;
 }
+
+void EntityBase::drawIfVisible(sf::RenderWindow& window) {
+	if(mIsVisible) {
+		draw(window);
+	}
+}
+
+void EntityBase::drawIfVisible(ViewManager& window) {
+	if(mIsVisible) {
+		draw(window);
+	}
+} 	

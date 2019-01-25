@@ -17,4 +17,4 @@ NPC (100,100) 150
 END
 
 CHARACTERS
-player (0,600) (19,34) (2,2) (20,10)
+player (0,600)

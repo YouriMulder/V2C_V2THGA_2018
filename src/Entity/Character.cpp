@@ -265,7 +265,7 @@ void Character::handleCollision(
 		setPosition( 
 			sf::Vector2f(
 				mPosition.x - ((*highestBottom)->getPosition().x - (*highestBottom)->getNextPosition().x),
-				(*highestBottom)->getPosition().y - getSize().y + 1 // otherwise the player will always fall when standing on moving entities
+				(*highestBottom)->getPosition().y - getSize().y + 3 // otherwise the player will always fall when standing on moving entities
 			) 
 		);
 
@@ -362,6 +362,11 @@ void Character::update(const sf::Time& deltaTime) {
 	animate(deltaTime);
 }
 
+void Character::startHurtAnimation() {
+	hurtClock.restart();
+	mIsHurting = true;
+}
+
 void Character::animate(const sf::Time& deltaTime) {
 	timeSinceLastAnimation += deltaTime;
 
@@ -378,6 +383,15 @@ void Character::animate(const sf::Time& deltaTime) {
 		if(mState == animation.first) {
 			
 			if(timeSinceLastAnimation >= animation.second.displayTime) {
+				if(mIsHurting) {
+					if(hurtClock.getElapsedTime() >= totalHurtTime) {
+						mIsHurting = false;
+						setIsVisible(true);
+					} else {
+						setIsVisible(!getIsVisible());
+					}
+				}
+				
 				timeSinceLastAnimation = sf::seconds(0.0f);
 				currentSprite.x++;
 
