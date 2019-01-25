@@ -1,7 +1,7 @@
 SETTINGS:
 noOfScreens 4
 gameTime 3
-songName yolo
+songName music.ogg
 levelSize (2500,1000) (2500,1000) (2500,1000) (2500,1000)
 finishPoints (1900,380) (2050,230) (1950,230) (2150,330)
 
@@ -9,44 +9,44 @@ backgroundImages plx-1.png,plx-2.png,plx-3.png,plx-4.png,plx-5.png
 
 SCREEN1
 
+platform wallRight.png (-10,0) (10,1000) 1 0
 platform platform.png (0,500) (300,25) 1 0
 platform platform.png (500,350) (200,25) 1 0
 platform platform.png (800,250) (400,25) 1 0
 platform platform.png (1350,350) (300,25) 1 0
 platform platform.png (1750,450) (200,25) 1 0
-platform wallRight.png (0,0) (1,720) 1 0
 
 SCREEN
 
+platform wallRight.png (-10,0) (10,1000) 1 0
 platform platform.png (0,350) (300,25) 1 0
 platform platform.png (400,400) (400,25) 1 0
 platform platform.png (900,300) (200,25) 1 0
 platform platform.png (1300,200) (300,25) 1 0
 platform platform.png (1750,300) (350,25) 1 0 
-platform wallRight.png (0,0) (1,720) 1 0
 
 SCREEN 
 
+platform wallRight.png (-10,0) (10,1000) 1 0
 platform platform.png (0,300) (500,25) 1 0
 platform platform.png (600,200) (300,25) 1 0
 platform platform.png (1050,300) (200,25) 1 0
 platform platform.png (1350,400) (250,25) 1 0
 platform platform.png (1700,300) (300,25) 1 0
-platform wallRight.png (0,0) (1,720) 1 0
 
 SCREEN 
 
+platform wallRight.png (-10,0) (10,1000) 1 0
 platform platform.png (0,500) (400,25) 1 0
 platform platform.png (550,600) (500,25) 1 0
 platform platform.png (1200,550) (200,25) 1 0
-platform platform.png (1500,450) (300,25) 1 0
+platform platform.png (1500,450) (400,25) 1 0
 platform platform.png (1950,400) (250,25) 1 0
-platform wallRight.png (0,0) (1,720) 1 0
 
 END
 
 CHARACTERS
-player (0,432)
-player (0,282)
-player (0,232)
-player (0,432)
+player (0,435)
+player (0,285)
+player (0,235)
+player (0,435)

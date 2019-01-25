@@ -26,7 +26,7 @@ void Spikes::addClock(uint_least64_t entityId) {
 }
 
 bool Spikes::isClocked(uint_least64_t entityId) {
-	for(int i = 0; i < hitClocks.size(); ++i) {
+	for(unsigned int i = 0; i < hitClocks.size(); ++i) {
 		if(hitClocks[i].first == entityId) {
 			if(hitClocks[i].second.getElapsedTime() > timeBetweenHits) {
 				hitClocks.erase(hitClocks.begin() + i);
@@ -54,7 +54,7 @@ void Spikes::handleCollision(
 }
 
 void Spikes::update(const sf::Time& deltaTime) {
-	for(int i = 0; i < hitClocks.size(); ++i) {
+	for(unsigned int i = 0; i < hitClocks.size(); ++i) {
 		if(hitClocks[i].second.getElapsedTime() > timeBetweenHits) {
 			hitClocks.erase(hitClocks.begin() + i);
 		}

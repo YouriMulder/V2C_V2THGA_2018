@@ -4,6 +4,7 @@ std::ifstream & operator>>(std::ifstream & input, sf::Vector2f & rhs) {
 	std::string s;
 	input >> s;
 	bool x_fetched = false;
+	bool negative = false;
 	for (unsigned int index = 0; index < s.length(); index++) {
 		if (s[index] == '(') {
 			x_fetched = false;
@@ -11,13 +12,28 @@ std::ifstream & operator>>(std::ifstream & input, sf::Vector2f & rhs) {
 		else if (s[index] == ',') {
 			x_fetched = true;
 		}
-		else if ((s[index] >= '0' && s[index] <= '9') && x_fetched == false) {
-			rhs.x *= 10;
-			rhs.x += (int)s[index] - '0';
+		else if (s[index] == '-') {
+			negative = true;
 		}
-		else if (s[index] >= '0' && s[index] <= '9' && x_fetched == true) {
-			rhs.y *= 10;
-			rhs.y += (int)s[index] - '0';
+		else if ((s[index] >= '0' && s[index] <= '9') && !x_fetched) {
+			if (negative){
+				rhs.x *= 10;
+				rhs.x += ((int)s[index] - '0')*-1;
+				negative = false;
+			} else{
+				rhs.x *= 10;
+				rhs.x += (int)s[index] - '0';
+			}
+		}
+		else if (s[index] >= '0' && s[index] <= '9' && x_fetched) {
+			if (negative) {
+				rhs.y *= 10;
+				rhs.y += ((int)s[index] - '0')*-1;
+				negative = false;
+			} else {
+				rhs.y *= 10;
+				rhs.y += (int)s[index] - '0';
+			}
 		}
 		else if (s[index] == ')') {
 			return input;

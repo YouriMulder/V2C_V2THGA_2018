@@ -63,9 +63,7 @@ void GameManager::applyLevelSettings() {
 		mSelectedScreen[1] = true;
 	}
 	mCurrentScreensNotFinished = mCurrentSettings.noOfScreens;
-	if (!mMusic.openFromFile(mPathMusic + mCurrentSettings.songName)) {
-		std::cerr << "faild loading music";
-	}
+	Player::resetHealth();
 }
 
 void GameManager::createBackgrounds() {
@@ -250,6 +248,9 @@ void GameManager::runGame() {
 	while (mViewManager.isOpen()) {
 		if (!mPlayingLevel) {
 			createLevel();
+			if (!mMusic.openFromFile(mPathMusic + mCurrentSettings.songName)) {
+				std::cerr << "faild loading music";
+			}
 			mMusic.play();
 			mCurrentDeathCount = 0;
 			mHUD.updateDeathCount(mCurrentDeathCount);
@@ -288,7 +289,6 @@ void GameManager::runGame() {
 					createLevel();
 					mCurrentDeathCount++;
 					mHUD.updateDeathCount(mCurrentDeathCount);
-					Player::resetHealth();
 					break;
 				}
 				if (checkLevelFinished()) {
