@@ -24,6 +24,7 @@ protected:
 	sf::Vector2f mSize;
 	int mScreenNumber;
 	bool mIsVisible;
+	bool mIsSolid;
 	
 	static uint_least64_t nextId;
 public:
@@ -33,6 +34,7 @@ public:
 		const sf::Vector2f& mPosition, 
 		const sf::Vector2f mSize, 
 		int mScreenNumber,
+		bool mIsSolid = true,
 		bool mIsVisible = true
 	);
 	
@@ -46,6 +48,8 @@ public:
 	int getScreenNumber() const;
 	void setIsVisible(bool isVisible);
 	bool getIsVisible();
+	void setIsSolid(bool isSolid);
+	bool getIsSolid();
 
 	virtual void hurt(uint_least8_t damage) {};
 
