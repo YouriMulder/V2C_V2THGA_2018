@@ -11,6 +11,7 @@
 #include <array>
 #include <sstream>
 #include "Entity/Finish.hpp"
+#include "Entity/Text.hpp"
 
 SettingsData Factory::readSettings(std::ifstream& text) {
 	std::string name;
@@ -107,7 +108,6 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 				} else {
 					staticObjects.push_back(std::make_unique<Platform>(textureName, position, size, i, textureRepeat));
 				}
-				std::cout << "position: " << position << std::endl;
 			} else if (name == "spike") {
 				std::string textureName;
 				sf::Vector2f position;
@@ -152,7 +152,6 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 					movableObjects.push_back(std::make_unique <MoveablePlatform>(textureName, position, size, i, range, steps, textureRepeat));
 				}
 			} else if (name == "textBox") {
-				//std::cout << "ben in textbox swa\n";
 				sf::Vector2f position;
 				sf::Vector2f size;
 				std::string s;
@@ -163,17 +162,16 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 				text >> position >> size;
 				c = text.get();
 				c = text.get();
-				if (c == 34) {
+				if (c == '\"') {
 					c = text.get();
-					while (c != 34) {
+					while (c != '\"') {
 						s += c;
 						c = text.get();
 					}
 				}
 
 				text >> fontSize >> fontFile;
-				//staticObjects.push_back(std::make_unique <Text>(position, size, i, s, fontSize, fontFile));
-				std::cout << "text constructor: " << position << " " << size << " " << i << " " << s << " " << fontSize << " " << fontFile << "\n";
+				staticObjects.push_back(std::make_unique <Text>(position, size, i, s, fontSize, fontFile));
 			} else if (name == "NPC") {
 				sf::Vector2f startPoint;
 				float deltaXMovement;
@@ -187,7 +185,7 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 				text.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			}
 			currentNoLine++;
-			if (currentNoLine > noOfLines) {
+			if (currentNoLine > mNoOfLines) {
 				std::cerr << "Exceded number of lines\n";
 				break;
 			}
@@ -223,7 +221,7 @@ void Factory::createFinishes(std::vector<std::unique_ptr<EntityBase>> & staticOb
 
 SettingsData Factory::readLevelFile(std::string fileName, std::vector<std::unique_ptr<EntityBase>> & staticObjects,
 	std::vector<std::unique_ptr<EntityBase>> & movableObjects) {
-	noOfLines = getNoLines(fileName);
+	mNoOfLines = getNoLines(fileName);
 	std::ifstream text(fileName);
 	SettingsData temp = readSettings(text);
 	readObjects(text, temp.noOfScreens, staticObjects, movableObjects);
