@@ -51,6 +51,11 @@ void EntityBase::setPosition(const sf::Vector2f& newPosition) {
 	mPosition = newPosition;
 }
 
+void EntityBase::setSize(const sf::Vector2f& newSize) {
+	mSize = newSize;
+}
+
+
 sf::Vector2f EntityBase::getPosition() const {
 	return mPosition;
 }

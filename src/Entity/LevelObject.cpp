@@ -1,5 +1,5 @@
 #include "LevelObject.hpp"
-
+#include <iostream>
 LevelObject::LevelObject(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
 	const sf::IntRect& picturepart, int screenNumber, bool repeated) :
 
@@ -25,6 +25,15 @@ LevelObject::LevelObject(const std::string& filename, const sf::Vector2f& positi
 }
 
 LevelObject::~LevelObject() {}
+
+void LevelObject::matchSizeWithSprite() {
+	EntityBase::setSize(
+		sf::Vector2f(
+			mSprite.getGlobalBounds().width,
+			mSprite.getGlobalBounds().height
+		)
+	);
+}
 
 void LevelObject::resize(float width, float height) {
 	mSize = { width, height };

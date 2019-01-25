@@ -54,6 +54,8 @@ public:
 
 	virtual ~LevelObject();
 
+	void matchSizeWithSprite();
+
 	/// \brief
 	/// Changes the size of the LevelObject.
 	void resize(float width, float height);

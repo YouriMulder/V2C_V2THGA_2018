@@ -1,6 +1,8 @@
 #include "GameManager.hpp"
-#include <fstream>
 #include "Entity/Player.hpp"
+#include "Entity/Projectile.hpp"
+#include <fstream>
+#include <exception>
 
 GameManager::GameManager(const std::string& levelFileName) :
 	mCurrentLevel(0),
@@ -247,6 +249,7 @@ bool GameManager::check2Selected() {
 
 void GameManager::runGame() {	
 	sf::Event event;
+	
 	while (mViewManager.isOpen()) {
 		if (!mPlayingLevel) {
 			createLevel();
@@ -277,13 +280,23 @@ void GameManager::runGame() {
 		while(mPassedTime >= mFrameTime) {
 			if (numUpdates++ < 10) {
 				mCollisionManager.checkCollisions();
-				for(auto& dynamicObject : mDynamicItems) {
+				
+				for(const auto& playerIndex : mPlayerIndexes) {
+					if(dynamic_cast<Player*>(mDynamicItems[playerIndex].get())) {
+						auto player = dynamic_cast<Player*>(mDynamicItems[playerIndex].get());
+						if(auto projectile = player->getProjectile()) {
+							mDynamicItems.push_back(std::move(projectile.value()));
+						}
+					}
+				}
+				
+				for(const auto& dynamicObject : mDynamicItems) {
 					if (mSelectedScreen[dynamicObject->getScreenNumber() - 1] && check2Selected()) {
 						dynamicObject->update(mPassedTime);
 					}
 				}
 				moveScreens();
-				for (auto & background : mBackgrounds) {
+				for (const auto & background : mBackgrounds) {
 					background->update(mPassedTime);
 				}
 				if (checkLosingConditions()) {
@@ -319,7 +332,6 @@ void GameManager::runGame() {
 			for (const auto& background : mBackgrounds) {
 				background->drawIfVisible(mViewManager);
 			}
-
 			for (const auto& dynamicObject : mDynamicItems) {
 				dynamicObject->drawIfVisible(mViewManager);
 			}

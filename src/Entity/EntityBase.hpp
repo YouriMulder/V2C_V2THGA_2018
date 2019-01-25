@@ -41,8 +41,6 @@ public:
 	uint_least64_t getId() const;
 	void move(float deltaX, float deltaY);
 	void move(const sf::Vector2f& deltaPosition);
-	void setPosition(float x, float y);
-	void setPosition(const sf::Vector2f& newPosition);
 
 	void setScreenNumber(int newScreenNumber);
 	int getScreenNumber() const;
@@ -52,6 +50,10 @@ public:
 	bool isSolid() const;
 
 	virtual void hurt(uint_least8_t damage) {};
+
+	void setPosition(float x, float y);
+	void setPosition(const sf::Vector2f& newPosition);
+	void setSize(const sf::Vector2f& newSize);
 
 	virtual sf::Vector2f getSize() const;
 	virtual sf::Vector2f getPosition() const;

@@ -7,6 +7,8 @@
 #include <vector>
 #include <memory>
 #include <cstdint>
+#include <optional>
+
 
 #include "EntityBase.hpp"
 #include "../EventManager.hpp"
@@ -29,14 +31,15 @@ struct AnimationSequence {
 };
 
 class Character : public EntityBase {
-public:	
+public:
 	enum class State {
 		Idle,
 		Moving,
 		Running,
 		Jumping,
 		Falling,
-		Attacking
+		Attacking,
+		Shooting,
 	};
 
 	enum class Action {
@@ -46,6 +49,7 @@ public:
 		Run,
 		Duck,
 		Punch,
+		Shoot,
 		None
 	};
 	
@@ -76,13 +80,16 @@ public:
 	void updateState(const Action& action);
 	void startHurtAnimation();
 	void animate(const sf::Time& deltaTime);
+
 	
 	void left();
 	void right();
 	void jump(); 
 	void run();
 
-	void attack();
+	void shoot();
+	bool isShooting() const;
+	std::optional<std::unique_ptr<EntityBase>> getProjectile();
 	
 	void applyGravity();
 	void updateVelocity(const sf::Vector2f& deltaVelocity);
@@ -129,14 +136,15 @@ protected:
 	float mJumpAcceleration = 0.3f;
 	float mGravityAcceleration = 0.3f;
 
-	bool mCanDoubleJump = false;
-
 	bool mIsFacingRight;
 	bool mIsInAir;
 	bool mIsJumping;
+	bool mCanDoubleJump;
 	bool mIsRunning;
+	bool mIsShooting;
 	bool mIsFinished;
 	bool mSelected;
+	
 	State mPreviousState;
 	State mState;
 
@@ -172,6 +180,9 @@ protected:
 		),
 		std::make_pair(
 			Action::Run, 	[this](){run();}
+		),
+		std::make_pair(
+			Action::Shoot, 	[this](){shoot();}
 		),
 	};
 

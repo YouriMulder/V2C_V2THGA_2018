@@ -2,8 +2,12 @@
 
 #include "../World/Physics.hpp"
 #include "Finish.hpp"
+#include "Projectile.hpp"
 #include <iostream>
 #include <cstdint>
+#include <memory>
+#include <optional>
+
 
 template<typename T>
 std::ostream& operator<<(typename std::enable_if<std::is_enum<T>::value, std::ostream>::type& stream, const T& e) {
@@ -26,8 +30,11 @@ Character::Character(
 	mIsFacingRight(true),
 	mIsInAir(true),
 	mIsJumping(false),
-	mSelected(false),
+	mCanDoubleJump(false),
+	mIsRunning(false),
+	mIsShooting(false),
 	mIsFinished(false),
+	mSelected(false),
 	mPreviousState(Character::State::Idle),
 	mState(Character::State::Idle),
 	mSpriteWidth(static_cast<unsigned int>(size.x)),
@@ -163,6 +170,28 @@ void Character::left() {
 void Character::right() {
 	applyMovement(Action::Right);
 }
+
+void Character::shoot() {
+	mIsShooting = true;
+}
+
+bool Character::isShooting() const {
+	return mIsShooting;
+}
+
+std::optional<std::unique_ptr<EntityBase>> Character::getProjectile() {
+	if(mIsShooting) {
+		mIsShooting = false;
+		return std::make_unique<Projectile>(
+			"../res/Textures/HUD/energy.png", 
+			getPosition(),
+			getScreenNumber(),
+			mIsFacingRight
+		);
+	}
+	return {};
+}
+
 
 void Character::jump() {
 	if(!mIsInAir && !mIsJumping) {

@@ -57,6 +57,8 @@ void Player::bindActions() {
 	
 	Character::bindAction(EventManager(sf::Keyboard::Space, 	[&] 	{addAction(Character::Action::Jump);	}));
 	Character::bindAction(EventManager(sf::Keyboard::LShift, 	[&] 	{addAction(Character::Action::Run);		}));
+
+	Character::bindAction(EventManager(sf::Keyboard::F, 	[&] 		{addAction(Character::Action::Shoot);		}));
 }
 
 void Player::bindAnimations() {
