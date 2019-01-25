@@ -36,11 +36,11 @@ private:
 	bool mPlayingLevel = false;
 
 	/// \brief
-	/// Is the player currently respawning
+	/// Is the player currently respawning.
 	bool mPlayerRespawn = false;
 
 	/// \brief
-	/// The main RenderWindow for the game
+	/// The main RenderWindow for the game.
 	sf::RenderWindow mMainWindow;
 
 	/// \brief
@@ -93,7 +93,7 @@ private:
 	std::vector<std::unique_ptr<EntityBase>> mFinishTexts = {};
 
 	/// \brief
-	/// Vector with all the names of the level files
+	/// Vector with all the names of the level files.
 	std::vector<std::string> mLevelFileNames;
 
 	/// \brief
@@ -138,7 +138,7 @@ private:
 	bool readLevelFileNames(const std::string & levelFileName);
 
 	/// \brief
-	/// Function to read all the level information using the factory
+	/// Function to read all the level information using the factory.
 	void readLevelInfo();
 
 	/// \brief
@@ -148,7 +148,7 @@ private:
 	void applyLevelSettings();
 
 	/// \brief
-	/// Function to create a level 
+	/// Function to create a level.
 	/// \details
 	/// Uses other functions such as clearLevel and readLevelInfo.
 	void createLevel();
@@ -175,7 +175,7 @@ private:
 	/// \brief
 	/// Function to clear all the level information.
 	/// \details
-	/// Clears all the level information 
+	/// Clears all the level information.
 	void clearLevel();
 
 	/// \brief
@@ -207,7 +207,7 @@ private:
 
 
 	/// \brief
-	/// Array of actions
+	/// Array of actions.
 	/// \details
 	/// This array contains all the key bindings nessecary.\n
 	/// Numbers 1-4 for selecting screens 1-4.\n
