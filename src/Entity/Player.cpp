@@ -40,6 +40,16 @@ void Player::setMaxEnergy(uint_least8_t newMaxEnergy) {
 	maxEnergy = newMaxEnergy;
 }
 
+void Player::addEnergy(int_least8_t deltaEnergy) {
+	if(energy + deltaEnergy > maxEnergy) {
+		energy = maxEnergy;
+	} else if(energy + deltaEnergy < 0) {
+		energy = 0;
+	} else {
+		energy += deltaEnergy;
+	}
+}
+
 void Player::resetEnergy() {
 	energy = maxEnergy;
 }
