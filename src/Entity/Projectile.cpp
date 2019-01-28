@@ -34,16 +34,19 @@ void Projectile::handleCollision(
 	std::vector<std::unique_ptr<EntityBase>*> right, 
 	CollisionSides hitSides
 ) {
-	std::vector<
-		std::vector<std::unique_ptr<EntityBase>*>
-	> allObjects = {top, bottom, left, right};
-	
-	for(const auto& objectVector: allObjects) {
-		for(const auto& object : objectVector) {
-			const auto& uniqueObject = (*object);
-			uniqueObject->hurt(mDamage);
+	if(!EntityBase::shouldDestroy()) {
+		std::vector<
+			std::vector<std::unique_ptr<EntityBase>*>
+		> allObjects = {top, bottom, left, right};
+		
+		for(const auto& objectVector: allObjects) {
+			for(const auto& object : objectVector) {
+				const auto& uniqueObject = (*object);
+				if(!EntityBase::shouldDestroy() && !uniqueObject->shouldDestroy()) {
+					uniqueObject->hurt(mDamage);
+					destroy();
+				}
+			}
 		}
 	}
-
-	destroy();
 }
