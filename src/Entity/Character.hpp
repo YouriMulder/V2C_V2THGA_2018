@@ -7,10 +7,13 @@
 #include <vector>
 #include <memory>
 #include <cstdint>
+#include <optional>
+
 
 #include "EntityBase.hpp"
 #include "../EventManager.hpp"
 #include "../ViewManager.hpp"
+#include "Timer.hpp"
 
 struct AnimationSequence {
 	sf::Vector2i start;
@@ -29,14 +32,15 @@ struct AnimationSequence {
 };
 
 class Character : public EntityBase {
-public:	
+public:
 	enum class State {
 		Idle,
 		Moving,
 		Running,
 		Jumping,
 		Falling,
-		Attacking
+		Attacking,
+		Shooting,
 	};
 
 	enum class Action {
@@ -46,6 +50,7 @@ public:
 		Run,
 		Duck,
 		Punch,
+		Shoot,
 		None
 	};
 	
@@ -82,7 +87,9 @@ public:
 	void jump(); 
 	void run();
 
-	void attack();
+	virtual bool shoot();
+	virtual bool isShooting() const;
+	std::optional<std::unique_ptr<EntityBase>> getProjectile();
 	
 	void applyGravity();
 	void updateVelocity(const sf::Vector2f& deltaVelocity);
@@ -98,7 +105,7 @@ public:
 	virtual sf::FloatRect getGlobalBounds() const override;
 	void setSpriteScale(float x, float y);
 	void updateSizeUsingSprite();
-	virtual bool isFinished() override;
+	virtual bool isFinished() const override;
 	virtual void handleCollision(
 		std::vector<std::unique_ptr<EntityBase>*> top, 
 		std::vector<std::unique_ptr<EntityBase>*> bottom, 
@@ -113,6 +120,9 @@ public:
 
 	virtual void bindActions() {};
 	virtual void bindAnimations() {};
+
+	void select(bool selection);
+	bool isSelected();
 protected:
 	uint_least64_t id;
 
@@ -129,14 +139,15 @@ protected:
 	float mJumpAcceleration = 0.3f;
 	float mGravityAcceleration = 0.3f;
 
-	bool mCanDoubleJump = false;
-
 	bool mIsFacingRight;
 	bool mIsInAir;
 	bool mIsJumping;
+	bool mCanDoubleJump;
 	bool mIsRunning;
+	bool mIsShooting;
 	bool mIsFinished;
 	bool mSelected;
+	
 	State mPreviousState;
 	State mState;
 
@@ -149,12 +160,12 @@ protected:
 	sf::Time timeSinceLastAnimation;
 	sf::Clock hurtClock;
 	bool mIsHurting = false;
+	
+	Timer mShootTimer;
+	sf::Time mTimeBetweenShots = sf::seconds(1);
 	sf::Time totalHurtTime = sf::seconds(1);
 
 	CollisionSides restrictedSides;
-
-	void select(bool selection);
-	bool isSelected();
 
 	std::queue<Action> mUnperformedActions = {};
 	
@@ -172,6 +183,9 @@ protected:
 		),
 		std::make_pair(
 			Action::Run, 	[this](){run();}
+		),
+		std::make_pair(
+			Action::Shoot, 	[this](){shoot();}
 		),
 	};
 

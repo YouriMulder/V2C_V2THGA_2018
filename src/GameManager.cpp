@@ -1,10 +1,12 @@
 #include "GameManager.hpp"
-#include <fstream>
 #include "Entity/Player.hpp"
+#include "Entity/Projectile.hpp"
+#include <fstream>
+#include <exception>
 
 GameManager::GameManager(const std::string& levelFileName) :
 	mCurrentLevel(0),
-	mMainWindow(sf::VideoMode::getDesktopMode(), "MiNdF*cK",sf::Style::Fullscreen),
+	mMainWindow(sf::VideoMode(1920,1080), "MiNdF*cK",sf::Style::Fullscreen),
 	mViewManager(mMainWindow, 1),
 	mFactory(),
 	mHUD(),
@@ -17,6 +19,14 @@ GameManager::GameManager(const std::string& levelFileName) :
 
 
 GameManager::~GameManager() {}
+
+void GameManager::dynamicItemsErase(unsigned int index) {
+	if(index >= 0 && index < mDynamicItems.size()) {
+		mDynamicItems.erase(mDynamicItems.begin() + index);
+		findPlayerIndexes();
+	}
+}
+
 
 bool GameManager::readLevelFileNames(const std::string & levelFileName) {
 	std::ifstream input(levelFileName);
@@ -62,7 +72,7 @@ void GameManager::applyLevelSettings() {
 		mSelectedScreen[1] = true;
 	}
 	mCurrentScreensNotFinished = mCurrentSettings.noOfScreens;
-	Player::resetHealth();
+	Player::reset();
 	if (!mMusic.openFromFile(mPathMusic + mCurrentSettings.songName)) {
 		std::cerr << "failed loading music";
 	}
@@ -83,7 +93,6 @@ void GameManager::createBackgrounds() {
 }
 
 void GameManager::moveScreens() {
-
 	for (const auto & currentPlayer : mPlayerIndexes) {
 		sf::Vector2f currentPlayerPosition = mDynamicItems[currentPlayer]->getPosition();
 		sf::Vector2f currentPlayerSize = mDynamicItems[currentPlayer]->getSize();
@@ -216,6 +225,7 @@ bool GameManager::checkLevelFinished() {
 }
 
 void GameManager::findPlayerIndexes() {
+	mPlayerIndexes.clear();
 	for (unsigned int i = 0; i < mDynamicItems.size();i++) {
 		if (dynamic_cast<Player*>(mDynamicItems[i].get())) {
 			mPlayerIndexes.push_back(i);
@@ -247,6 +257,7 @@ bool GameManager::check2Selected() {
 
 void GameManager::runGame() {	
 	sf::Event event;
+	
 	while (mViewManager.isOpen()) {
 		if (!mPlayingLevel) {
 			createLevel();
@@ -277,13 +288,28 @@ void GameManager::runGame() {
 		while(mPassedTime >= mFrameTime) {
 			if (numUpdates++ < 10) {
 				mCollisionManager.checkCollisions();
-				for(auto& dynamicObject : mDynamicItems) {
-					if (mSelectedScreen[dynamicObject->getScreenNumber() - 1] && check2Selected()) {
-						dynamicObject->update(mPassedTime);
+				
+				for(const auto& playerIndex : mPlayerIndexes) {
+					if(dynamic_cast<Player*>(mDynamicItems[playerIndex].get())) {
+						auto player = dynamic_cast<Player*>(mDynamicItems[playerIndex].get());
+						if(auto projectile = player->getProjectile()) {
+							mDynamicItems.push_back(std::move(projectile.value()));
+						}
 					}
 				}
+				for(size_t i = mDynamicItems.size(); i > 0; i--) {
+					const auto& object = mDynamicItems[i-1];
+					
+					if(mSelectedScreen[object->getScreenNumber() - 1] && check2Selected()) {
+						object->update(mPassedTime);
+					}
+					if(object->shouldDestroy()) {
+						dynamicItemsErase(i - 1);
+					}
+				}
+				
 				moveScreens();
-				for (auto & background : mBackgrounds) {
+				for (const auto & background : mBackgrounds) {
 					background->update(mPassedTime);
 				}
 				if (checkLosingConditions()) {
@@ -305,6 +331,8 @@ void GameManager::runGame() {
     	}
 
 		mHUD.updateHealth(Player::getHealth());
+		mHUD.updateEnergy(Player::getEnergy());
+
 		mViewManager.clear();
 		int count = 1;
 		for (const auto & selected : mSelectedScreen) {
@@ -319,7 +347,6 @@ void GameManager::runGame() {
 			for (const auto& background : mBackgrounds) {
 				background->drawIfVisible(mViewManager);
 			}
-
 			for (const auto& dynamicObject : mDynamicItems) {
 				dynamicObject->drawIfVisible(mViewManager);
 			}

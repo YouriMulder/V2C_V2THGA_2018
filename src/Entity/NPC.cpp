@@ -1,6 +1,6 @@
 #include "NPC.hpp"
 
-NPC::NPC(const sf::Vector2f& startPoint, const float& deltaXMovement, int screenNumber, bool jumpingEnabled, const sf::Time& jumpDeltaTime):
+NPC::NPC(const sf::Vector2f& startPoint, const float& deltaXMovement, int screenNumber, uint_least8_t damage, bool jumpingEnabled, const sf::Time& jumpDeltaTime):
 	Character(
 		startPoint, sf::Vector2f(50.0f, 50.0f), 
 		screenNumber, sf::Vector2f(2.0f, 2.0f), sf::Vector2f(20.0f, 10.0f),
@@ -8,10 +8,12 @@ NPC::NPC(const sf::Vector2f& startPoint, const float& deltaXMovement, int screen
 	),
 	mStartPoint(startPoint),
 	mDeltaXMovement(deltaXMovement),
+	mDamage(damage),
 	mIsMovingRight(true),
 	mJumpingEnabled(jumpingEnabled),
 	mJumpDeltaTime(jumpDeltaTime),
-	mAbleToMove(true)
+	mAbleToMove(true),
+	mHealth(4)
 {
 	setSpriteScale(1.0f, 1.0f);
 
@@ -32,12 +34,14 @@ void NPC::bindActions() {
 		}
 		return false;
 	}, [&] 	{addAction(Character::Action::Jump);} ));
+	
 	Character::bindAction( EventManager( [=]()->bool { 
 		if(mAbleToMove) {
 			return mIsMovingRight; 
 		}
 		return false;
 	}, [&] 	{addAction(Character::Action::Right);} ));
+	
 	Character::bindAction( EventManager( [=]()->bool { 
 		if(mAbleToMove) {
 			return !mIsMovingRight;
@@ -75,7 +79,20 @@ void NPC::handleCollision(
 	CollisionSides hitSides
 ) {
 	Character::handleCollision(top, bottom, left, right, hitSides);
-	
+
+	std::vector<
+		std::vector<std::unique_ptr<EntityBase>*>
+	> allObjects = {top, bottom, left, right};
+
+	for(const auto& objectVector: allObjects) {
+		for(const auto& object : objectVector) {
+			if(!hitClocks.isClocked((*object)->getId())) {
+				(*object)->hurt(mDamage);
+				hitClocks.addClock((*object)->getId());
+			}
+		}
+	}
+
 	if((hitSides.right || hitSides.left) && mAbleToMove) {
 		mIsMovingRight = !mIsMovingRight;
 		mAbleToMove = false;
@@ -96,8 +113,20 @@ void NPC::handleNoCollision() {
 	}
 }
 
+void NPC::hurt(uint_least8_t damage) {
+	Character::startHurtAnimation();
+	if(damage >= mHealth) {
+		mHealth = 0;
+		destroy();
+	} else {
+		mHealth -= damage;
+	}
+}
+
 void NPC::update(const sf::Time& deltaTime) {
 	Character::update(deltaTime);
+
+	hitClocks.deleteExpired();
 
 	if(!mAbleToMove) {
 		if(unableToMoveClock.getElapsedTime() >= unableToMoveTime && unableToMoveTimerSet) {
