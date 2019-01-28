@@ -19,7 +19,13 @@ void Player::setMaxHealth(uint_least8_t newMaxHealth) {
 }
 
 void Player::addHealth(int_least8_t deltaHealth) {
-	health += deltaHealth;
+	if(health + deltaHealth > maxHealth) {
+		health = maxHealth;
+	} else if(health + deltaHealth < 0) {
+		health = 0;
+	} else {
+		health += deltaHealth;
+	}
 }
 
 void Player::resetHealth() {
