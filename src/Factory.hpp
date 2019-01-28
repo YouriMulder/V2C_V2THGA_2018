@@ -19,7 +19,7 @@ struct SettingsData {
 	/// This int contains the amount of time the player has for a level.
 	int gameDuration = 0;
 
-	int energy = 10;
+	int energy = 0;
 
 	/// \brief
 	/// This string contains the songname for the level.
