@@ -75,7 +75,8 @@ void GameManager::applyLevelSettings() {
 	Player::reset();
 	if (!mMusic.openFromFile(mPathMusic + mCurrentSettings.songName)) {
 		std::cerr << "failed loading music";
-	}
+	} 
+	Player::setEnergy(mCurrentSettings.energy);
 }
 
 void GameManager::createBackgrounds() {

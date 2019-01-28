@@ -33,7 +33,7 @@ void EventTriggeredObject::handleCollision(
 		for (const auto& object : objectVector) {
 			const auto& uniqueObject = (*object);
 			if (dynamic_cast<Player*>(uniqueObject.get())) {
-				mIsVisible = true;
+				setIsVisible(true);
 				if (!EntityBase::shouldDestroy()) {
 					mWork();
 				}
