@@ -8,9 +8,42 @@ Projectile::Projectile(
 	int screenNumber,
 	bool isDirectionRight 
 ):
-	LevelObject(filename, position, sf::Vector2f(0.0f,0.0f), screenNumber)
+	LevelObject(filename, position, sf::Vector2f(0.0f,0.0f), screenNumber),
+	mIsDirectionRight(isDirectionRight)
 {
-	LevelObject::matchSizeWithSprite();
+	EntityBase::setIsSolid(false);
 }
 
 Projectile::~Projectile() {}
+
+void Projectile::update(const sf::Time& deltaTime) {
+	float newX = getPosition().x + (mMovementPerSecond * deltaTime.asSeconds());
+	if(!mIsDirectionRight) {
+		newX = getPosition().x - (mMovementPerSecond * deltaTime.asSeconds());
+	}
+	setPosition( sf::Vector2f(
+		newX,
+		getPosition().y
+	));
+}
+
+void Projectile::handleCollision(
+	std::vector<std::unique_ptr<EntityBase>*> top, 
+	std::vector<std::unique_ptr<EntityBase>*> bottom, 
+	std::vector<std::unique_ptr<EntityBase>*> left, 
+	std::vector<std::unique_ptr<EntityBase>*> right, 
+	CollisionSides hitSides
+) {
+	std::vector<
+		std::vector<std::unique_ptr<EntityBase>*>
+	> allObjects = {top, bottom, left, right};
+	
+	for(const auto& objectVector: allObjects) {
+		for(const auto& object : objectVector) {
+			const auto& uniqueObject = (*object);
+			uniqueObject->hurt(mDamage);
+		}
+	}
+
+	destroy();
+}

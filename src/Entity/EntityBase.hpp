@@ -19,14 +19,16 @@ private:
 	bool mIsHurting = false;
 
 protected:
+	static uint_least64_t nextId;
+	
 	uint_least64_t id;
 	sf::Vector2f mPosition;
 	sf::Vector2f mSize;
 	int mScreenNumber;
 	bool mIsVisible;
 	bool mIsSolid;
-	
-	static uint_least64_t nextId;
+	bool mShouldDestroyed;
+
 public:
 	static void backToStartId();
 
@@ -48,11 +50,13 @@ public:
 	bool isVisible() const;
 	void setIsSolid(bool isSolid);
 	bool isSolid() const;
+	void destroy();
+	bool shouldDestroy() const;
 
 	virtual void hurt(uint_least8_t damage) {};
 
 	void setPosition(float x, float y);
-	void setPosition(const sf::Vector2f& newPosition);
+	virtual void setPosition(const sf::Vector2f& newPosition);
 	void setSize(const sf::Vector2f& newSize);
 
 	virtual sf::Vector2f getSize() const;

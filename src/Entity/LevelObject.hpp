@@ -72,6 +72,8 @@ public:
 	/// Changes the height of the LevelObject.
 	void resizeHeight(float height);
 
+	virtual void setPosition(const sf::Vector2f& newPosition) override;
+
 	/// \brief
 	/// Draws the LevelObject in the given window.
 	virtual void draw(sf::RenderWindow& window) override;

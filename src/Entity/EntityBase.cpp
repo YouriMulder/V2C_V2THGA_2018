@@ -18,7 +18,8 @@ EntityBase::EntityBase(
 	mSize(size), 
 	mScreenNumber(screenNumber),
 	mIsSolid(isSolid),
-	mIsVisible(isVisible)
+	mIsVisible(isVisible),
+	mShouldDestroyed(false)
 {
 	increaseNextId();
 }
@@ -94,6 +95,14 @@ void EntityBase::setIsSolid(bool isSolid) {
 
 bool EntityBase::isSolid() const {
 	return mIsSolid;
+}
+
+void EntityBase::destroy() {
+	mShouldDestroyed = true;
+}
+
+bool EntityBase::shouldDestroy() const {
+	return mShouldDestroyed;
 }
 
 bool EntityBase::isFinished() const {

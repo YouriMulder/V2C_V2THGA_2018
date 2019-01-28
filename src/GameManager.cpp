@@ -6,7 +6,7 @@
 
 GameManager::GameManager(const std::string& levelFileName) :
 	mCurrentLevel(0),
-	mMainWindow(sf::VideoMode(1920, 1080), "MiNdF*cK",sf::Style::Fullscreen),
+	mMainWindow(sf::VideoMode(1920, 1080), "MiNdF*cK"),
 	mViewManager(mMainWindow, 1),
 	mFactory(),
 	mHUD(),
@@ -64,7 +64,7 @@ void GameManager::applyLevelSettings() {
 		mSelectedScreen[1] = true;
 	}
 	mCurrentScreensNotFinished = mCurrentSettings.noOfScreens;
-	Player::resetHealth();
+	Player::reset();
 	if (!mMusic.openFromFile(mPathMusic + mCurrentSettings.songName)) {
 		std::cerr << "failed loading music";
 	}
@@ -290,10 +290,15 @@ void GameManager::runGame() {
 					}
 				}
 				
+				unsigned int itemIndex = 0;
 				for(const auto& dynamicObject : mDynamicItems) {
 					if (mSelectedScreen[dynamicObject->getScreenNumber() - 1] && check2Selected()) {
 						dynamicObject->update(mPassedTime);
+						if(dynamicObject->shouldDestroy()) {
+ 							mDynamicItems.erase(mDynamicItems.begin() + itemIndex);
+						}
 					}
+					itemIndex++;
 				}
 				moveScreens();
 				for (const auto & background : mBackgrounds) {
@@ -318,6 +323,8 @@ void GameManager::runGame() {
     	}
 
 		mHUD.updateHealth(Player::getHealth());
+		mHUD.updateEnergy(Player::getEnergy());
+
 		mViewManager.clear();
 		int count = 1;
 		for (const auto & selected : mSelectedScreen) {

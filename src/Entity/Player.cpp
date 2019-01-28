@@ -1,18 +1,42 @@
 #include "Player.hpp"
 
 #include "../EventManager.hpp"
+#include "Finish.hpp"
 #include <SFML/Graphics.hpp>
 
 // static 
 uint_least8_t Player::maxHealth = 10;
 uint_least8_t Player::health = maxHealth;
+uint_least8_t Player::maxEnergy = 10;
+uint_least8_t Player::energy = maxEnergy;
 
 uint_least8_t Player::getHealth() {
 	return health;
 }
 
+void Player::setMaxHealth(uint_least8_t newMaxHealth) {
+	maxHealth = newMaxHealth;
+}
+
 void Player::resetHealth() {
 	health = maxHealth;
+}
+
+uint_least8_t Player::getEnergy() {
+	return energy;
+}
+
+void Player::setMaxEnergy(uint_least8_t newMaxEnergy) {
+	maxEnergy = newMaxEnergy;
+}
+
+void Player::resetEnergy() {
+	energy = maxEnergy;
+}
+
+void Player::reset() {
+	resetHealth();
+	resetEnergy();
 }
 
 bool Player::isAlive() {
@@ -37,6 +61,14 @@ Player::Player(const sf::Vector2f& position, int screenNumber):
 
 Player::~Player() {}
 
+bool Player::shoot() {
+	if(energy > 0 && Character::shoot()) {
+		energy--;
+		return true;
+	}
+	return false;
+}
+
 void Player::hurt(uint_least8_t damage) {
 	Character::startHurtAnimation();
 	if(damage >= Player::health) {
@@ -44,7 +76,6 @@ void Player::hurt(uint_least8_t damage) {
 	} else {
 		Player::health -= damage;
 	}
-
 }
 
 void Player::bindActions() {
@@ -58,7 +89,7 @@ void Player::bindActions() {
 	Character::bindAction(EventManager(sf::Keyboard::Space, 	[&] 	{addAction(Character::Action::Jump);	}));
 	Character::bindAction(EventManager(sf::Keyboard::LShift, 	[&] 	{addAction(Character::Action::Run);		}));
 
-	Character::bindAction(EventManager(sf::Keyboard::F, 	[&] 		{addAction(Character::Action::Shoot);		}));
+	Character::bindAction(EventManager(sf::Keyboard::F, 		[&] 	{addAction(Character::Action::Shoot);		}));
 }
 
 void Player::bindAnimations() {
@@ -107,4 +138,27 @@ void Player::bindAnimations() {
 			sf::milliseconds(10)
 		)
 	);
+}
+
+void Player::handleCollision(
+	std::vector<std::unique_ptr<EntityBase>*> top, 
+	std::vector<std::unique_ptr<EntityBase>*> bottom, 
+	std::vector<std::unique_ptr<EntityBase>*> left, 
+	std::vector<std::unique_ptr<EntityBase>*> right, 
+	CollisionSides hitSides
+) {
+	Character::handleCollision(top, bottom, left, right, hitSides);
+	
+	std::vector<
+		std::vector<std::unique_ptr<EntityBase>*>
+	> allObjects = {top, bottom, left, right};
+
+	for(const auto& objectVector: allObjects) {
+		for(const auto& object : objectVector) {
+			const auto& uniqueObject = (*object);
+			if(dynamic_cast<Finish*>(uniqueObject.get())) {
+				mIsFinished = true;
+			}
+		}
+	}
 }

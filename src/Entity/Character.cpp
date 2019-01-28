@@ -1,7 +1,6 @@
 #include "Character.hpp"
 
 #include "../World/Physics.hpp"
-#include "Finish.hpp"
 #include "Projectile.hpp"
 #include <iostream>
 #include <cstdint>
@@ -25,7 +24,7 @@ Character::Character(
 	EntityBase(position, size, screenNumber),
 	id(nextId),
 	mVelocity(0.0f, 0.0f),
-	mMaxVelocity(maxVelocity), 
+	mMaxVelocity(maxVelocity),
 	mAcceleration(acceleration),
 	mIsFacingRight(true),
 	mIsInAir(true),
@@ -137,7 +136,7 @@ void Character::updateState(const Action& action) {
 				updateFacingDirection();
 			} else {
 				mState = State::Idle;
-			}			
+			}
 			break;
 		}
 		case Action::Jump: {
@@ -171,8 +170,13 @@ void Character::right() {
 	applyMovement(Action::Right);
 }
 
-void Character::shoot() {
-	mIsShooting = true;
+bool Character::shoot() {
+	if(mShootTimer.isExpired()) {
+		mIsShooting = true;
+		mShootTimer.set(mTimeBetweenShots);
+		return true;
+	}
+	return false;
 }
 
 bool Character::isShooting() const {
@@ -181,10 +185,15 @@ bool Character::isShooting() const {
 
 std::optional<std::unique_ptr<EntityBase>> Character::getProjectile() {
 	if(mIsShooting) {
+		float x = mIsFacingRight ? getPosition().x + getSize().x + 10.0f : getPosition().x - 10.0f;
+		
 		mIsShooting = false;
 		return std::make_unique<Projectile>(
 			"../res/Textures/HUD/energy.png", 
-			getPosition(),
+			sf::Vector2f(
+				mIsFacingRight ? getPosition().x + getSize().x + 20.0f : getPosition().x - 20.0f,
+				getPosition().y + getSize().y/2
+			),
 			getScreenNumber(),
 			mIsFacingRight
 		);
@@ -269,18 +278,6 @@ void Character::handleCollision(
 ) {
 
 	EntityBase::removeNonSolid(top, bottom, left, right, hitSides);
-
-	std::vector<
-		std::vector<std::unique_ptr<EntityBase>*>
-	> allObjects = {top, bottom, left, right};
-
-	for(const auto& objectVector: allObjects) {
-		for(const auto& object : (objectVector)) {
-			if(dynamic_cast<Finish*>((*object).get())) {
-				mIsFinished = true;
-			}
-		}
-	}
 
 	if(hitSides.bottom) {
 		// move along with platforms

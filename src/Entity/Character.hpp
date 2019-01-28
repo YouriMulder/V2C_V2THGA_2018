@@ -13,6 +13,7 @@
 #include "EntityBase.hpp"
 #include "../EventManager.hpp"
 #include "../ViewManager.hpp"
+#include "Timer.hpp"
 
 struct AnimationSequence {
 	sf::Vector2i start;
@@ -80,15 +81,14 @@ public:
 	void updateState(const Action& action);
 	void startHurtAnimation();
 	void animate(const sf::Time& deltaTime);
-
 	
 	void left();
 	void right();
 	void jump(); 
 	void run();
 
-	void shoot();
-	bool isShooting() const;
+	virtual bool shoot();
+	virtual bool isShooting() const;
 	std::optional<std::unique_ptr<EntityBase>> getProjectile();
 	
 	void applyGravity();
@@ -120,6 +120,9 @@ public:
 
 	virtual void bindActions() {};
 	virtual void bindAnimations() {};
+
+	void select(bool selection);
+	bool isSelected();
 protected:
 	uint_least64_t id;
 
@@ -157,12 +160,12 @@ protected:
 	sf::Time timeSinceLastAnimation;
 	sf::Clock hurtClock;
 	bool mIsHurting = false;
+	
+	Timer mShootTimer;
+	sf::Time mTimeBetweenShots = sf::seconds(1);
 	sf::Time totalHurtTime = sf::seconds(1);
 
 	CollisionSides restrictedSides;
-
-	void select(bool selection);
-	bool isSelected();
 
 	std::queue<Action> mUnperformedActions = {};
 	
