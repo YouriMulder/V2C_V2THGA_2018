@@ -1,9 +1,12 @@
 #include "Character.hpp"
 
 #include "../World/Physics.hpp"
-#include "Finish.hpp"
+#include "Projectile.hpp"
 #include <iostream>
 #include <cstdint>
+#include <memory>
+#include <optional>
+
 
 template<typename T>
 std::ostream& operator<<(typename std::enable_if<std::is_enum<T>::value, std::ostream>::type& stream, const T& e) {
@@ -21,13 +24,16 @@ Character::Character(
 	EntityBase(position, size, screenNumber),
 	id(nextId),
 	mVelocity(0.0f, 0.0f),
-	mMaxVelocity(maxVelocity), 
+	mMaxVelocity(maxVelocity),
 	mAcceleration(acceleration),
 	mIsFacingRight(true),
 	mIsInAir(true),
 	mIsJumping(false),
-	mSelected(false),
+	mCanDoubleJump(false),
+	mIsRunning(false),
+	mIsShooting(false),
 	mIsFinished(false),
+	mSelected(false),
 	mPreviousState(Character::State::Idle),
 	mState(Character::State::Idle),
 	mSpriteWidth(static_cast<unsigned int>(size.x)),
@@ -130,7 +136,7 @@ void Character::updateState(const Action& action) {
 				updateFacingDirection();
 			} else {
 				mState = State::Idle;
-			}			
+			}
 			break;
 		}
 		case Action::Jump: {
@@ -163,6 +169,38 @@ void Character::left() {
 void Character::right() {
 	applyMovement(Action::Right);
 }
+
+bool Character::shoot() {
+	if(mShootTimer.isExpired()) {
+		mIsShooting = true;
+		mShootTimer.set(mTimeBetweenShots);
+		return true;
+	}
+	return false;
+}
+
+bool Character::isShooting() const {
+	return mIsShooting;
+}
+
+std::optional<std::unique_ptr<EntityBase>> Character::getProjectile() {
+	if(mIsShooting) {
+		float x = mIsFacingRight ? getPosition().x + getSize().x + 10.0f : getPosition().x - 10.0f;
+		
+		mIsShooting = false;
+		return std::make_unique<Projectile>(
+			"../res/Textures/HUD/energy.png", 
+			sf::Vector2f(
+				mIsFacingRight ? getPosition().x + getSize().x + 20.0f : getPosition().x - 20.0f,
+				getPosition().y + getSize().y/2
+			),
+			getScreenNumber(),
+			mIsFacingRight
+		);
+	}
+	return {};
+}
+
 
 void Character::jump() {
 	if(!mIsInAir && !mIsJumping) {
@@ -238,19 +276,8 @@ void Character::handleCollision(
 	std::vector<std::unique_ptr<EntityBase>*> right, 
 	CollisionSides hitSides
 ) {
-	restrictedSides = hitSides;
 
-	std::vector<
-		std::vector<std::unique_ptr<EntityBase>*>
-	> allObjects = {top, bottom, left, right};
-
-	for(const auto& objectVector: allObjects) {
-		for(const auto& object : objectVector) {
-			if(dynamic_cast<Finish*>((*object).get())) {
-				mIsFinished = true;
-			}
-		}
-	}
+	EntityBase::removeNonSolid(top, bottom, left, right, hitSides);
 
 	if(hitSides.bottom) {
 		// move along with platforms
@@ -285,6 +312,9 @@ void Character::handleCollision(
 	if(hitSides.right) {
 		mVelocity.x = 0;
 	} 
+	
+	restrictedSides = hitSides;
+
 }
 
 void Character::handleNoCollision() {
@@ -388,7 +418,7 @@ void Character::animate(const sf::Time& deltaTime) {
 						mIsHurting = false;
 						setIsVisible(true);
 					} else {
-						setIsVisible(!getIsVisible());
+						setIsVisible(!isVisible());
 					}
 				}
 				
@@ -446,6 +476,6 @@ bool Character::isSelected() {
 	return mSelected;
 }
 
-bool Character::isFinished() {
+bool Character::isFinished() const {
 	return mIsFinished;
 }

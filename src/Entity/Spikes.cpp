@@ -6,14 +6,18 @@ Spikes::Spikes(const std::string& filename, const sf::Vector2f& position, const 
 
 	LevelObject(filename, position, size, picturepart, screenNumber, repeated),
 	mDamage(damage)
-{}
+{
+	EntityBase::setIsSolid(false);
+}
 
 Spikes::Spikes(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
 	int screenNumber, uint_least8_t damage, bool repeated) :
 
 	LevelObject(filename, position, size, screenNumber, repeated),
 	mDamage(damage)
-{}
+{
+	EntityBase::setIsSolid(false);
+}
 
 void Spikes::handleCollision(
 	std::vector<std::unique_ptr<EntityBase>*> top, 
@@ -22,10 +26,16 @@ void Spikes::handleCollision(
 	std::vector<std::unique_ptr<EntityBase>*> right,  
 	CollisionSides hitSides
 ) {
-	for(auto& object : top) {
-		if(!hitClocks.isClocked((*object)->getId())) {
-			(*object)->hurt(mDamage);
-			hitClocks.addClock((*object)->getId());
+	std::vector<
+		std::vector<std::unique_ptr<EntityBase>*>
+	> allObjects = {top, bottom, left, right};
+
+	for(const auto& objectVector: allObjects) {
+		for(const auto& object : objectVector) {
+			if(!hitClocks.isClocked((*object)->getId())) {
+				(*object)->hurt(mDamage);
+				hitClocks.addClock((*object)->getId());
+			}
 		}
 	}
 }

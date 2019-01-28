@@ -19,14 +19,16 @@ private:
 	bool mIsHurting = false;
 
 protected:
+	static uint_least64_t nextId;
+	
 	uint_least64_t id;
 	sf::Vector2f mPosition;
 	sf::Vector2f mSize;
 	int mScreenNumber;
 	bool mIsVisible;
 	bool mIsSolid;
-	
-	static uint_least64_t nextId;
+	bool mShouldDestroyed;
+
 public:
 	static void backToStartId();
 
@@ -41,23 +43,27 @@ public:
 	uint_least64_t getId() const;
 	void move(float deltaX, float deltaY);
 	void move(const sf::Vector2f& deltaPosition);
-	void setPosition(float x, float y);
-	void setPosition(const sf::Vector2f& newPosition);
 
 	void setScreenNumber(int newScreenNumber);
 	int getScreenNumber() const;
 	void setIsVisible(bool isVisible);
-	bool getIsVisible();
+	bool isVisible() const;
 	void setIsSolid(bool isSolid);
-	bool getIsSolid();
+	bool isSolid() const;
+	void destroy();
+	bool shouldDestroy() const;
 
 	virtual void hurt(uint_least8_t damage) {};
+
+	void setPosition(float x, float y);
+	virtual void setPosition(const sf::Vector2f& newPosition);
+	void setSize(const sf::Vector2f& newSize);
 
 	virtual sf::Vector2f getSize() const;
 	virtual sf::Vector2f getPosition() const;
 	virtual sf::Vector2f getNextPosition() const;
 	virtual sf::FloatRect getGlobalBounds() const;
-	virtual bool isFinished();
+	virtual bool isFinished() const;
 	
 	virtual void update(const sf::Time& deltaTime) = 0;
 	virtual void handleCollision(
@@ -68,6 +74,13 @@ public:
 		CollisionSides hitSides
 	) {};
 	virtual void handleNoCollision() {};
+	void removeNonSolid(
+		std::vector<std::unique_ptr<EntityBase>*>& top, 
+		std::vector<std::unique_ptr<EntityBase>*>& bottom, 
+		std::vector<std::unique_ptr<EntityBase>*>& left, 
+		std::vector<std::unique_ptr<EntityBase>*>& right, 
+		CollisionSides& hitSides
+	) const;
 
 	virtual void setColor(const sf::Color& newColor) {};
 	

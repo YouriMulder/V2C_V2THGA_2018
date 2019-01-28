@@ -9,9 +9,9 @@ project "MindFuck"
 
 	files { "src/**.*" }
 	flags { "FatalCompileWarnings", "FatalLinkWarnings", "FatalWarnings",  }
+	cppdialect "C++17"
 	
 	filter { "system:windows" }
-		cppdialect "C++17"
 		systemversion "10.0.17763.0"
 	filter "configurations:*"
 		defines { "SFML_STATIC" }

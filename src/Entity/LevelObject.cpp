@@ -1,5 +1,5 @@
 #include "LevelObject.hpp"
-
+#include <iostream>
 LevelObject::LevelObject(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
 	const sf::IntRect& picturepart, int screenNumber, bool repeated) :
 
@@ -8,7 +8,11 @@ LevelObject::LevelObject(const std::string& filename, const sf::Vector2f& positi
 	mTexture.loadFromFile(filename, picturepart);
 	mTexture.setRepeated(repeated);
 	mSprite.setTexture(mTexture);
-	mSprite.setTextureRect(sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(size)));
+	if(size.x > 0.0f && size.y > 0.0f) {
+		mSprite.setTextureRect(sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(size)));
+	} else {
+		matchSizeWithSprite();
+	}
 	mSprite.setPosition(position);
 }
 
@@ -20,11 +24,24 @@ LevelObject::LevelObject(const std::string& filename, const sf::Vector2f& positi
 	mTexture.loadFromFile(filename);
 	mTexture.setRepeated(repeated);
 	mSprite.setTexture(mTexture);
-	mSprite.setTextureRect(sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(size)));
+	if(size.x > 0.0f && size.y > 0.0f) {
+		mSprite.setTextureRect(sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(size)));
+	} else {
+		matchSizeWithSprite();
+	}
 	mSprite.setPosition(position);
 }
 
 LevelObject::~LevelObject() {}
+
+void LevelObject::matchSizeWithSprite() {
+	EntityBase::setSize(
+		sf::Vector2f(
+			mSprite.getGlobalBounds().width,
+			mSprite.getGlobalBounds().height
+		)
+	);
+}
 
 void LevelObject::resize(float width, float height) {
 	mSize = { width, height };
@@ -45,6 +62,12 @@ void LevelObject::resizeHeight(float height) {
 	mSize = { mSize.x, height };
 	mSprite.setScale(1, height / mSprite.getGlobalBounds().height);
 }
+
+void LevelObject::setPosition(const sf::Vector2f& newPosition) {
+	mSprite.setPosition(newPosition);
+	EntityBase::setPosition(newPosition);
+}
+
 
 void LevelObject::draw(sf::RenderWindow& window) {
 	sf::RectangleShape test;
