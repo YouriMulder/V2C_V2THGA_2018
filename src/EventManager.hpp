@@ -8,11 +8,9 @@
 
 class EventManager {
 private:
-	std::function< bool() > mConditionNoEvent;
 	std::function< bool(const sf::Event& event) > mCondition;
 	std::function< void() > mWork;
 	sf::Event::EventType mEvent;
-	bool mCustomEvent;
 public:
 	bool isEventAndKeyCorrect(
 		const sf::Keyboard::Key& key,
@@ -28,20 +26,18 @@ public:
 	/// This function is a condition to do the next function.
 	/// \param mWork
 	/// Needs a call for a void function.
-	EventManager(std::function< bool(const sf::Event& event) > mCondition, std::function< void() > mWork) :
-		mConditionNoEvent([](){return false;}),
-		mCondition(mCondition),
-		mWork(mWork),
-		mEvent(sf::Event::KeyPressed),
-		mCustomEvent(false)
+	EventManager(std::function< bool(const sf::Event& event) > Condition, std::function< void() > Work) :
+		mCondition(Condition),
+		mWork(Work),
+		mEvent(sf::Event::KeyPressed)
 	{}
 
-	EventManager(std::function< bool() > mCondition, std::function< void() > mWork) :
-		mConditionNoEvent(mCondition),
-		mCondition([&](const sf::Event& event)-> bool { return mConditionNoEvent(); }),
-		mWork(mWork),
-		mEvent(sf::Event::KeyPressed),
-		mCustomEvent(false)
+	EventManager(std::function< bool() > condition, std::function< void() > Work) :
+		mCondition([condition](const sf::Event& event = sf::Event())->bool { 
+			return condition();
+		}),
+		mWork(Work),
+		mEvent(sf::Event::KeyPressed)
 	{}
 
 	/// \brief
@@ -52,12 +48,10 @@ public:
 	/// Needs a key of the keyboard.
 	/// \param mWork
 	/// Needs a call for a void function.
-	EventManager(sf::Keyboard::Key mKey, std::function< void() > mWork) :
-		mConditionNoEvent([](){return false;}),
-		mCondition([mKey](const sf::Event& event)->bool { return sf::Keyboard::isKeyPressed(mKey); }),
-		mWork(mWork),
-		mEvent(sf::Event::KeyPressed),
-		mCustomEvent(false)
+	EventManager(sf::Keyboard::Key key, std::function< void() > Work) :
+		mCondition([key](const sf::Event& event)->bool { return sf::Keyboard::isKeyPressed(key); }),
+		mWork(Work),
+		mEvent(sf::Event::KeyPressed)
 	{}
 
 
@@ -70,11 +64,9 @@ public:
 	/// \param mWork
 	/// Needs a call for a void function.
 	EventManager(sf::Mouse::Button mButton, std::function< void() > mWork) :
-		mConditionNoEvent([](){return false;}),
 		mCondition([mButton](const sf::Event& event)->bool { return sf::Mouse::isButtonPressed(mButton); }),
 		mWork(mWork),
-		mEvent(sf::Event::KeyPressed),
-		mCustomEvent(false)
+		mEvent(sf::Event::KeyPressed)
 	{}
 
 	/// \brief
@@ -86,17 +78,15 @@ public:
 	/// \param mWork
 	/// Needs a call for a void function.
 	EventManager(
-		sf::Keyboard::Key mKey, 
-		std::function< void() > mWork,
+		sf::Keyboard::Key key, 
+		std::function< void() > work,
 		sf::Event::EventType eventType
 	):
-		mConditionNoEvent([](){return false;}),
-		mCondition([=](const sf::Event& event = sf::Event())->bool { 
-			return isEventAndKeyCorrect(mKey, event, eventType);
+		mCondition([key, eventType, this](const sf::Event& event = sf::Event())->bool { 
+			return isEventAndKeyCorrect(key, event, eventType);
 		}),
-		mWork(mWork),
-		mEvent(eventType),
-		mCustomEvent(true)
+		mWork(work),
+		mEvent(eventType)
 	{}
 
 	/// \brief

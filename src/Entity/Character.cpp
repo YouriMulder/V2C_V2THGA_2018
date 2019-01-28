@@ -337,8 +337,8 @@ void Character::update(const sf::Time& deltaTime) {
 		mIsJumping = false;
 	}
 	
-	for(auto & EventManager : actions) {
-		EventManager();
+	for(auto & action : actions) {
+		action();
 	}
 	
 	if(mUnperformedActions.empty()) {
