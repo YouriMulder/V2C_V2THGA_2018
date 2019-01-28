@@ -227,7 +227,7 @@ public:
 	/// This constructor constructs a GameManager using the given txt file.
 	/// \param levelFileName
 	/// This parameter contains the file name of the all text file.
-	GameManager(const std::string& levelFileName);
+	GameManager(const std::string& levelFileName, sf::VideoMode & target);
 	
 	virtual ~GameManager();
 
