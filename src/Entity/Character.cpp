@@ -155,6 +155,14 @@ void Character::updateState(const Action& action) {
 			mState = State::Attacking;
 			break;
 		}
+		case Action::Shoot: {
+			if(isMovingX()) {
+				mState = State::Running;
+			} else {
+				mState = State::Idle;
+			}
+			break;
+		}
 		case Action::None: {
 			mState = State::Idle;
 			break;
