@@ -12,7 +12,8 @@ NPC::NPC(const sf::Vector2f& startPoint, const float& deltaXMovement, int screen
 	mIsMovingRight(true),
 	mJumpingEnabled(jumpingEnabled),
 	mJumpDeltaTime(jumpDeltaTime),
-	mAbleToMove(true)
+	mAbleToMove(true),
+	mHealth(4)
 {
 	setSpriteScale(1.0f, 1.0f);
 
@@ -109,6 +110,16 @@ void NPC::handleNoCollision() {
 	if(!unableToMoveTimerSet) {
 		unableToMoveTimerSet = true;
 		unableToMoveClock.restart();
+	}
+}
+
+void NPC::hurt(uint_least8_t damage) {
+	Character::startHurtAnimation();
+	if(damage >= mHealth) {
+		mHealth = 0;
+		destroy();
+	} else {
+		mHealth -= damage;
 	}
 }
 
