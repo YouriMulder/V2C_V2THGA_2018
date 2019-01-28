@@ -13,10 +13,12 @@ protected:
 
 public:
 	static uint_least8_t getHealth();
-	static void setMaxHealth(uint_least8_t newMaxEnergy);
+	static void setMaxHealth(uint_least8_t newMaxHealth);
+	static void addHealth(int_least8_t deltaHealth);
 	static void resetHealth();
 	static uint_least8_t getEnergy();
 	static void setMaxEnergy(uint_least8_t newMaxEnergy);
+	static void addEnergy(int_least8_t deltaEnergy);
 	static void resetEnergy();
 	static void reset();
 
