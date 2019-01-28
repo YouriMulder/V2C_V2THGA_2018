@@ -201,7 +201,7 @@ void ViewManager::changeAmountOfScreens(int newAmount) {
 
 	} else {
 		std::cout << "not a correct amount of screens" << newAmount << std::endl;
-	}	
+	}
 	createScreenBorders();
 }
 

@@ -6,7 +6,7 @@
 
 GameManager::GameManager(const std::string& levelFileName) :
 	mCurrentLevel(0),
-	mMainWindow(sf::VideoMode(1920, 1080), "MiNdF*cK"),
+	mMainWindow(sf::VideoMode(1920,1080), "MiNdF*cK",sf::Style::Fullscreen),
 	mViewManager(mMainWindow, 1),
 	mFactory(),
 	mHUD(),
