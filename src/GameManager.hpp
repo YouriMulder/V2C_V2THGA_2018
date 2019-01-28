@@ -128,6 +128,8 @@ private:
 	/// Array to see which screens are finished.
 	std::array<bool, 4> mFinishedScreen = { false,false,false,false };
 
+	void dynamicItemsErase(unsigned int index);
+	
 	/// \brief
 	/// Function to read all the levelfile names form a all file.
 	/// \details
