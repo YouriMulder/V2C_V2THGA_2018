@@ -10,8 +10,11 @@
 #include "operator.hpp"
 #include <array>
 #include <sstream>
+#include <functional>
 #include "Entity/Finish.hpp"
 #include "Entity/Text.hpp"
+#include "Entity/Drugs.hpp"
+#include "Entity/EventTriggeredObject.hpp"
 
 SettingsData Factory::readSettings(std::ifstream& text) {
 	std::string name;
@@ -177,6 +180,16 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 				float deltaXMovement;
 				text >> startPoint >> deltaXMovement;
 				movableObjects.push_back(std::make_unique<NPC>(startPoint, deltaXMovement, i));
+			}else if (name == "DRUG"){
+				std::string textureName;
+				sf::Vector2f position;
+				sf::Vector2f size;
+				bool textureRepeat;
+				std::string eventName;
+				text >> textureName;
+				text >> position >> size >> textureRepeat >> eventName;
+				std::function<void()> eventFunc = checkDrugName(eventName);
+				movableObjects.push_back(std::make_unique<EventTriggeredObject>(mPathDrugs + textureName, position, size,i,  eventFunc, true, textureRepeat));
 			} else if (name == "CHARACTERS") {
 				//std::cerr << "END OBJECTS FOUND\n";
 				readCharacters(text, amountOfScreens, movableObjects);
@@ -239,4 +252,12 @@ int Factory::getNoLines(std::string fileName) {
 	}
 	text.close();
 	return counter;
+}
+
+std::function<void()> Factory::checkDrugName(const std::string & eventName) {
+	if (eventName == "healthReset") {
+		std::cout << "reset healt";
+		return Drugs::health;
+	}
+	return [&]() {};
 }

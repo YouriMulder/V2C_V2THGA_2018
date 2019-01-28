@@ -6,6 +6,7 @@
 #include <fstream>
 #include <memory>
 #include <array>
+#include <functional>
 
 /// \brief
 /// This struct contains all of the settings for a level.
@@ -44,6 +45,8 @@ private:
 	/// \brief
 	/// This string holds the path to the Finish textures.
 	std::string mPathFinish = "../res/Textures/Finish/";
+
+	std::string mPathDrugs = "../res/Textures/Drugs/";
 	/// \brief
 	/// Method to read the characters from the input file.
 	/// \details
@@ -95,6 +98,8 @@ private:
 	/// \brief
 	/// An int used to store the number of lines of a text file.
 	int mNoOfLines = 0;
+
+	std::function<void()> checkDrugName(const std::string & eventName);
 
 
 public:
