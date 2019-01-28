@@ -9,6 +9,7 @@ EventTriggeredObject::EventTriggeredObject(const std::string& filename, const sf
 	LevelObject(filename,position,size,screenNumber,repeated)
 {
 	setIsVisible(isVisible);
+	setIsSolid(false);
 }
 
 
@@ -23,6 +24,7 @@ void EventTriggeredObject::handleCollision(
 	std::vector<std::unique_ptr<EntityBase>*> right,
 	CollisionSides hitSides
 ) {
+
 	std::vector<
 		std::vector<std::unique_ptr<EntityBase>*>
 	> allObjects = { top, bottom, left, right };
@@ -31,8 +33,10 @@ void EventTriggeredObject::handleCollision(
 		for (const auto& object : objectVector) {
 			const auto& uniqueObject = (*object);
 			if (dynamic_cast<Player*>(uniqueObject.get())) {
-				mIsVisible = !mIsVisible;
-				mWork();
+				mIsVisible = true;
+				if (!EntityBase::shouldDestroy()) {
+					mWork();
+				}
 				if (mDestroyOnCollision) {
 					destroy();
 				}

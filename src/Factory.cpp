@@ -261,6 +261,8 @@ std::function<void()> Factory::checkDrugName(const std::string & eventName) {
 		return Drugs::energy;
 	} else if (eventName == "resetBoth") {
 		return Drugs::both;
+	} else if (eventName == "energy-2") {
+		return Drugs::energySub2;
 	}
 	return [&](){};
 }
