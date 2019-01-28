@@ -6,12 +6,14 @@
 
 
 
-Collision::Collision(	ViewManager & viewManager,
-						std::vector<std::unique_ptr<EntityBase>> & staticItems,
-						std::vector<std::unique_ptr<EntityBase>> & dynamicItems):
+Collision::Collision(
+	ViewManager & viewManager,
+	std::vector<std::unique_ptr<EntityBase>> & staticItems,
+	std::vector<std::unique_ptr<EntityBase>> & dynamicItems):
 	mViewManager(viewManager),
 	mStaticItems(staticItems),
-	mDynamicItems(dynamicItems){
+	mDynamicItems(dynamicItems)
+{
 	mAmountOfScreens = mViewManager.getAmountOfScreens();
 	for (int i = 1;i <= mAmountOfScreens;i++) {
 		ViewInfo newViewInfo{ i, mViewManager.getViewPosition(i), mViewManager.getViewSize(i) };

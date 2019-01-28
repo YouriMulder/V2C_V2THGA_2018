@@ -91,13 +91,6 @@ public:
 
 	/// \brief
 	/// Function for operator ().
-	// void operator()() {
-	// 	if (mCondition()) {
-	// 		mWork();
-	// 	}
-	// }
-
-
 	void operator()(const sf::Event& event = sf::Event()) {
 		if(mCondition(event)) {
 			mWork();

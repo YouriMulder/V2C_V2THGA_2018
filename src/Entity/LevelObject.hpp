@@ -54,6 +54,8 @@ public:
 
 	virtual ~LevelObject();
 
+	void matchSizeWithSprite();
+
 	/// \brief
 	/// Changes the size of the LevelObject.
 	void resize(float width, float height);
@@ -69,6 +71,8 @@ public:
 	/// \brief
 	/// Changes the height of the LevelObject.
 	void resizeHeight(float height);
+
+	virtual void setPosition(const sf::Vector2f& newPosition) override;
 
 	/// \brief
 	/// Draws the LevelObject in the given window.

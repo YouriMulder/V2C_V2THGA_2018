@@ -3,11 +3,13 @@
 
 #include "Character.hpp"
 #include <SFML/System/Clock.hpp>
+#include "Timers.hpp"
 
 class NPC : public Character {
 private:
 	sf::Vector2f mStartPoint;
 	float mDeltaXMovement;
+	uint_least8_t mDamage;
 	bool mIsMovingRight;
 	bool mJumpingEnabled;
 	sf::Time mJumpDeltaTime;
@@ -18,10 +20,13 @@ private:
 	sf::Time unableToMoveTime = sf::seconds(2);
 	sf::Clock unableToMoveClock;
 
+	Timers hitClocks;
+
 public:
 	NPC(const sf::Vector2f& startPoint, 
 		const float& deltaXMovement, 
 		int screenNumber,
+		uint_least8_t damage = 1,
 		bool jumpingEnabled = false, 
 		const sf::Time& jumpDeltaTime = sf::seconds(0)
 	);
