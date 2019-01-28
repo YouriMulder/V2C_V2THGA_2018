@@ -10,8 +10,11 @@
 #include "operator.hpp"
 #include <array>
 #include <sstream>
+#include <functional>
 #include "Entity/Finish.hpp"
 #include "Entity/Text.hpp"
+#include "Entity/Drugs.hpp"
+#include "Entity/EventTriggeredObject.hpp"
 
 SettingsData Factory::readSettings(std::ifstream& text) {
 	std::string name;
@@ -29,26 +32,22 @@ SettingsData Factory::readSettings(std::ifstream& text) {
 				text >> data;
 				temp.noOfScreens = data;
 				mAmountOfScreens = data;
-			}
-			else if (name == "gameTime") {
+			} else if (name == "gameTime") {
 				int data;
 				text >> data;
 				temp.gameDuration = data;
-			}
-			else if (name == "songName") {
+			} else if (name == "songName") {
 				std::string data;
 				text >> data;
 				temp.songName = data;
-			}
-			else if (name == "levelSize") {
+			} else if (name == "levelSize") {
 				sf::Vector2f levelSizeTemp;
 				for (int i = 0; i < temp.noOfScreens; ++i) {
 					levelSizeTemp = sf::Vector2f(0, 0);
 					text >> levelSizeTemp;
 					temp.totalLevelSize[i] = levelSizeTemp;
 				}
-			}
-			else if (name == "finishPoints") {
+			} else if (name == "finishPoints") {
 				sf::Vector2f finishPointsTemp;
 				for (int i = 0; i < temp.noOfScreens; ++i) {
 					finishPointsTemp = sf::Vector2f(0, 0);
@@ -56,8 +55,7 @@ SettingsData Factory::readSettings(std::ifstream& text) {
 					temp.finishPoints[i] = finishPointsTemp;
 					mFinishPoints[i] = finishPointsTemp;
 				}
-			}
-			else if (name == "backgroundImages") {
+			} else if (name == "backgroundImages") {
 				std::string imagesTemp;
 				text.get();
 				char c = text.get();
@@ -70,8 +68,11 @@ SettingsData Factory::readSettings(std::ifstream& text) {
 				while (std::getline(s, token, ',')) {
 					temp.backgroundImages.push_back(token);
 				}
-			}
-			else if (text.eof()) {
+			} else if (name == "energy") {
+				int spawnEnergy;
+				text >> spawnEnergy;
+				temp.energy = spawnEnergy;
+			} else if (text.eof()) {
 				return temp;
 			}
 		}
@@ -177,6 +178,24 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 				float deltaXMovement;
 				text >> startPoint >> deltaXMovement;
 				movableObjects.push_back(std::make_unique<NPC>(startPoint, deltaXMovement, i));
+			}else if (name == "DRUG"){
+				std::string textureName;
+				sf::Vector2f position;
+				sf::Vector2f size;
+				bool textureRepeat;
+				std::string eventName;
+				text >> textureName;
+				text >> position >> size >> textureRepeat >> eventName;
+				movableObjects.push_back(std::make_unique<EventTriggeredObject>(mPathDrugs + textureName, position, size,i, checkDrugName(eventName), true, textureRepeat));
+			} else if (name == "tutorial") {
+				std::cout << "error";
+				std::string textureName;
+				sf::Vector2f position;
+				sf::Vector2f size;
+				bool textureRepeat;
+				text >> textureName;
+				text >> position >> size >> textureRepeat;
+				movableObjects.push_back(std::make_unique<EventTriggeredObject>(mPathTutorial + textureName, position, size, i, [&]() {}, false, textureRepeat,false));
 			} else if (name == "CHARACTERS") {
 				//std::cerr << "END OBJECTS FOUND\n";
 				readCharacters(text, amountOfScreens, movableObjects);
@@ -239,4 +258,19 @@ int Factory::getNoLines(std::string fileName) {
 	}
 	text.close();
 	return counter;
+}
+
+std::function<void()> Factory::checkDrugName(const std::string & eventName) {
+	if (eventName == "healthReset") {
+		return Drugs::health;
+	} else if (eventName == "energyReset") {
+		return Drugs::energy;
+	} else if (eventName == "resetBoth") {
+		return Drugs::both;
+	} else if (eventName == "energy-2") {
+		return Drugs::energySub2;
+	} else if (eventName == "energy+1") {
+		return Drugs::energyAdd1;
+	}
+	return [&](){};
 }

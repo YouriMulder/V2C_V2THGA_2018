@@ -18,6 +18,16 @@ void Player::setMaxHealth(uint_least8_t newMaxHealth) {
 	maxHealth = newMaxHealth;
 }
 
+void Player::setEnergy(uint_least8_t newEnergy) {
+	if (newEnergy > maxEnergy) {
+		energy = maxEnergy;
+	} else if (newEnergy < 0) {
+		energy = 0;
+	} else {
+		energy = newEnergy;
+	}
+}
+
 void Player::addHealth(int_least8_t deltaHealth) {
 	if(health + deltaHealth > maxHealth) {
 		health = maxHealth;

@@ -70,11 +70,6 @@ void LevelObject::setPosition(const sf::Vector2f& newPosition) {
 
 
 void LevelObject::draw(sf::RenderWindow& window) {
-	sf::RectangleShape test;
-	test.setSize(sf::Vector2f(getGlobalBounds().width, getGlobalBounds().height));
-	test.setPosition(sf::Vector2f(getGlobalBounds().left, getGlobalBounds().top));
-	test.setOutlineColor(sf::Color::Red);
-	window.draw(test);
 	window.draw(mSprite);
 }
 
