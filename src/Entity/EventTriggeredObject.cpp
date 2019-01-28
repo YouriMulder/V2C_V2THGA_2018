@@ -34,7 +34,7 @@ void EventTriggeredObject::handleCollision(
 				mIsVisible = !mIsVisible;
 				mWork();
 				if (mDestroyOnCollision) {
-					mIsSolid = !mIsSolid;
+					destroy();
 				}
 			}
 		}

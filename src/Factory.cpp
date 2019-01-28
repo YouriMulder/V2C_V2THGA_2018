@@ -256,8 +256,11 @@ int Factory::getNoLines(std::string fileName) {
 
 std::function<void()> Factory::checkDrugName(const std::string & eventName) {
 	if (eventName == "healthReset") {
-		std::cout << "reset healt";
 		return Drugs::health;
+	} else if (eventName == "energyReset") {
+		return Drugs::energy;
+	} else if (eventName == "resetBoth") {
+		return Drugs::both;
 	}
-	return [&]() {};
+	return [&](){};
 }
