@@ -1,7 +1,8 @@
 #include "Timer.hpp"
 
 Timer::Timer():
-	mIsSet(false)
+	mIsSet(false),
+	mMaxTime(sf::seconds(0))
 {
 	init();
 }
