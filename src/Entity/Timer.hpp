@@ -14,6 +14,7 @@ public:
 	virtual ~Timer();
 
 	void set(const sf::Time& countDownTime);
+	void init();
 	bool isSet() const;
 	bool isExpired();
 };

@@ -18,6 +18,10 @@ void Player::setMaxHealth(uint_least8_t newMaxHealth) {
 	maxHealth = newMaxHealth;
 }
 
+void Player::addHealth(int_least8_t deltaHealth) {
+	health += deltaHealth;
+}
+
 void Player::resetHealth() {
 	health = maxHealth;
 }
