@@ -2,9 +2,9 @@
 #include <fstream>
 #include "Entity/Player.hpp"
 
-GameManager::GameManager(const std::string& levelFileName, sf::VideoMode & target) :
+GameManager::GameManager(const std::string& levelFileName) :
 	mCurrentLevel(0),
-	mMainWindow(target, "MiNdF*cK",sf::Style::Fullscreen),
+	mMainWindow(sf::VideoMode(1920,1080), "MiNdF*cK",sf::Style::Fullscreen),
 	mViewManager(mMainWindow, 1),
 	mFactory(),
 	mHUD(),
