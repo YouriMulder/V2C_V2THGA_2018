@@ -3,12 +3,13 @@
 
 #include "LevelObject.hpp"
 #include "Timer.hpp"
+#include <cstdint>
 
 class Projectile : public LevelObject {
 	bool mIsDirectionRight;
 	Timer destroyTimer;
 	float mMovementPerSecond = 300.0f; 
-	uint_least64_t mDamage = 1;
+	uint_least8_t mDamage = 1;
 
 public:
 	Projectile(

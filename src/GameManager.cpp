@@ -20,6 +20,14 @@ GameManager::GameManager(const std::string& levelFileName) :
 
 GameManager::~GameManager() {}
 
+void GameManager::dynamicItemsErase(unsigned int index) {
+	if(index >= 0 && index < mDynamicItems.size()) {
+		mDynamicItems.erase(mDynamicItems.begin() + index);
+		findPlayerIndexes();
+	}
+}
+
+
 bool GameManager::readLevelFileNames(const std::string & levelFileName) {
 	std::ifstream input(levelFileName);
 	std::string newFileName;
@@ -85,7 +93,6 @@ void GameManager::createBackgrounds() {
 }
 
 void GameManager::moveScreens() {
-
 	for (const auto & currentPlayer : mPlayerIndexes) {
 		sf::Vector2f currentPlayerPosition = mDynamicItems[currentPlayer]->getPosition();
 		sf::Vector2f currentPlayerSize = mDynamicItems[currentPlayer]->getSize();
@@ -218,6 +225,7 @@ bool GameManager::checkLevelFinished() {
 }
 
 void GameManager::findPlayerIndexes() {
+	mPlayerIndexes.clear();
 	for (unsigned int i = 0; i < mDynamicItems.size();i++) {
 		if (dynamic_cast<Player*>(mDynamicItems[i].get())) {
 			mPlayerIndexes.push_back(i);
@@ -289,17 +297,17 @@ void GameManager::runGame() {
 						}
 					}
 				}
-				
-				unsigned int itemIndex = 0;
-				for(const auto& dynamicObject : mDynamicItems) {
-					if (mSelectedScreen[dynamicObject->getScreenNumber() - 1] && check2Selected()) {
-						dynamicObject->update(mPassedTime);
-						if(dynamicObject->shouldDestroy()) {
- 							mDynamicItems.erase(mDynamicItems.begin() + itemIndex);
-						}
+				for(size_t i = mDynamicItems.size(); i > 0; i--) {
+					const auto& object = mDynamicItems[i-1];
+					
+					if(mSelectedScreen[object->getScreenNumber() - 1] && check2Selected()) {
+						object->update(mPassedTime);
 					}
-					itemIndex++;
+					if(object->shouldDestroy()) {
+						dynamicItemsErase(i - 1);
+					}
 				}
+				
 				moveScreens();
 				for (const auto & background : mBackgrounds) {
 					background->update(mPassedTime);

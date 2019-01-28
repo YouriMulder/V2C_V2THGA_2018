@@ -2,6 +2,7 @@
 #define NPC_HPP
 
 #include "Character.hpp"
+#include <cstdint>
 #include <SFML/System/Clock.hpp>
 #include "Timers.hpp"
 
@@ -14,6 +15,8 @@ private:
 	bool mJumpingEnabled;
 	sf::Time mJumpDeltaTime;
 	bool mAbleToMove;
+	
+	uint_least8_t mHealth;
 
 	sf::Clock lastTimeSinceJumpClock;
 	bool unableToMoveTimerSet = true;
@@ -42,6 +45,7 @@ public:
 	CollisionSides hitSides
 	) override;
 	virtual void handleNoCollision() override;
+	virtual void hurt(uint_least8_t damage) override;
 	virtual void update(const sf::Time& deltaTime) override;
 
 };
