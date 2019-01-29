@@ -20,6 +20,7 @@ NPC::NPC(const sf::Vector2f& startPoint, const float& deltaXMovement, int screen
 	if(deltaXMovement < 0) {
 		mIsMovingRight = false;
 	}
+
 	bindActions();
 	bindAnimations();
 }
