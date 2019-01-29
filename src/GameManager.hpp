@@ -128,6 +128,11 @@ private:
 	/// Array to see which screens are finished.
 	std::array<bool, 4> mFinishedScreen = { false,false,false,false };
 
+	/// \brief
+	/// Delete a object from dynamicItems
+	/// \details
+	/// \param index
+	/// The index at which the object needs to be deleted
 	void dynamicItemsErase(unsigned int index);
 	
 	/// \brief
@@ -207,8 +212,13 @@ private:
 	/// \return Returns true if contions are met.
 	bool check2Selected();
 
+
+	/// \brief
+	/// Function to go to the next level
 	void gotoNextLevel();
 
+	/// \brief
+	/// Function to go to the previous level
 	void gotoPreviousLevel();
 
 	/// \brief
