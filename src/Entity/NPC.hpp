@@ -38,11 +38,11 @@ public:
 	virtual void bindActions() override;
 	virtual void bindAnimations() override;
 	virtual void handleCollision(
-	std::vector<std::unique_ptr<EntityBase>*> top, 
-	std::vector<std::unique_ptr<EntityBase>*> bottom, 
-	std::vector<std::unique_ptr<EntityBase>*> left, 
-	std::vector<std::unique_ptr<EntityBase>*> right, 
-	CollisionSides hitSides
+		std::vector<std::unique_ptr<EntityBase>*> top, 
+		std::vector<std::unique_ptr<EntityBase>*> bottom, 
+		std::vector<std::unique_ptr<EntityBase>*> left, 
+		std::vector<std::unique_ptr<EntityBase>*> right, 
+		CollisionSides hitSides
 	) override;
 	virtual void handleNoCollision() override;
 	virtual void hurt(uint_least8_t damage) override;
