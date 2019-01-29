@@ -47,6 +47,8 @@ Character::Character(
 		mSprite.getGlobalBounds().width, 
 		mSprite.getGlobalBounds().height
 	);
+	bindActions();
+	bindAnimations();
 }
 
 Character::~Character() { }
@@ -107,6 +109,37 @@ void Character::applyMovement(const Action& direction) {
 	}
 }
 
+void Character::updateFacingDirection() {
+	if(mVelocity.x > 0) {
+		mIsFacingRight = true;
+	} else if(mVelocity.x < 0) {
+		mIsFacingRight = false;
+	}
+}
+
+void Character::updateVelocity(const sf::Vector2f& deltaVelocity) {
+	auto maxVelocity = mMaxVelocity;
+	if(mIsRunning) {
+		maxVelocity.x *= 2;
+	}
+	mVelocity += sf::Vector2f(deltaVelocity.x, deltaVelocity.y);
+
+	mVelocity.x = mVelocity.x > +maxVelocity.x ? +maxVelocity.x : mVelocity.x;
+	mVelocity.x = mVelocity.x < -maxVelocity.x ? -maxVelocity.x : mVelocity.x;	
+}
+
+void Character::resetVelocityY() {
+	mVelocity.y = 0;
+}
+
+void Character::resetVelocityX() {
+	mVelocity.x = 0;
+}
+
+bool Character::isMovingX() const {
+	return mVelocity.x != 0;
+}
+
 void Character::updateState(const Action& action) {
 	if(mIsInAir) {
 		if(mVelocity.y < 0) {
@@ -151,10 +184,6 @@ void Character::updateState(const Action& action) {
 			}
 			break;
 		}
-		case Action::Punch: {
-			mState = State::Attacking;
-			break;
-		}
 		case Action::Shoot: {
 			if(isMovingX()) {
 				mState = State::Running;
@@ -170,12 +199,39 @@ void Character::updateState(const Action& action) {
 	}
 }
 
+void Character::startHurtAnimation() {
+	hurtClock.restart();
+	mIsHurting = true;
+}
+
 void Character::left() {
 	applyMovement(Action::Left);
 }
 
 void Character::right() {
 	applyMovement(Action::Right);
+}
+
+void Character::jump() {
+	if(!mIsInAir && !mIsJumping) {
+		mIsInAir = true;
+		mIsJumping = true;
+		applyMovement(Action::Jump);
+		mCanDoubleJump = true;
+	} else if (mCanDoubleJump && !mIsJumping) {
+		mJumpForce = mStartingJumpForce;
+		mIsInAir = true;
+		mIsJumping = true;
+		applyMovement(Action::Jump);
+		mCanDoubleJump = false;
+	}
+}
+
+void Character::run() {
+	if(!mIsInAir && !mIsJumping && !mIsRunning) {
+		mIsRunning = true;
+		applyMovement(Action::Run);
+	}
 }
 
 bool Character::shoot() {
@@ -209,64 +265,6 @@ std::optional<std::unique_ptr<EntityBase>> Character::getProjectile() {
 	return {};
 }
 
-
-void Character::jump() {
-	if(!mIsInAir && !mIsJumping) {
-		mIsInAir = true;
-		mIsJumping = true;
-		applyMovement(Action::Jump);
-		mCanDoubleJump = true;
-	} else if (mCanDoubleJump && !mIsJumping) {
-		mJumpForce = mStartingJumpForce;
-		mIsInAir = true;
-		mIsJumping = true;
-		applyMovement(Action::Jump);
-		mCanDoubleJump = false;
-	}
-}
-
-void Character::run() {
-	if(!mIsInAir && !mIsJumping && !mIsRunning) {
-		mIsRunning = true;
-		applyMovement(Action::Run);
-	}
-}
-
-void Character::applyGravity() {
-	updateVelocity(sf::Vector2f(mVelocity.x, 2.0f));
-}
-
-void Character::updateVelocity(const sf::Vector2f& deltaVelocity) {
-	auto maxVelocity = mMaxVelocity;
-	if(mIsRunning) {
-		maxVelocity.x *= 2;
-	}
-	mVelocity += sf::Vector2f(deltaVelocity.x, deltaVelocity.y);
-
-	mVelocity.x = mVelocity.x > +maxVelocity.x ? +maxVelocity.x : mVelocity.x;
-	mVelocity.x = mVelocity.x < -maxVelocity.x ? -maxVelocity.x : mVelocity.x;	
-}
-
-void Character::resetVelocityY() {
-	mVelocity.y = 0;
-}
-
-void Character::resetVelocityX() {
-	mVelocity.x = 0;
-}
-
-bool Character::isMovingX() const {
-	return mVelocity.x != 0;
-}
-
-void Character::updateFacingDirection() {
-	if(mVelocity.x > 0) {
-		mIsFacingRight = true;
-	} else if(mVelocity.x < 0) {
-		mIsFacingRight = false;
-	}
-}
-
 void Character::performAction(const Action& unperformedAction) {
 	for(auto& action : mActions) {
 		if(unperformedAction == action.first) {
@@ -275,6 +273,22 @@ void Character::performAction(const Action& unperformedAction) {
 			return;
 		}
 	}
+}
+
+sf::FloatRect Character::getGlobalBounds() const {
+	return mSprite.getGlobalBounds();
+}
+
+void Character::setSpriteScale(float x, float y) {
+	mSprite.setScale(x, y);
+	updateSizeUsingSprite();
+}
+
+void Character::updateSizeUsingSprite() {
+	EntityBase::mSize = sf::Vector2f(
+		mSprite.getGlobalBounds().width,
+		mSprite.getGlobalBounds().height	
+	);
 }
 
 void Character::handleCollision(
@@ -337,23 +351,6 @@ sf::Vector2f Character::getSize() const {
 	);
 }
 
-sf::FloatRect Character::getGlobalBounds() const {
-	return mSprite.getGlobalBounds();
-}
-
-void Character::setSpriteScale(float x, float y) {
-	mSprite.setScale(x, y);
-	updateSizeUsingSprite();
-}
-
-void Character::updateSizeUsingSprite() {
-	EntityBase::mSize = sf::Vector2f(
-		mSprite.getGlobalBounds().width,
-		mSprite.getGlobalBounds().height	
-	);
-}
-
-
 void Character::update(const sf::Time& deltaTime) {
 	mVelocity.x = 0;
 	if (mJumpForce >= 0) {
@@ -398,11 +395,6 @@ void Character::update(const sf::Time& deltaTime) {
 
 	move(mVelocity);
 	animate(deltaTime);
-}
-
-void Character::startHurtAnimation() {
-	hurtClock.restart();
-	mIsHurting = true;
 }
 
 void Character::animate(const sf::Time& deltaTime) {

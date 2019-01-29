@@ -18,9 +18,11 @@ public:
 	static void resetHealth();
 	static uint_least8_t getEnergy();
 	static void setMaxEnergy(uint_least8_t newMaxEnergy);
+	static void setEnergy(uint_least8_t newEnergy);
 	static void addEnergy(int_least8_t deltaEnergy);
 	static void resetEnergy();
 	static void reset();
+
 
 	static bool isDead();
 	static bool isAlive();

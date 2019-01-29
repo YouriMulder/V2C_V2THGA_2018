@@ -6,6 +6,7 @@
 #include <fstream>
 #include <memory>
 #include <array>
+#include <functional>
 
 /// \brief
 /// This struct contains all of the settings for a level.
@@ -13,18 +14,25 @@ struct SettingsData {
 	/// \brief
 	/// This int contains the number of screens of a level.
 	int noOfScreens = 0;
+
 	/// \brief
 	/// This int contains the amount of time the player has for a level.
 	int gameDuration = 0;
+
+	int energy = 10;
+
 	/// \brief
 	/// This string contains the songname for the level.
 	std::string songName;
+
 	/// \brief
 	/// This array holds the coordinates for each screen of a level.
 	std::array<sf::Vector2f, 4> finishPoints;
+
 	/// \brief
 	/// This array holds the levelSize for each screen of a level.
 	std::array<sf::Vector2f, 4> totalLevelSize;
+
 	/// \brief
 	/// This vector holds the background images for a level.
 	std::vector<std::string> backgroundImages;
@@ -44,6 +52,9 @@ private:
 	/// \brief
 	/// This string holds the path to the Finish textures.
 	std::string mPathFinish = "../res/Textures/Finish/";
+
+	std::string mPathDrugs = "../res/Textures/Drugs/";
+	std::string mPathTutorial = "../res/Textures/Tutorial/";
 	/// \brief
 	/// Method to read the characters from the input file.
 	/// \details
@@ -95,6 +106,8 @@ private:
 	/// \brief
 	/// An int used to store the number of lines of a text file.
 	int mNoOfLines = 0;
+
+	std::function<void()> checkDrugName(const std::string & eventName);
 
 
 public:
