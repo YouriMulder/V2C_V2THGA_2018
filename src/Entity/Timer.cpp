@@ -1,12 +1,22 @@
 #include "Timer.hpp"
 
-Timer::Timer() {}
+Timer::Timer():
+	mIsSet(false),
+	mMaxTime(sf::seconds(0))
+{
+	init();
+}
+
 Timer::~Timer() {}
 
 void Timer::set(const sf::Time& countDownTime) {
 	mIsSet = true;
 	mTimer.restart();
 	mMaxTime = countDownTime;
+}
+
+void Timer::init() {
+	set(sf::seconds(0));
 }
 
 bool Timer::isSet() const {
