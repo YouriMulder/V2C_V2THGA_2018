@@ -21,7 +21,15 @@ public:
 	/// \param filename
 	/// The filename of the sprite.
 	/// \param position 
-	/// \
+	/// The position for the object.
+	/// \param size
+	/// The size of the object.
+	/// \param screenNumber
+	/// The screen number on which the object needs to be drawn.
+	/// \param work
+	/// The function that needs to be called when object is hit
+	/// \param destroyOnCollision
+	/// The bool if the 
 	EventTriggeredObject(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
 		int screenNumber, std::function<void()> work, bool destroyOnCollision, bool repeated = false, bool isVisible = true );
 	
