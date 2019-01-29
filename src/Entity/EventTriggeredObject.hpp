@@ -27,9 +27,9 @@ public:
 	/// \param screenNumber
 	/// The screen number on which the object needs to be drawn.
 	/// \param work
-	/// The function that needs to be called when object is hit.
+	/// The function that needs to be called when an object is hit.
 	/// \param destroyOnCollision
-	/// The bool if the object needs to be destroyed
+	/// The bool if the object needs to be destroyed.
 	EventTriggeredObject(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
 		int screenNumber, std::function<void()> work, bool destroyOnCollision, bool repeated = false, bool isVisible = true );
 	
@@ -37,7 +37,7 @@ public:
 	/// \brief
 	/// Handle collision function for event triggerd object.
 	/// \details
-	/// When a player hits the object it is either destoyed or made visible. \n
+	/// When a player hits the object it is either destroyed or made visible. \n
 	/// This depends on the destroyOnCollision boolean when this is set the object is default visible. \n
 	/// When the object is hit and the boolean is set it will be destroyed. \n
 	/// If the boolean is not set it will only be made visible.
