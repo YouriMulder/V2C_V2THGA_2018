@@ -207,6 +207,9 @@ private:
 	/// \return Returns true if contions are met.
 	bool check2Selected();
 
+	void gotoNextLevel();
+
+	void gotoPreviousLevel();
 
 	/// \brief
 	/// Array of actions.
@@ -214,12 +217,14 @@ private:
 	/// This array contains all the key bindings nessecary.\n
 	/// Numbers 1-4 for selecting screens 1-4.\n
 	/// Escape for closing the game.
-	EventManager actions[5] = {
-		EventManager(sf::Keyboard::Num1, 	[&] {selectScreen(1); }, sf::Event::KeyReleased),
-		EventManager(sf::Keyboard::Num2, 	[&] {selectScreen(2); }, sf::Event::KeyReleased),
-		EventManager(sf::Keyboard::Num3, 	[&] {selectScreen(3); }, sf::Event::KeyReleased),
-		EventManager(sf::Keyboard::Num4, 	[&] {selectScreen(4); }, sf::Event::KeyReleased),
-		EventManager(sf::Keyboard::Escape, 	[&] {mViewManager.close(); })
+	EventManager actions[7] = {
+		EventManager(sf::Keyboard::Num1, 	[&]() {selectScreen(1); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Num2, 	[&]() {selectScreen(2); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Num3, 	[&]() {selectScreen(3); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Num4, 	[&]() {selectScreen(4); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Numpad6, [&]() {gotoNextLevel(); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Numpad4, [&]() {gotoPreviousLevel();},sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Escape, 	[&]() {mViewManager.close(); })
 	};
 
 public:

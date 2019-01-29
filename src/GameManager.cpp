@@ -6,7 +6,7 @@
 
 GameManager::GameManager(const std::string& levelFileName) :
 	mCurrentLevel(0),
-	mMainWindow(sf::VideoMode(1920,1080), "MiNdF*cK",sf::Style::Fullscreen),
+	mMainWindow(sf::VideoMode(1920,1080), "MiNdF*cK"/*,sf::Style::Fullscreen*/),
 	mViewManager(mMainWindow, 1),
 	mFactory(),
 	mHUD(),
@@ -16,7 +16,6 @@ GameManager::GameManager(const std::string& levelFileName) :
 		std::cerr << "levelFileNames not read" << std::endl ;
 	}
 }
-
 
 GameManager::~GameManager() {}
 
@@ -53,6 +52,7 @@ void GameManager::createLevel(){
 	findPlayerIndexes();
 	createBackgrounds();
 }
+
 
 void GameManager::readLevelInfo() {
 	if (static_cast<unsigned int>(mCurrentLevel) >= mLevelFileNames.size()) {
@@ -256,6 +256,18 @@ bool GameManager::check2Selected() {
 	return false;
 }
 
+void GameManager::gotoNextLevel() {
+	mCurrentLevel++;
+	mPlayingLevel = false;
+}
+
+void GameManager::gotoPreviousLevel() {
+	if (mCurrentLevel > 0) {
+		mCurrentLevel--;
+		mPlayingLevel = false;
+	}
+}
+
 void GameManager::runGame() {	
 	sf::Event event;
 	
@@ -321,8 +333,7 @@ void GameManager::runGame() {
 					break;
 				}
 				if (checkLevelFinished()) {
-					mPlayingLevel = false;
-				 	mCurrentLevel++;
+					gotoNextLevel();
 					EntityBase::backToStartId();
 					break;
 				}
