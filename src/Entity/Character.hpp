@@ -16,7 +16,7 @@
 #include "Timer.hpp"
 
 /// \brief
-/// This struct is used to store the data of a animation
+/// This struct is used to store the data of an animation.
 /// \details
 struct AnimationSequence {
 	/// \brief
@@ -72,7 +72,7 @@ public:
 	/// This are all the states a Character could be in.
 	/// \details
 	/// These states are mostly used to choose the right animation of the Character.
-	/// The states is updated using the updateState method.
+	/// mState will be updated using the updateState method.
 	enum class State {
 		Idle,		/// < The Character is doing nothing. 
 		Moving,		/// < The Character is walking.
@@ -86,7 +86,7 @@ public:
 	/// The actions which a Character is able to perform.
 	/// \details
 	/// These actions are given to the performAction method to perform a given action.
-	/// After calling the perform method the state is automaticly updated if the state of the Character changed.
+	/// After calling the perform method the state is automatically updated if the state of the Character changed.
 	enum class Action {
 		Left,	/// < The Character is going to the left side. 
 		Right,	/// < The Character is going to the right side. 
@@ -101,7 +101,7 @@ public:
 	/// \param position
 	/// The position the Character should spawn.
 	/// \param size
-	/// The size of the player. 
+	/// The size of the Character. 
 	/// Most of the time the same size as one single picture in the sprite
 	/// \param maxVelocity
 	/// The maximum velocity the Character is able to move at.
@@ -122,15 +122,15 @@ public:
 	/// \brief
 	/// This method adds a new action to mUnperformedActions.
 	/// \details
-	///	The action will be performed the next time the unperformed actions will be performed.
+	///	The action will be performed the next time the all the unperformed actions will be called.
 	/// \param newAction
 	/// The action you want to add to the unperformed actions.
 	void addAction(const Action& newAction);
 	
 	/// \brief
-	/// This method binds a event to a action.
+	/// This method binds an event to an action.
 	/// \details
-	/// This is used to bind keybindings or other conditions to perform a action. 
+	/// This is used to bind keybindings or other conditions to perform an action. 
 	/// \param event
 	/// The event you want to bind the a given action.
 	void bindAction(const EventManager& event);
@@ -156,7 +156,7 @@ public:
 	);
 
 	/// \brief
-	/// This method is should be overridden if you want to bind multiple animations at once.
+	/// This method should be overridden if you want to bind multiple animations at once.
 	/// \details
 	/// This method is called on construction.
 	virtual void bindAnimations() {};
@@ -167,11 +167,11 @@ public:
 	/// The delta position you want to move the player.
 	/// \details
 	/// This method moves the Character using the delta.
-	/// The Character will only move to that side is not restricted.
+	/// The Character will only move to the side is not restricted.
 	void move(sf::Vector2f& delta);
 
 	/// \brief
-	/// This method is used to apply the right movement given a action using the velocity.
+	/// This method is used to apply the right movement given an action using the velocity.
 	/// \details
 	/// If the direction is left the Character will move left and vise versa.
 	/// The method updates mVelocity.
@@ -214,7 +214,7 @@ public:
 	/// \brief
 	/// This function updates the current state of the Character.
 	/// \details
-	/// A paramether action is passed into this method, 
+	/// A parameter action is passed into this method, 
 	/// using that action the new mState is determent.
 	/// \param action
 	/// This is the action the Character is currently performing.
@@ -226,7 +226,8 @@ public:
 	/// The hurtClock is restarted and mIsHurting is set to true.
 	/// The player starts now starts flickering.
 	/// This flickering animation is handled by the animate method.
-	/// Everytime a new picture is being set in the animate function the is setIsVisible is toggled.
+	/// Everytime a new picture is being set in the animate method 
+	/// setIsVisible is toggled.
 	void startHurtAnimation();
 
 	/// \brief
@@ -247,7 +248,7 @@ public:
 	void left();
 
 	/// \brief
-	/// This method moves the Character to the left using applyMovement.
+	/// This method moves the Character to the right using applyMovement.
 	void right();
 
 	/// \brief
@@ -265,7 +266,7 @@ public:
 	/// This method is used to shoot a projectile.
 	/// \details
 	/// When mShootTimer is expired the Character is able to shoot.
-	/// mShootTImer is restarted and mIsShooting is set to true.
+	/// mShootTimer is restarted and mIsShooting is set to true.
 	/// \returns
 	/// A bool containing whether the player was able to shoot or not.
 	virtual bool shoot();
@@ -282,16 +283,32 @@ public:
 	/// Using this method a new projectile is made. 
 	/// This projectile exists until a collision is detected.
 	/// \return
-	/// A std::optional containing a projectile when mIsShooting is true.
+	/// An std::optional containing a projectile when mIsShooting is true.
 	/// if mIsShooting is false the std::optional is empty.
 	std::optional<std::unique_ptr<EntityBase>> getProjectile();
 
-	
+	/// \brief
+	/// This method performs the given action.
+	/// \param unperformedAction
+	/// This is the action you want to perform.
 	void performAction(const Action& unperformedAction);
 	
+	/// \brief
+	/// This method returns the size of the Character.
+	/// \return 
+	/// A sf::Vector2f containing the size of the Character.
 	virtual sf::Vector2f getSize() const override;
+
+	/// \brief
+	/// This method returns the global bounds of the Character.
+	/// \return
+	/// a Sf::FloatRect containing the global bounds of the Character.
 	virtual sf::FloatRect getGlobalBounds() const override;
+	
+	/// \brief
+	/// This method sets the scale of mSprite and updates mSize accordingly.
 	void setSpriteScale(float x, float y);
+	
 	void updateSizeUsingSprite();
 	virtual bool isFinished() const override;
 	virtual void handleCollision(

@@ -275,6 +275,22 @@ void Character::performAction(const Action& unperformedAction) {
 	}
 }
 
+sf::FloatRect Character::getGlobalBounds() const {
+	return mSprite.getGlobalBounds();
+}
+
+void Character::setSpriteScale(float x, float y) {
+	mSprite.setScale(x, y);
+	updateSizeUsingSprite();
+}
+
+void Character::updateSizeUsingSprite() {
+	EntityBase::mSize = sf::Vector2f(
+		mSprite.getGlobalBounds().width,
+		mSprite.getGlobalBounds().height	
+	);
+}
+
 void Character::handleCollision(
 	std::vector<std::unique_ptr<EntityBase>*> top, 
 	std::vector<std::unique_ptr<EntityBase>*> bottom, 
@@ -334,23 +350,6 @@ sf::Vector2f Character::getSize() const {
 		mSprite.getGlobalBounds().height
 	);
 }
-
-sf::FloatRect Character::getGlobalBounds() const {
-	return mSprite.getGlobalBounds();
-}
-
-void Character::setSpriteScale(float x, float y) {
-	mSprite.setScale(x, y);
-	updateSizeUsingSprite();
-}
-
-void Character::updateSizeUsingSprite() {
-	EntityBase::mSize = sf::Vector2f(
-		mSprite.getGlobalBounds().width,
-		mSprite.getGlobalBounds().height	
-	);
-}
-
 
 void Character::update(const sf::Time& deltaTime) {
 	mVelocity.x = 0;
