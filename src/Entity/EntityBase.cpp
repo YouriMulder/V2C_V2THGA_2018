@@ -14,6 +14,7 @@ EntityBase::EntityBase(
 	bool isSolid,
 	bool isVisible
 ):
+	id(nextId),
 	mPosition(position), 
 	mSize(size), 
 	mScreenNumber(screenNumber),

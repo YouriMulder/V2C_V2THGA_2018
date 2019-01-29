@@ -33,15 +33,13 @@ Character::Character(
 	mIsRunning(false),
 	mIsShooting(false),
 	mIsFinished(false),
-	mSelected(false),
 	mPreviousState(Character::State::Idle),
-	mState(Character::State::Idle),
-	mSpriteWidth(static_cast<unsigned int>(size.x)),
-	mSpriteHeight(static_cast<unsigned int>(size.y)),
-	mCurrentSpriteSheetLocation(0,0, static_cast<unsigned int>(size.x), static_cast<unsigned int>(size.y))
+	mState(Character::State::Idle)
 {
 	mTexture.loadFromFile(characterSheetPath);
-	mSprite = sf::Sprite(mTexture, mCurrentSpriteSheetLocation);
+	mSprite = sf::Sprite(mTexture, 
+		sf::IntRect(0,0, static_cast<unsigned int>(size.x), static_cast<unsigned int>(size.y))
+	);
 	mSprite.setPosition(EntityBase::mPosition);
 	mSize = sf::Vector2f(
 		mSprite.getGlobalBounds().width, 
@@ -69,15 +67,15 @@ void Character::bindAnimation(
 }
 
 void Character::move(sf::Vector2f& delta) {
-	if(delta.x > 0 && restrictedSides.right) {
+	if(delta.x > 0 && mRestrictedSides.right) {
 		delta.x = 0;
-	} else if(delta.x < 0 && restrictedSides.left) {
+	} else if(delta.x < 0 && mRestrictedSides.left) {
 		delta.x = 0;
 	}
 
-	if(delta.y < 0 && restrictedSides.top) {
+	if(delta.y < 0 && mRestrictedSides.top) {
 		delta.y = 0;
-	} else if(delta.y > 0 && restrictedSides.bottom) {
+	} else if(delta.y > 0 && mRestrictedSides.bottom) {
 		delta.y = 0;
 	}
 
@@ -200,7 +198,7 @@ void Character::updateState(const Action& action) {
 }
 
 void Character::startHurtAnimation() {
-	hurtClock.restart();
+	mHurtTimer.set(mTotalHurtTime);
 	mIsHurting = true;
 }
 
@@ -275,6 +273,13 @@ void Character::performAction(const Action& unperformedAction) {
 	}
 }
 
+sf::Vector2f Character::getSize() const {
+	return sf::Vector2f(
+		mSprite.getGlobalBounds().width,
+		mSprite.getGlobalBounds().height
+	);
+}
+
 sf::FloatRect Character::getGlobalBounds() const {
 	return mSprite.getGlobalBounds();
 }
@@ -289,6 +294,10 @@ void Character::updateSizeUsingSprite() {
 		mSprite.getGlobalBounds().width,
 		mSprite.getGlobalBounds().height	
 	);
+}
+
+bool Character::isFinished() const {
+	return mIsFinished;
 }
 
 void Character::handleCollision(
@@ -335,20 +344,13 @@ void Character::handleCollision(
 		mVelocity.x = 0;
 	} 
 	
-	restrictedSides = hitSides;
+	mRestrictedSides = hitSides;
 
 }
 
 void Character::handleNoCollision() {
-	restrictedSides = CollisionSides();
+	mRestrictedSides = CollisionSides();
 	mIsInAir = true;
-}
-
-sf::Vector2f Character::getSize() const {
-	return sf::Vector2f(
-		mSprite.getGlobalBounds().width,
-		mSprite.getGlobalBounds().height
-	);
 }
 
 void Character::update(const sf::Time& deltaTime) {
@@ -359,7 +361,7 @@ void Character::update(const sf::Time& deltaTime) {
 	if (mIsJumping && mIsInAir) {
 		mVelocity.y = mJumpForce;
 		mJumpForce += mJumpAcceleration;
-	} else if(mIsInAir || !restrictedSides.bottom) {
+	} else if(mIsInAir || !mRestrictedSides.bottom) {
 		mIsInAir = true;
 		mVelocity.y = mGravity;
 		if (mGravity < mMaxGravity) {
@@ -398,7 +400,7 @@ void Character::update(const sf::Time& deltaTime) {
 }
 
 void Character::animate(const sf::Time& deltaTime) {
-	timeSinceLastAnimation += deltaTime;
+	mTimeSinceLastAnimation += deltaTime;
 
 	updateFacingDirection();
 	if(mState != mPreviousState) {
@@ -412,9 +414,9 @@ void Character::animate(const sf::Time& deltaTime) {
 	for(const auto& animation : mAnimations) {
 		if(mState == animation.first) {
 			
-			if(timeSinceLastAnimation >= animation.second.displayTime) {
+			if(mTimeSinceLastAnimation >= animation.second.displayTime) {
 				if(mIsHurting) {
-					if(hurtClock.getElapsedTime() >= totalHurtTime) {
+					if(mHurtTimer.isExpired()) {
 						mIsHurting = false;
 						setIsVisible(true);
 					} else {
@@ -422,7 +424,7 @@ void Character::animate(const sf::Time& deltaTime) {
 					}
 				}
 				
-				timeSinceLastAnimation = sf::seconds(0.0f);
+				mTimeSinceLastAnimation = sf::seconds(0.0f);
 				currentSprite.x++;
 
 
@@ -466,16 +468,4 @@ void Character::draw(sf::RenderWindow& window) {
 void Character::draw(ViewManager& window) {
 	window.selectDrawingScreen(mScreenNumber);
 	window.draw(mSprite);
-}
-
-void Character::select(bool selection) {
-	mSelected = selection;
-}
-
-bool Character::isSelected() {
-	return mSelected;
-}
-
-bool Character::isFinished() const {
-	return mIsFinished;
 }
