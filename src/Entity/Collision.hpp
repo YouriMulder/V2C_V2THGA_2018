@@ -28,7 +28,6 @@ private:
 
 	std::vector<std::unique_ptr<EntityBase>> & mStaticItems;
 	std::vector<std::unique_ptr<EntityBase>> & mDynamicItems;
-
 	int mAmountOfScreens;
 	
 	std::vector<int> mNeedsCheckStatic;

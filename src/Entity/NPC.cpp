@@ -87,10 +87,10 @@ void NPC::handleCollision(
 
 	for(const auto& objectVector: allObjects) {
 		for(const auto& object : objectVector) {
-			if(!hitClocks.isClocked((*object)->getId())) {
-				(*object)->hurt(mDamage);
-				hitClocks.addClock((*object)->getId());
-			}
+				if (!hitClocks.isClocked((*object)->getId())) {
+					(*object)->hurt(mDamage);
+					hitClocks.addClock((*object)->getId());
+				}
 		}
 	}
 
