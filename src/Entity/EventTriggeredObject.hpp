@@ -6,7 +6,7 @@
 class EventTriggeredObject : public LevelObject {
 private:
 	/// \brief
-	/// The work that needs to be done when a object is hit
+	/// The work that needs to be done when a object is hit.
 	std::function<void()> mWork;
 
 	/// \brief
@@ -27,9 +27,9 @@ public:
 	/// \param screenNumber
 	/// The screen number on which the object needs to be drawn.
 	/// \param work
-	/// The function that needs to be called when object is hit
+	/// The function that needs to be called when object is hit.
 	/// \param destroyOnCollision
-	/// The bool if the 
+	/// The bool if the object needs to be destroyed
 	EventTriggeredObject(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
 		int screenNumber, std::function<void()> work, bool destroyOnCollision, bool repeated = false, bool isVisible = true );
 	
