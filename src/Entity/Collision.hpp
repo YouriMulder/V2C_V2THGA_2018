@@ -8,33 +8,33 @@
 
 struct ViewInfo {
 	/// \brief
-	/// The number of this view
+	/// The number of this view.
 	int viewNumber;
 
 	/// \brief
-	/// The position of the view
+	/// The position of the view.
 	sf::Vector2f viewPosition;
 
 	/// \brief
-	/// The size of the view
+	/// The size of the view.
 	sf::Vector2f viewSize;
 };
 
 struct CollisionBoxes {
 	/// \brief
-	/// Left collisionbox
+	/// Left collisionbox.
 	sf::FloatRect leftBox;
 
 	/// \brief
-	/// Right collisionbox
+	/// Right collisionbox.
 	sf::FloatRect rightBox;
 
 	/// \brief
-	/// Bottom collisionbox
+	/// Bottom collisionbox.
 	sf::FloatRect bottomBox;
 
 	/// \brief
-	/// Top collisionbox
+	/// Top collisionbox.
 	sf::FloatRect topBox;
 };
 
