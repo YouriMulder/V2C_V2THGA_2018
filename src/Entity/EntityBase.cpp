@@ -14,12 +14,13 @@ EntityBase::EntityBase(
 	bool isSolid,
 	bool isVisible
 ):
+	id(nextId),
 	mPosition(position), 
 	mSize(size), 
 	mScreenNumber(screenNumber),
 	mIsSolid(isSolid),
 	mIsVisible(isVisible),
-	mShouldDestroyed(false)
+	mShouldDestroyed(false)	
 {
 	increaseNextId();
 }

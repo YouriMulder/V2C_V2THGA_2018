@@ -1,4 +1,5 @@
 #include "NPC.hpp"
+#include "Player.hpp"
 
 NPC::NPC(const sf::Vector2f& startPoint, const float& deltaXMovement, int screenNumber, uint_least8_t damage, bool jumpingEnabled, const sf::Time& jumpDeltaTime):
 	Character(
@@ -87,10 +88,10 @@ void NPC::handleCollision(
 
 	for(const auto& objectVector: allObjects) {
 		for(const auto& object : objectVector) {
-			if(!hitClocks.isClocked((*object)->getId())) {
-				(*object)->hurt(mDamage);
-				hitClocks.addClock((*object)->getId());
-			}
+				if (!hitClocks.isClocked((*object)->getId())) {
+					(*object)->hurt(mDamage);
+					hitClocks.addClock((*object)->getId());
+				}
 		}
 	}
 
