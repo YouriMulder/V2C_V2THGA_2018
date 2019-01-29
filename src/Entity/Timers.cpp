@@ -1,5 +1,4 @@
 #include "Timers.hpp"
-#include <iostream>
 #include <cstdint>
 #include <SFML/System.hpp>
 
