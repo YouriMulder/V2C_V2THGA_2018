@@ -19,7 +19,7 @@ struct SettingsData {
 	/// This int contains the amount of time the player has for a level.
 	int gameDuration = 0;
 
-	int energy = 10;
+	int energy = 0;
 
 	/// \brief
 	/// This string contains the songname for the level.
@@ -43,18 +43,23 @@ private:
 	/// \brief
 	/// This array holds the finish points for all screens of every level.
 	std::array<sf::Vector2f, 4> mFinishPoints;
+
 	/// \brief
 	/// This string holds the path to the Platform textures.
 	std::string mPathPlatform = "../res/Textures/Platform/";
+
 	/// \brief
 	/// This string holds the path to the Spike textures.
 	std::string mPathSpike = "../res/Textures/Spike/";
+
 	/// \brief
 	/// This string holds the path to the Finish textures.
 	std::string mPathFinish = "../res/Textures/Finish/";
 
 	std::string mPathDrugs = "../res/Textures/Drugs/";
+
 	std::string mPathTutorial = "../res/Textures/Tutorial/";
+
 	/// \brief
 	/// Method to read the characters from the input file.
 	/// \details
@@ -66,6 +71,7 @@ private:
 	/// \param movableOjects
 	/// This vector holds all the movable objects of the level.
 	void readCharacters(std::ifstream& text, int amountOfScreens, std::vector<std::unique_ptr<EntityBase>> & movableObjects);
+
 	/// \brief
 	/// Method to create finish point.
 	/// \details
@@ -73,6 +79,7 @@ private:
 	/// \param staticObjects
 	/// A vector used to hold the static objects for the level.
 	void createFinishes(std::vector<std::unique_ptr<EntityBase>> & staticObjects);
+
 	/// \brief
 	/// Method used for reading all the game objects from a level file.
 	/// \details
@@ -86,6 +93,7 @@ private:
 	/// \param movableObjects
 	/// A vector that gets filled with the movable game objects from the levvel file.
 	void readObjects(std::ifstream& text, int amountOfScreens, std::vector<std::unique_ptr<EntityBase>> & staticObjects, std::vector<std::unique_ptr<EntityBase>> & movableObjects);
+
 	/// \brief
 	/// A method that reads the settings for the level.
 	/// \param text
