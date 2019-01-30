@@ -16,6 +16,7 @@
 #include "Entity/Text.hpp"
 #include "Factory.hpp"
 #include "HUD.hpp"
+#include "SoundPlayer.hpp"
 
 /// \brief
 /// Main game class that manages every aspect of the game.
@@ -56,6 +57,9 @@ private:
 	/// \brief
 	/// The HUD that displays the healt/energy and death.
 	HUD mHUD;
+
+	SoundPlayer mSoundPlayer;
+
 	Collision mCollisionManager;
 
 	/// \brief 

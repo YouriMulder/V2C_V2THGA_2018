@@ -72,9 +72,6 @@ void GameManager::applyLevelSettings() {
 	}
 	mCurrentScreensNotFinished = mCurrentSettings.noOfScreens;
 	Player::reset();
-	if (!mMusic.openFromFile(mPathMusic + mCurrentSettings.songName)) {
-		std::cerr << "failed loading music";
-	} 
 	Player::setEnergy(mCurrentSettings.energy);
 }
 
@@ -337,7 +334,9 @@ void GameManager::runGame() {
 					background->update(mPassedTime);
 				}
 				if (checkLosingConditions()) {
+					mSoundPlayer.play(Sounds::death);
 					mPlayerRespawn = true;
+					sf::sleep(sf::milliseconds(1000));
 					createLevel();
 					mCurrentDeathCount++;
 					mHUD.updateDeathCount(mCurrentDeathCount);

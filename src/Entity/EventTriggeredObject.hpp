@@ -3,6 +3,7 @@
 
 #include "LevelObject.hpp"
 #include <functional>
+#include "../SoundPlayer.hpp"
 
 /// \brief
 /// Class for a event triggered object.

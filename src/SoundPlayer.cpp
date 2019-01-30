@@ -4,6 +4,9 @@
 
 const std::string Sounds::hurt = "hurt.ogg";
 const std::string Sounds::death = "death.ogg";
+const std::string Sounds::slurp = "slurp.ogg";
+
+
 
 void SoundPlayer::play(const std::string &filename) {
 	mCurrentSound.stop();
