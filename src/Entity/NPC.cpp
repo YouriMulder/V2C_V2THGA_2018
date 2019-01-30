@@ -79,6 +79,7 @@ void NPC::handleCollision(
 	std::vector<std::unique_ptr<EntityBase>*> right, 
 	CollisionSides hitSides
 ) {
+	EntityBase::removeNonSolid(top, bottom, left, right, hitSides);
 	Character::handleCollision(top, bottom, left, right, hitSides);
 
 	std::vector<
