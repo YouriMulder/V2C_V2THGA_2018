@@ -171,27 +171,27 @@ void ViewManager::changeAmountOfScreens(int newAmount) {
 	mAmountOfScreens = newAmount;
 	
 	if (newAmount== 1) {
-		mScreens.push_back(screen{ 1,mMainWindow.getDefaultView() });
+		mScreens.push_back(Screen{ 1,mMainWindow.getDefaultView() });
 		resetDrawingScreen();
 	} else if (newAmount == 2) {
-		screen newScreen1{ 1, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y / 2)) };
-		screen newScreen2{ 2, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y / 2)) };
+		Screen newScreen1{ 1, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y / 2)) };
+		Screen newScreen2{ 2, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x, mainWindowSize.y / 2)) };
 		newScreen1.view.setViewport(sf::FloatRect(0, 0, 1, 0.5));
 		newScreen2.view.setViewport(sf::FloatRect(0, 0.5, 1, 0.5));
 
 		mScreens.push_back(newScreen1);
 		mScreens.push_back(newScreen2);
 	} else if (newAmount == 4) {
-		screen newScreen1{ 1, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
+		Screen newScreen1{ 1, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
 		newScreen1.view.setViewport(sf::FloatRect(0, 0, 0.5, 0.5));
 
-		screen newScreen2{ 2, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
+		Screen newScreen2{ 2, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
 		newScreen2.view.setViewport(sf::FloatRect(0.5, 0, 0.5, 0.5));
 
-		screen newScreen3{ 3, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
+		Screen newScreen3{ 3, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
 		newScreen3.view.setViewport(sf::FloatRect(0, 0.5, 0.5, 0.5));
 
-		screen newScreen4{ 4, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
+		Screen newScreen4{ 4, sf::View(sf::FloatRect(0.0, 0.0, mainWindowSize.x / 2, mainWindowSize.y / 2)) };
 		newScreen4.view.setViewport(sf::FloatRect(0.5, 0.5, 0.5, 0.5));
 
 		mScreens.push_back(newScreen1);
