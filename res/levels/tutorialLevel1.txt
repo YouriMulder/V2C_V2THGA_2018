@@ -2,7 +2,7 @@ SETTINGS:
 noOfScreens 1
 gameTime 3
 songName music.ogg
-levelSize (2200,1000)
+levelSize (2115,1000)
 finishPoints (2050,125) 
 
 backgroundImages plx-1.png,plx-2.png,plx-3.png,plx-4.png,plx-5.png
@@ -16,6 +16,8 @@ platform platform.png (750,495) (300,25) 1 0
 platform platform.png (1100,395) (300,25) 1 0
 platform platform.png (1450,295) (300,25) 1 0
 platform platform.png (1800,195) (300,25) 1 0
+
+tutorial doubleJump.png (0,300) (175,50) 0 (0,595) (200,100)
 
 END
 
