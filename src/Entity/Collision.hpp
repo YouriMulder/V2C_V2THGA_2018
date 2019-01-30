@@ -8,33 +8,33 @@
 
 struct ViewInfo {
 	/// \brief
-	/// The number of this view
+	/// The number of this view.
 	int viewNumber;
 
 	/// \brief
-	/// The position of the view
+	/// The position of the view.
 	sf::Vector2f viewPosition;
 
 	/// \brief
-	/// The size of the view
+	/// The size of the view.
 	sf::Vector2f viewSize;
 };
 
 struct CollisionBoxes {
 	/// \brief
-	/// Left collisionbox
+	/// Left collisionBox
 	sf::FloatRect leftBox;
 
 	/// \brief
-	/// Right collisionbox
+	/// Right collisionBox
 	sf::FloatRect rightBox;
 
 	/// \brief
-	/// Bottom collisionbox
+	/// Bottom collisionBox
 	sf::FloatRect bottomBox;
 
 	/// \brief
-	/// Top collisionbox
+	/// Top collisionBox
 	sf::FloatRect topBox;
 };
 
@@ -75,7 +75,7 @@ private:
 	void updateViewInfo();
 
 	/// \brief
-	/// This method check if items are in the view.
+	/// This method checks if items are in the view.
 	/// \details
 	/// If a item is out of view it will not be checked for collisions. \n
 	/// By checking this first a lot of time is saved in further collision checking.
@@ -85,16 +85,16 @@ private:
 	/// This method checks if the left top corner of a object is in view.
 	/// \details
 	/// \param currentItem
-	/// The collisionbox of the current item that needs to be checked.
+	/// The collisionBox of the current item that needs to be checked.
 	/// \param currentViewinfo 
 	/// The information of the view the object is in.
 	bool checkScopeLeftTop(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo);
 
 	/// \brief
-	/// This method checks if the right top corner of a object is in view.
+	/// This method checks if the right top corner of an object is in view.
 	/// \details
 	/// \param currentItem
-	/// The collisionbox of the current item that needs to be checked.
+	/// The collisionBox of the current item that needs to be checked.
 	/// \param currentViewinfo 
 	/// The information of the view the object is in.
 	bool checkScopeRightTop(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo);
@@ -127,14 +127,14 @@ private:
 	/// \brief
 	/// This method handles the rest of the collision checking after a collision is found.
 	/// \details
-	/// When a collision is found on the main collision box this function checks where the collision occured.
+	/// When a collision is found on the main collisionBox this function checks where the collision occured.
 	/// Possibilities are: Left, Right, Top and Bottom. \n
 	/// After checking which side the collision is detected the object is added to the corresponding vector.
 	/// The collisionSides struct is updated with a true on the corresponding side.
 	/// \param object1
-	/// The first object to check the collision with.
+	/// The first object to check the collision width.
 	/// \param object2
-	/// The second object to check the collision with.
+	/// The second object to check the collision width.
 	/// \param top
 	/// Vector with top collisioned objects.
 	/// \param bottom
@@ -142,9 +142,9 @@ private:
 	/// \param left
 	/// Vector with left collisioned objects.
 	/// \param right
-	/// Vector with bottom collisioned objects.
+	/// Vector with right collisioned objects.
 	/// \param collisionSides
-	/// The collisionsides struct
+	/// The collisionSides struct
 	void collisionHandler(
 		std::unique_ptr<EntityBase> & object1,
 		std::unique_ptr<EntityBase> & object2,
@@ -156,11 +156,11 @@ private:
 	);
 
 	/// \brief
-	/// Method to reload all the view information
+	/// Method to reload all the view information.
 	void reloadViewInfo();
 
 	/// \brief
-	/// Method to create alle the collisionboxes for each side.
+	/// Method to create all the collisionBoxes for each side.
 	/// \details
 	/// \param mainBox
 	/// The box on bases of which the other boxes need to be created.
@@ -169,7 +169,7 @@ private:
 public:
 
 	/// \brief
-	/// Constructor for Collision class
+	/// Constructor for Collision class.
 	/// \details
 	/// \param viewManager
 	/// A reference to the viewManager needed for view information such as position and size.
