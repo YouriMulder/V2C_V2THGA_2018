@@ -7,15 +7,34 @@
 #include "Side.hpp"
 
 struct ViewInfo {
+	/// \brief
+	/// The number of this view.
 	int viewNumber;
+
+	/// \brief
+	/// The position of the view.
 	sf::Vector2f viewPosition;
+
+	/// \brief
+	/// The size of the view.
 	sf::Vector2f viewSize;
 };
 
 struct CollisionBoxes {
+	/// \brief
+	/// Left collisionBox.
 	sf::FloatRect leftBox;
+
+	/// \brief
+	/// Right collisionBox.
 	sf::FloatRect rightBox;
+
+	/// \brief
+	/// Bottom collisionBox.
 	sf::FloatRect bottomBox;
+
+	/// \brief
+	/// Top collisionBox.
 	sf::FloatRect topBox;
 };
 
@@ -23,28 +42,93 @@ struct CollisionBoxes {
 
 class Collision {
 private:
-	
+	/// \brief
+	/// A reference to the viewManager.
 	ViewManager & mViewManager;
 
+	/// \brief
+	/// A reference to the vector with static items.
 	std::vector<std::unique_ptr<EntityBase>> & mStaticItems;
+
+	/// \brief
+	/// A reference to the vector with dynamic items.
 	std::vector<std::unique_ptr<EntityBase>> & mDynamicItems;
+
+	/// \brief
+	/// The amount of screens in the window.
 	int mAmountOfScreens;
 	
+	/// \brief
+	/// This vector contains the indexes of the static items that need collision checking.
 	std::vector<int> mNeedsCheckStatic;
+
+	/// \brief
+	/// This vector contains the indexes of the Dynamic items that need collision checking.
 	std::vector<int> mNeedsCheckDynamic;
 
+	/// \brief
+	/// This vector contains the information of all the views.
 	std::vector<ViewInfo> mViewInfos;
 
+	/// \brief
+	/// This function updates all the view information, such as position and size.
 	void updateViewInfo();
 
+	/// \brief
+	/// This function checks if items are in the view.
+	/// \details
+	/// If an item is out of view it will not be checked for collisions. \n
+	/// By checking this first, a lot of time is saved in further collision checking.
 	void checkScope();
 	
+	/// \brief
+	/// This function checks if the left top corner of a object is in view.
+	/// \details
+	/// \param currentItem
+	/// The collisionBox of the current item that needs to be checked.
+	/// \param currentViewinfo 
+	/// The information of the view the object is in.
 	bool checkScopeLeftTop(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo);
+
+	/// \brief
+	/// This function checks if the right top corner of an object is in view.
+	/// \details
+	/// \param currentItem
+	/// The collisionBox of the current item that needs to be checked.
+	/// \param currentViewinfo 
+	/// The information of the view the object is in.
 	bool checkScopeRightTop(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo);
+
+	/// \brief
+	/// This function checks if the left bottom corner of an object is in view.
+	/// \details
+	/// \param currentItem
+	/// The collisionBox of the current item that needs to be checked.
+	/// \param currentViewinfo 
+	/// The information of the view the object is in.
 	bool checkScopeLeftBottom(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo);
+
+	/// \brief
+	/// This function checks if the right bottom corner of an object is in view.
+	/// \details
+	/// \param currentItem
+	/// The collisionBox of the current item that needs to be checked.
+	/// \param currentViewinfo 
+	/// The information of the view the object is in.
 	bool checkScopeRightBottom(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo);
+
+	/// \brief
+	/// Function to print the ViewInfo struct.
+	/// \details
+	/// \param info
+	/// The info that needs to be printed.
 	void printViewInfo(ViewInfo info);
 
+	/// \brief
+	/// This function handles the rest of the collision checking after a collision is found.
+	/// \details
+	/// When a collision is found on the main collisionBox this function checks where the collision occured.
+	/// Possibilities 
 	void collisionHandler(
 		std::unique_ptr<EntityBase> & object1,
 		std::unique_ptr<EntityBase> & object2,
@@ -54,6 +138,7 @@ private:
 		std::vector<std::unique_ptr<EntityBase>*>& right,  
 		CollisionSides& collisionSides
 	);
+
 	void reloadViewInfo();
 	CollisionBoxes createCollisionBoxes(const sf::FloatRect & mainBox);
 

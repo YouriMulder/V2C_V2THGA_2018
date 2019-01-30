@@ -9,6 +9,8 @@ private:
 	/// The work that needs to be done when a object is hit.
 	std::function<void()> mWork;
 
+	sf::RectangleShape mHitBox;
+
 	/// \brief
 	/// This is set when a ojbect needs to be destroyed on collision.
 	bool mDestroyOnCollision;
@@ -31,7 +33,7 @@ public:
 	/// \param destroyOnCollision
 	/// The bool if the object needs to be destroyed.
 	EventTriggeredObject(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
-		int screenNumber, std::function<void()> work, bool destroyOnCollision, bool repeated = false, bool isVisible = true );
+		int screenNumber, std::function<void()> work, bool destroyOnCollision, const sf::Vector2f& hitBoxPosition, const sf::Vector2f& hitBoxSize, bool repeated = false, bool isVisible = true );
 	
 
 	/// \brief
@@ -48,6 +50,9 @@ public:
 		std::vector<std::unique_ptr<EntityBase>*> right,
 		CollisionSides hitSides
 	) override;
+
+	virtual void handleNoCollision() override;
+	virtual sf::FloatRect getGlobalBounds() const override;
 	virtual ~EventTriggeredObject();
 };
 #endif /*EVENTTRIGGEREDOBJECT_HPP*/
