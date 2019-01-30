@@ -79,7 +79,6 @@ void MoveablePlatform::update(const sf::Time& deltaTime) {
 	mPosition += mSpeed * deltaTime.asSeconds();
 
 	for(const auto& entity : mAttachedEntities) {
-		std::cout << oldPosition.y - mPosition.y << "\n";
 		(*entity)->move(
 			mPosition.x - oldPosition.x,
 			mPosition.y - oldPosition.y

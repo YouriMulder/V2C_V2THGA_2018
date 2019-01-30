@@ -3,12 +3,17 @@
 
 #include "LevelObject.hpp"
 #include <functional>
+
+/// \brief
+/// Class for a event triggered object.
 class EventTriggeredObject : public LevelObject {
 private:
 	/// \brief
 	/// The work that needs to be done when a object is hit.
 	std::function<void()> mWork;
 
+	/// \brief
+	/// The hitbox on which the object is triggered.
 	sf::RectangleShape mHitBox;
 
 	/// \brief
@@ -66,6 +71,7 @@ public:
 	/// \brief
 	/// Method to get the FloatRect from the hitbox
 	virtual sf::FloatRect getGlobalBounds() const override;
+
 	virtual ~EventTriggeredObject();
 };
 #endif /*EVENTTRIGGEREDOBJECT_HPP*/
