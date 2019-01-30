@@ -10,6 +10,8 @@ project "MindFuck"
 	files { "src/**.*" }
 	flags { "FatalCompileWarnings", "FatalLinkWarnings", "FatalWarnings",  }
 	cppdialect "C++17"
+	optimize "On"
+
 	
 	filter { "system:windows" }
 		systemversion "10.0.17763.0"

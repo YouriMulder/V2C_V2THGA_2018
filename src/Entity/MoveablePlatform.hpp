@@ -4,6 +4,7 @@
 #include "SFML/Graphics.hpp"
 #include "Platform.hpp"
 #include <string>
+#include <vector>
 
 class MoveablePlatform : public Platform {
 private:
@@ -28,6 +29,12 @@ private:
 	/// \brief
 	/// A boolean that decides the starting direction.
 	bool mReverse;
+
+	/// \brief
+	/// All the objects which are on the platform will be added to this vector.
+	/// \details
+	/// This vector is used to move all the entities on the platform along with the platform.
+	std::vector<std::unique_ptr<EntityBase>*> mAttachedEntities = {};
 public:
 	/// \brief
 	/// Constructor for MoveablePlatform.
@@ -84,6 +91,22 @@ public:
 	/// \brief
 	/// Updates the position of the platform.
 	virtual void update(const sf::Time& deltaTime) override;
+
+	/// \brief
+	/// This method handles the collision when for the movingPlatform
+	/// \details
+	/// This method adds an collided entity to the attached objects.
+	/// The entity will detached when not collided anymore. 
+	virtual void handleCollision(
+		std::vector<std::unique_ptr<EntityBase>*> top, 
+		std::vector<std::unique_ptr<EntityBase>*> bottom, 
+		std::vector<std::unique_ptr<EntityBase>*> left, 
+		std::vector<std::unique_ptr<EntityBase>*> right, 
+		CollisionSides hitSides
+	) override;
+
+
+	virtual void handleNoCollision() override;
 };
 
 #endif
