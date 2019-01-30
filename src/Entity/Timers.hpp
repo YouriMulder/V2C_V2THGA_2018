@@ -10,7 +10,7 @@
 class Timers {
 private:
 	/// \brief
-	/// The time a timer lasts
+	/// The time a timer lasts.
 	sf::Time mMaxTime = sf::seconds(1);
 
 	/// \brief 
