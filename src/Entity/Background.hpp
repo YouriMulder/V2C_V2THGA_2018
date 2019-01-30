@@ -11,7 +11,7 @@ public:
 /// \param filename
 /// This parameter is the name of the sprite.
 /// \param position
-/// This parameter is the position where the background will start be at.
+/// This parameter is the position where the background will be start at.
 /// \param sizeTexture
 /// This parameter is the size of the background image.
 /// \param wantedSize
