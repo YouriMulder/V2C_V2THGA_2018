@@ -6,7 +6,7 @@
 
 GameManager::GameManager(const std::string& levelFileName) :
 	mCurrentLevel(0),
-	mMainWindow(sf::VideoMode(1920,1080), "MiNdF*cK"/*,sf::Style::Fullscreen*/),
+	mMainWindow(sf::VideoMode(1920,1080), "MiNdF*cK",sf::Style::Fullscreen),
 	mViewManager(mMainWindow, 1),
 	mFactory(),
 	mHUD(),
@@ -272,6 +272,11 @@ void GameManager::gotoPreviousLevel() {
 		mCurrentLevel--;
 	}
 	mPlayingLevel = false;
+}
+
+void GameManager::respawn() {
+	mPlayerRespawn = true;
+	createLevel();
 }
 
 void GameManager::runGame() {	
