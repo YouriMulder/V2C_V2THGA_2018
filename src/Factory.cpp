@@ -15,6 +15,7 @@
 #include "Entity/Text.hpp"
 #include "Entity/Drugs.hpp"
 #include "Entity/EventTriggeredObject.hpp"
+#include <cstdint>
 
 SettingsData Factory::readSettings(std::ifstream& text) {
 	std::string name;
@@ -176,8 +177,10 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 			} else if (name == "NPC") {
 				sf::Vector2f startPoint;
 				float deltaXMovement;
-				text >> startPoint >> deltaXMovement;
-				movableObjects.push_back(std::make_unique<NPC>(startPoint, deltaXMovement, i));
+				unsigned int health;
+				unsigned int damage;
+				text >> startPoint >> deltaXMovement >> health >> damage;
+				movableObjects.push_back(std::make_unique<NPC>(startPoint, deltaXMovement, i, health, damage));
 			}else if (name == "DRUG"){
 				std::string textureName;
 				sf::Vector2f position;
