@@ -20,7 +20,7 @@ EntityBase::EntityBase(
 	mScreenNumber(screenNumber),
 	mIsSolid(isSolid),
 	mIsVisible(isVisible),
-	mShouldDestroyed(false)
+	mShouldDestroyed(false)	
 {
 	increaseNextId();
 }

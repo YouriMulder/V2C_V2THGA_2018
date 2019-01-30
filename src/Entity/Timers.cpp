@@ -1,9 +1,13 @@
 #include "Timers.hpp"
-
 #include <cstdint>
 #include <SFML/System.hpp>
 
 void Timers::addClock(uint_least64_t entityId) {
+	for (const auto & clockPair : mClocks) {
+		if (clockPair.first == entityId) {
+			return;
+		}
+	}
 	mClocks.push_back(
 		std::make_pair(entityId, sf::Clock())
 	);

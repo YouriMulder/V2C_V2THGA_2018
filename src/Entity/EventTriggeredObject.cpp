@@ -3,13 +3,15 @@
 
 
 EventTriggeredObject::EventTriggeredObject(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
-	int screenNumber, std::function<void()> work, bool destroyOnCollision, bool repeated, bool isVisible):
+	int screenNumber, std::function<void()> work,  bool destroyOnCollision, const sf::Vector2f& hitBoxPosition, const sf::Vector2f& hitBoxSize, bool repeated, bool isVisible):
 	mWork(work),
 	mDestroyOnCollision(destroyOnCollision),
+	mHitBox(hitBoxSize),
 	LevelObject(filename,position,size,screenNumber,repeated)
 {
 	setIsVisible(isVisible);
 	setIsSolid(false);
+	mHitBox.setPosition(hitBoxPosition);
 }
 
 
@@ -43,4 +45,16 @@ void EventTriggeredObject::handleCollision(
 			}
 		}
 	}
+}
+
+
+
+void EventTriggeredObject::handleNoCollision() {
+	if (!mDestroyOnCollision) {
+		setIsVisible(false);
+	}
+}
+
+sf::FloatRect EventTriggeredObject::getGlobalBounds() const {
+	return mHitBox.getGlobalBounds();
 }
