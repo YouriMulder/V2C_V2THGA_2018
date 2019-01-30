@@ -17,7 +17,6 @@
 
 /// \brief
 /// This struct is used to store the data of an animation.
-/// \details
 struct AnimationSequence {
 	/// \brief
 	/// The start point of the animation in the spritesheet.

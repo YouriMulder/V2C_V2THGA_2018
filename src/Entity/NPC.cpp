@@ -1,6 +1,14 @@
 #include "NPC.hpp"
 
-NPC::NPC(const sf::Vector2f& startPoint, const float& deltaXMovement, int screenNumber, uint_least8_t damage, bool jumpingEnabled, const sf::Time& jumpDeltaTime):
+NPC::NPC(
+	const sf::Vector2f& startPoint, 
+	const float& deltaXMovement, 
+	int screenNumber, 
+	const uint_least8_t& health, 	
+	const uint_least8_t& damage, 
+	bool jumpingEnabled, 
+	const sf::Time& jumpDeltaTime
+):
 	Character(
 		startPoint, sf::Vector2f(50.0f, 50.0f), 
 		screenNumber, sf::Vector2f(2.0f, 2.0f), sf::Vector2f(20.0f, 10.0f),
@@ -8,12 +16,12 @@ NPC::NPC(const sf::Vector2f& startPoint, const float& deltaXMovement, int screen
 	),
 	mStartPoint(startPoint),
 	mDeltaXMovement(deltaXMovement),
-	mDamage(damage),
 	mIsMovingRight(true),
 	mJumpingEnabled(jumpingEnabled),
 	mJumpDeltaTime(jumpDeltaTime),
 	mAbleToMove(true),
-	mHealth(4)
+	mHealth(health),
+	mDamage(damage)
 {
 	setSpriteScale(1.0f, 1.0f);
 
@@ -37,14 +45,14 @@ void NPC::bindActions() {
 	}, [&] 	{addAction(Character::Action::Jump);} ));
 	
 	Character::bindAction( EventManager( [=]()->bool { 
-		if(mAbleToMove) {
+		if(mAbleToMove && mDeltaXMovement != 0.0f) {
 			return mIsMovingRight; 
 		}
 		return false;
 	}, [&] 	{addAction(Character::Action::Right);} ));
 	
 	Character::bindAction( EventManager( [=]()->bool { 
-		if(mAbleToMove) {
+		if(mAbleToMove && mDeltaXMovement != 0.0f) {
 			return !mIsMovingRight;
 		}
 		return false;
@@ -87,30 +95,29 @@ void NPC::handleCollision(
 
 	for(const auto& objectVector: allObjects) {
 		for(const auto& object : objectVector) {
-				if (!hitClocks.isClocked((*object)->getId())) {
-					(*object)->hurt(mDamage);
-					hitClocks.addClock((*object)->getId());
-				}
+			if(!hitClocks.isClocked((*object)->getId())) {
+				std::cout << "health: " << unsigned(mHealth) << "\n";
+				std::cout << "damage: " << unsigned(mDamage) << "\n";				
+				(*object)->hurt(mDamage);
+				hitClocks.addClock((*object)->getId());
+			}
 		}
 	}
 
 	if((hitSides.right || hitSides.left) && mAbleToMove) {
 		mIsMovingRight = !mIsMovingRight;
 		mAbleToMove = false;
-		unableToMoveTimerSet = false;
 	} else {
-		if(!unableToMoveTimerSet) {
-			unableToMoveTimerSet = true;
-			unableToMoveClock.restart();
+		if(!unableToMoveTimer.isSet()) {
+			unableToMoveTimer.set(unableToMoveTime);
 		}
 	}
 }
 
 void NPC::handleNoCollision() {
 	Character::handleNoCollision();
-	if(!unableToMoveTimerSet) {
-		unableToMoveTimerSet = true;
-		unableToMoveClock.restart();
+	if(!unableToMoveTimer.isSet()) {
+		unableToMoveTimer.set(unableToMoveTime);
 	}
 }
 
@@ -130,16 +137,17 @@ void NPC::update(const sf::Time& deltaTime) {
 	hitClocks.deleteExpired();
 
 	if(!mAbleToMove) {
-		if(unableToMoveClock.getElapsedTime() >= unableToMoveTime && unableToMoveTimerSet) {
-			unableToMoveTimerSet = false;
+		if(unableToMoveTimer.isExpired()) {
 			mAbleToMove = true;
 		}
 	}
-
-	if(mPosition.x >= mStartPoint.x + mDeltaXMovement) {
-		mIsMovingRight = false;
-	} else if(mPosition.x <= mStartPoint.x) {
-		mIsMovingRight = true;
+	
+	if(mDeltaXMovement != 0.0f) {
+		if(mPosition.x >= mStartPoint.x + mDeltaXMovement) {
+			mIsMovingRight = false;
+		} else if(mPosition.x <= mStartPoint.x) {
+			mIsMovingRight = true;
+		}
 	}
 	
 }
