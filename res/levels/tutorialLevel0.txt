@@ -2,19 +2,29 @@ SETTINGS:
 noOfScreens 1
 gameTime 3
 songName music.ogg
-levelSize (1600,1000)
-finishPoints (1400,625) 
+levelSize (2575,1000)
+finishPoints (2500,625) 
+energy 1
 
 backgroundImages plx-1.png,plx-2.png,plx-3.png,plx-4.png,plx-5.png
 
 SCREEN1
 
 platform wallRight.png (-10,0) (10,1000) 1 0
-platform platform.png (0,695) (700,25) 1 0
-platform platform.png (750,695) (700,25) 1 0
-spike spike.png (1000,671) (80,25) 2 0 0
+platform platform.png (0,695) (1000,25) 1 0
+platform platform.png (1150,695) (1425,25) 1 0
+spike spike.png (1300,671) (80,25) 2 0 0
+NPC (1500,650) 200 1 1
+NPC (2000,650) 200 1 1
+tutorial moveRight.png (0,300) (225,150) 0 (0,595) (200,100) 
+tutorial moveLeft.png (300,300) (225,150) 0 (310,595) (200,100)
+tutorial run.png (600,300) (225,125) 0 (610,595) (200,100)
+tutorial jump.png (850,300) (475,125) 0 (850,595) (200,100)
+tutorial spikeLine.png (1200,300) (210,50) 0 (1200,595) (100,100)
+tutorial shoot.png (1800,300) (150,150) 0 (1800,595) (200,100
+
 
 END
 
 CHARACTERS
-player (0,630)
+player (0,500)
