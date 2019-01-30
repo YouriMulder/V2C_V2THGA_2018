@@ -15,7 +15,7 @@ SFML(2.5.1): https://www.sfml-dev.org/download/sfml/2.5.1/
 	-Plaats de uitgepakte map "SFML-2.5.1" in de dependencies map.
 	
 premake5: https://premake.github.io/download.html#v5
-	-Downloard premake5 vanaf bovenstaande link.
+	-Download premake5 vanaf bovenstaande link.
 	-Pak de .zip file uit.
 	-Plaats het premake5.exe bestand in de map waar de repository staat.
 	
