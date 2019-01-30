@@ -3,8 +3,25 @@ Algemene volgorde:
 	LevelObjects
 	Players
 
-starten met SETTINGS
+	
+starten met SETTINGS zie onderstaand voorbeeld:
+SETTINGS:
+noOfScreens 1
+gameTime 3
+songName yolo
+levelSize (1280,1000)
+finishPoints (1200,623) 
+energy 4
 
+noOfScreens: staat voor het aantal schermen in dit level (1,2,4)
+gameTime: wordt momenteel niet gebruikt
+songName: de naam van de muziek file die onder dit level moet komen.
+levelSize: de totale grote van het level
+finishPoints: de positie van de finshvlaggen
+zowel finishPoints als levelSize bestaan uit 1,2 of 4 vectors afhankelijk van het aantal schermen.
+
+Na de settings moet er 1 maal SCREEN1 getyped worden dit geeft aan dat hieronder de objecten van het eerste scherm staan.
+Na alle objecten van een scherm dient er SCREEN getyped te worden. aan het einde van alle objecten dient er END getyped te worden.
 
 
 Types:
@@ -12,7 +29,7 @@ sf::Vector2f intypen als(x, y)
 sf::IntRect intypen als (left, top, width, height)
 bool intypen als 1 of 0
 
-textureName = string
+textureName = std::string
 position = sf::Vector2f 
 size = sf::Vector2f
 range = sf::Vector2f
@@ -21,8 +38,9 @@ damage = int
 textureRepeat = bool 
 enableTexturePart = bool
 texturePart = sf::IntRect
+eventName = std::string
 
-
+			
 Level objects:
 
 Platform:
@@ -33,4 +51,45 @@ movePlatform textureName position size range steps textureRepeat EnableTexturePa
 
 Spike:
 spike textureName position size damage textureRepeat enableTexturePart "texturePart"
+
+DRUG:
+DRUG textureName position size textureRepeat eventName
+
+Tutorial object:
+tutorial textureName position size textureRepeat hitBoxposition hitBoxsize
+
+NPC:
+NPC position deltax health damage
+
+Na alle objecten moeten de startposities van de spelers aangegeven worden, dit door na de END het woord CHARACTERS te typen. 
+Hieronder staan 1,2,4 players afhankelijk van het aantal schremen.
+
+player position
+
+hieronder een voorbeeld van een complete level file
+
+SETTINGS:
+noOfScreens 1
+gameTime 3
+songName music.ogg
+levelSize (1600,1000)
+finishPoints (1400,625) 
+energy 2
+
+backgroundImages plx-1.png,plx-2.png,plx-3.png,plx-4.png,plx-5.png
+
+SCREEN1
+
+platform wallRight.png (-10,0) (10,1000) 1 0
+platform platform.png (0,695) (700,25) 1 0
+DRUG redDrug.png (100,670) (25,25) 0 energy+1
+NPC (200,570) 50
+tutorial tutorial.png (0,0) (350,350) 0 (300,670) (200,25)
+platform platform.png (750,695) (700,25) 1 0
+spike spike.png (1000,671) (80,25) 2 0 0
+
+END
+
+CHARACTERS
+player (0,630)
 
