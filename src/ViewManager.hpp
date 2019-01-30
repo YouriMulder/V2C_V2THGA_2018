@@ -8,7 +8,7 @@
 
 /// \brief
 /// Struct with information of a screen 
-struct screen {
+struct Screen {
 	/// \brief
 	/// The screen number;
 	int number;
@@ -41,7 +41,7 @@ private:
 	/// \details
 	/// This vector contains screens on the basis of the screen struct.
 	/// The most screens at this point in time is 4.
-	std::vector<screen> mScreens;
+	std::vector<Screen> mScreens;
 
 	std::array<sf::RectangleShape, 4> mBorders;
 	
