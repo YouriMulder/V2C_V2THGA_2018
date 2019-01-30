@@ -6,6 +6,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+/// \brief
+/// This class manages the keyboard/mouse events.
 class EventManager {
 private:
 	std::function< bool(const sf::Event& event) > mCondition;
