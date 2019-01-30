@@ -17,7 +17,6 @@
 
 /// \brief
 /// This struct is used to store the data of an animation.
-/// \details
 struct AnimationSequence {
 	/// \brief
 	/// The start point of the animation in the spritesheet.
@@ -309,71 +308,203 @@ public:
 	/// This method sets the scale of mSprite and updates mSize accordingly.
 	void setSpriteScale(float x, float y);
 	
+	/// \brief
+	/// This method updates mSize using the global bounds of mSprite.
 	void updateSizeUsingSprite();
+
+	/// \brief
+	/// This method returns the value of mIsFinished.
+	/// \return
+	/// A bool containing the value of mIsFinished.
 	virtual bool isFinished() const override;
+
+	/// \brief
+	/// This method handles the collision for a Character.
+	/// \details
+	/// This method is called by the Collision class.
+	/// In this method the restrictedSides is updated,
+	/// mIsInAir is set to false when the Character hits the ground,
+	/// the position is set correctly when standing on a moving object, etc.
+	/// If you want a more in depth view of what's happening in this method.
+	/// You should check the defintion.
 	virtual void handleCollision(
 		std::vector<std::unique_ptr<EntityBase>*> top, 
 		std::vector<std::unique_ptr<EntityBase>*> bottom, 
 		std::vector<std::unique_ptr<EntityBase>*> left, 
 		std::vector<std::unique_ptr<EntityBase>*> right,  
 		CollisionSides hitSides
-	) override; 
-	virtual void handleNoCollision() override;	
+	) override;
+
+	/// \brief
+	/// This method handles a no collision.
+	/// \details
+	/// When this method is called it means there was no collision with anything.
+	/// This method is called by the Collision class.	
+	virtual void handleNoCollision() override;
+
+	/// \brief
+	/// This method updates all the values in the Character.
+	/// \details
+	/// A few values are updated when this function is called. \n
+	/// For example: \n
+	/// Direction/movement is updated \n
+	/// mState is updated \n
+	/// Unperformed actions will be performed \n
+	/// Player animation is called \n
 	virtual void update(const sf::Time& deltaTime) override;
+	
+	/// \brief
+	/// This method draws the Character to a sf::RenderWindow.
 	virtual void draw(sf::RenderWindow& window) override;
+	
+	/// \brief
+	/// This method draws the Character to a ViewManager.
+	/// \warning
+	/// A screen inside the ViewManager must be selected before drawing.
 	virtual void draw(ViewManager& window) override;
 
-
-	void select(bool selection);
-	bool isSelected();
 protected:
+	/// \brief
+	/// The id of a Character used to 
+	/// identify which Character it is.
 	uint_least64_t id;
 
+	/// \brief
+	/// The current velocity of the Character 
+	/// used to move the Character.
 	sf::Vector2f mVelocity;
+
+	/// \brief
+	/// The mamixum velocity of the Character.
+	/// The Character is not able to exceed this velocity.
 	sf::Vector2f mMaxVelocity;
+
+	/// \brief
+	/// The amount of acceleration of the Character.
 	sf::Vector2f mAcceleration;
 
-	float xOffset;
-
-	float mGravity = 0.0f;
-	float mStartingJumpForce = -7.0f;
-	float mJumpForce = mStartingJumpForce;
-	float mMaxGravity = 7.0f;
-	float mJumpAcceleration = 0.3f;
-	float mGravityAcceleration = 0.3f;
-
+	/// \brief
+	/// The Character is facing right if this is true.\n
+	/// The Character is facing left if this is false.
 	bool mIsFacingRight;
+
+	/// \brief
+	/// The Character is in the air if this is true.\n
+	/// The Character is on the ground if this is false.
 	bool mIsInAir;
-	bool mIsJumping;
-	bool mCanDoubleJump;
-	bool mIsRunning;
-	bool mIsShooting;
-	bool mIsFinished;
-	bool mSelected;
 	
+	/// \brief
+	/// The Character is in the air if this is true.\n
+	/// The Character is on the ground if this is false.
+	bool mIsJumping;
+
+	/// \brief
+	/// The Character is in the air if this is true.\n
+	/// The Character is not on the ground if this is false.
+	bool mCanDoubleJump;
+
+	/// \brief
+	/// The Character is running if this is true.\n
+	/// The Character is not running if this is false.
+	bool mIsRunning;
+
+	/// \brief
+	/// The Character is shooting if this is true.\n
+	/// The Character is not shooting if this is false.
+	bool mIsShooting;
+
+	/// \brief
+	/// The Character is finished if this is true.\n
+	/// The Character is not finished if this is false.
+	bool mIsFinished;
+	
+	/// \brief
+	/// The previous state the Character was in.
 	State mPreviousState;
+
+	/// \brief
+	/// The current state the character is in.
 	State mState;
 
-	// TODO: Flyweight
-	unsigned int mSpriteWidth, mSpriteHeight;
-	sf::IntRect mCurrentSpriteSheetLocation;
+	/// \brief
+	/// The texture of the Character.
 	sf::Texture mTexture;
-	sf::Sprite mSprite;
 
-	sf::Time timeSinceLastAnimation;
-	sf::Clock hurtClock;
+	/// \brief
+	/// The sprite of the Character.
+	sf::Sprite mSprite;
+	
+	/// \brief
+	/// The Character is hurting if this is true.\n
+	/// The Character is not hurting if this is false.
 	bool mIsHurting = false;
 	
+	/// \brief
+	/// The direction in which the character can not walk.
+	CollisionSides mRestrictedSides;
+	
+	/// \brief
+	/// The amount of pixels the character moves down each update.\n
+	/// This only occurs if the character is in air.
+	float mGravity = 0.0f;
+	
+	/// \brief
+	/// The amount of pixels the character moves up when the jump starts.
+	float mStartingJumpForce = -7.0f;
+	
+	/// \brief
+	/// The amount of pixels the character moves up each update.\n
+	/// This only occurs if the character is jumping.
+	float mJumpForce = mStartingJumpForce;
+	
+	/// \brief
+	/// The maximum amount of pixels the character moves down each update.
+	float mMaxGravity = 7.0f;
+	
+	/// \brief
+	/// The amount of pixels the mJumpForce is decreased by each update.
+	float mJumpAcceleration = 0.3f;
+	
+	/// \brief
+	/// The amount of pixels the mGravity is increased by each update.
+	float mGravityAcceleration = 0.3f;
+
+	/// \brief
+	/// The timer to stop the Character from shooting continuously.
 	Timer mShootTimer;
+
+	/// \brief
+	/// The time there is between shots.
 	sf::Time mTimeBetweenShots = sf::seconds(1);
-	sf::Time totalHurtTime = sf::seconds(1);
+	
+	/// \brief
+	/// The last time a new picture has been set during a AnimationSequence.
+	sf::Time mTimeSinceLastAnimation;
+	
+	/// \brief
+	/// The timer used to check if the hurt animation should stop.
+	Timer mHurtTimer;
+	
+	/// \brief
+	/// The time the hurt animation is shown.
+	sf::Time mTotalHurtTime = sf::seconds(1);
 
-	CollisionSides restrictedSides;
-
+	/// \brief
+	/// All the unperformed actions.
+	/// These will be performed in the update method.
 	std::queue<Action> mUnperformedActions = {};
 	
+	/// \brief
+	/// The current location in the spritesheet.
+	/// \details 
+	/// The pixel location is calculated using the size.
 	sf::Vector2i currentSprite = sf::Vector2i(0,0);
-	
+
+	/// \brief
+	/// These are all the possible actions which can be performed.
+	/// \details
+	/// When performAction is called the right action 
+	/// is searched in this vector and the std::function is called.
 	std::vector< std::pair<Action, std::function<void()>> > mActions = {
 		std::make_pair(
 			Action::Left, 	[this](){left();}
@@ -392,7 +523,16 @@ protected:
 		),
 	};
 
+	/// \brief
+	/// These are all the states which should be filled in any derived class.
+	/// \details
+	/// You should bind these in the derived class.
 	std::vector<std::pair<State, AnimationSequence>> mAnimations = {};
+	
+	/// \brief
+	/// These are all the events/actions the Character has.
+	/// \details
+	/// You should bind these in the derived class.
 	std::vector<EventManager> actions = {};
 };
 

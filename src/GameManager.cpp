@@ -6,7 +6,7 @@
 
 GameManager::GameManager(const std::string& levelFileName) :
 	mCurrentLevel(0),
-	mMainWindow(sf::VideoMode(1920,1080), "MiNdF*cK"/*,sf::Style::Fullscreen*/),
+	mMainWindow(sf::VideoMode(1920,1080), "MiNdF*cK",sf::Style::Fullscreen),
 	mViewManager(mMainWindow, 1),
 	mFactory(),
 	mHUD(),
@@ -57,10 +57,9 @@ void GameManager::createLevel(){
 void GameManager::readLevelInfo() {
 	if (static_cast<unsigned int>(mCurrentLevel) >= mLevelFileNames.size()) {
 		std::cerr << "no file names";
-	} else {
-		mCurrentSettings = mFactory.readLevelFile(mPathLevels + mLevelFileNames[mCurrentLevel], mStaticItems, mDynamicItems);
-	}
-	
+		mCurrentLevel--;
+	} 
+	mCurrentSettings = mFactory.readLevelFile(mPathLevels + mLevelFileNames[mCurrentLevel], mStaticItems, mDynamicItems);	
 }
 
 void GameManager::applyLevelSettings() {
@@ -218,6 +217,9 @@ bool GameManager::checkLevelFinished() {
 			finishCounter++;
 		}
 	}
+	if (mCurrentLevel+1 == mLevelFileNames.size()) {
+		return false;
+	}
 	if (finishCounter == mCurrentSettings.noOfScreens) {
 		sf::sleep(sf::milliseconds(1000));
 		return true;
@@ -257,15 +259,24 @@ bool GameManager::check2Selected() {
 }
 
 void GameManager::gotoNextLevel() {
-	mCurrentLevel++;
+	if (mCurrentLevel + 1 == mLevelFileNames.size()) {
+		mCurrentLevel = mLevelFileNames.size() - 1;
+	} else {
+		mCurrentLevel++;
+	}
 	mPlayingLevel = false;
 }
 
 void GameManager::gotoPreviousLevel() {
 	if (mCurrentLevel > 0) {
 		mCurrentLevel--;
-		mPlayingLevel = false;
 	}
+	mPlayingLevel = false;
+}
+
+void GameManager::respawn() {
+	mPlayerRespawn = true;
+	createLevel();
 }
 
 void GameManager::runGame() {	

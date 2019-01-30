@@ -45,6 +45,16 @@ public:
 		int screenNumber, bool repeated = false);
 
 	virtual ~Platform();
+
+	/// \brief
+	/// This method handles the collision when for the movingPlatform 
+	virtual void handleCollision(
+		std::vector<std::unique_ptr<EntityBase>*> top, 
+		std::vector<std::unique_ptr<EntityBase>*> bottom, 
+		std::vector<std::unique_ptr<EntityBase>*> left, 
+		std::vector<std::unique_ptr<EntityBase>*> right, 
+		CollisionSides hitSides
+	) override;
 };
 
 #endif /* PLATFORM_HPP */

@@ -18,13 +18,13 @@ void Player::setMaxHealth(uint_least8_t newMaxHealth) {
 	maxHealth = newMaxHealth;
 }
 
-void Player::setEnergy(uint_least8_t newEnergy) {
-	if (newEnergy > maxEnergy) {
-		energy = maxEnergy;
-	} else if (newEnergy < 0) {
-		energy = 0;
+void Player::setHealth(uint_least8_t newHealth) {
+	if (newHealth > maxHealth) {
+		health = maxHealth;
+	} else if (newHealth < 0) {
+		health = 0;
 	} else {
-		energy = newEnergy;
+		health = newHealth;
 	}
 }
 
@@ -50,6 +50,16 @@ void Player::setMaxEnergy(uint_least8_t newMaxEnergy) {
 	maxEnergy = newMaxEnergy;
 }
 
+void Player::setEnergy(uint_least8_t newEnergy) {
+	if (newEnergy > maxEnergy) {
+		energy = maxEnergy;
+	} else if (newEnergy < 0) {
+		energy = 0;
+	} else {
+		energy = newEnergy;
+	}
+}
+
 void Player::addEnergy(int_least8_t deltaEnergy) {
 	if(energy + deltaEnergy > maxEnergy) {
 		energy = maxEnergy;
@@ -69,12 +79,12 @@ void Player::reset() {
 	resetEnergy();
 }
 
-bool Player::isAlive() {
-	return health > 0;
-}
-
 bool Player::isDead() {
 	return !isAlive();
+}
+
+bool Player::isAlive() {
+	return health > 0;
 }
 
 Player::Player(const sf::Vector2f& position, int screenNumber):

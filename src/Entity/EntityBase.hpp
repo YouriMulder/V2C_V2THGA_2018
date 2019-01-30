@@ -66,6 +66,18 @@ public:
 	virtual bool isFinished() const;
 	
 	virtual void update(const sf::Time& deltaTime) = 0;
+	
+	/// \param top
+	/// This contains all the objects that the Character collides with on the top.
+	/// \param bottom
+	/// This contains all the objects that the Character collides with on the bottom.	
+	/// \param left
+	/// This contains all the objects that the Character collides with on the left.
+	/// \param right
+	/// This contains all the objects that the Character collides with on the right.
+	/// \param hitSides
+	/// This contains booleans of all sides which are true 
+	/// when something collided on that side.
 	virtual void handleCollision(
 		std::vector<std::unique_ptr<EntityBase>*> top, 
 		std::vector<std::unique_ptr<EntityBase>*> bottom, 

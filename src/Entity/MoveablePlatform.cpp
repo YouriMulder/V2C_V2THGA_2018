@@ -13,6 +13,9 @@ MoveablePlatform::MoveablePlatform(const std::string& filename, const sf::Vector
 	mSpeed = { mEndpoint - position };
 	mSpeed.x /= amountOfSteps;
 	mSpeed.y /= amountOfSteps;
+
+	mSpeed.x *= 25;
+	mSpeed.y *= 25;
 }
 
 MoveablePlatform::MoveablePlatform(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f& size,
@@ -26,6 +29,9 @@ MoveablePlatform::MoveablePlatform(const std::string& filename, const sf::Vector
 	mSpeed = { mEndpoint - position };
 	mSpeed.x /= amountOfSteps;
 	mSpeed.y /= amountOfSteps;
+
+	mSpeed.x *= 25;
+	mSpeed.y *= 25;
 }
 
 sf::Vector2f MoveablePlatform::getNextPosition() const {
@@ -69,6 +75,34 @@ void MoveablePlatform::update(const sf::Time& deltaTime) {
 			mSpeed = -mSpeed;
 		}
 	}
-	mPosition += mSpeed;
+	auto oldPosition = mPosition;
+	mPosition += mSpeed * deltaTime.asSeconds();
+
+	for(const auto& entity : mAttachedEntities) {
+		std::cout << oldPosition.y - mPosition.y << "\n";
+		(*entity)->move(
+			mPosition.x - oldPosition.x,
+			mPosition.y - oldPosition.y
+		);
+	}
 	mSprite.setPosition(mPosition);
+}
+
+void MoveablePlatform::handleCollision(
+	std::vector<std::unique_ptr<EntityBase>*> top, 
+	std::vector<std::unique_ptr<EntityBase>*> bottom, 
+	std::vector<std::unique_ptr<EntityBase>*> left, 
+	std::vector<std::unique_ptr<EntityBase>*> right, 
+	CollisionSides hitSides
+) {
+	mAttachedEntities.clear();
+	if(hitSides.top) {
+		for(const auto& object : top) {
+			mAttachedEntities.push_back(object);
+		}
+	}
+}
+
+void MoveablePlatform::handleNoCollision() {
+	mAttachedEntities.clear();
 }

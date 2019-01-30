@@ -34,6 +34,8 @@ void Projectile::handleCollision(
 	std::vector<std::unique_ptr<EntityBase>*> right, 
 	CollisionSides hitSides
 ) {
+	EntityBase::removeNonSolid(top, bottom, left, right, hitSides);	
+	
 	if(!EntityBase::shouldDestroy()) {
 		std::vector<
 			std::vector<std::unique_ptr<EntityBase>*>
