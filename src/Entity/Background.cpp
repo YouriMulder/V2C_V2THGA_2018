@@ -13,7 +13,3 @@ Background::Background(const std::string& filename, const sf::Vector2f& position
 Background::~Background()
 {
 }
-
-sf::FloatRect Background::getGlobalBounds() const {
-	return mSprite.getGlobalBounds();
-}

@@ -19,6 +19,8 @@ struct SettingsData {
 	/// This int contains the amount of time the player has for a level.
 	int gameDuration = 0;
 
+	/// \brief
+	/// The start amount of energy in a level
 	int energy = 0;
 
 	/// \brief
@@ -38,6 +40,8 @@ struct SettingsData {
 	std::vector<std::string> backgroundImages;
 };
 
+/// \brief
+/// Class used to create objects etc. from a file.
 class Factory {
 private:
 	/// \brief
@@ -56,8 +60,12 @@ private:
 	/// This string holds the path to the Finish textures.
 	std::string mPathFinish = "../res/Textures/Finish/";
 
+	/// \brief
+	/// This string holds the path to the Drugs textures.
 	std::string mPathDrugs = "../res/Textures/Drugs/";
 
+	/// \brief
+	/// This string holds the path to the Tutorial textures.
 	std::string mPathTutorial = "../res/Textures/Tutorial/";
 
 	/// \brief
@@ -115,6 +123,12 @@ private:
 	/// An int used to store the number of lines of a text file.
 	int mNoOfLines = 0;
 
+	/// \brief
+	/// Method to check the given name and return the function coresponding to that name.
+	/// \details
+	/// \param eventName
+	/// The name of the event you want to give to a drug.
+	/// \return returns the corresponding function to the name.
 	std::function<void()> checkDrugName(const std::string & eventName);
 
 

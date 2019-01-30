@@ -2,30 +2,32 @@
 #include <cstdint>
 #include <SFML/System.hpp>
 
-void Timers::addClock(uint_least64_t entityId) {
-	for (const auto & clockPair : mClocks) {
+void Timers::addTimer(uint_least64_t entityId) {
+	for (const auto & clockPair : mTimers) {
 		if (clockPair.first == entityId) {
 			return;
 		}
 	}
-	mClocks.push_back(
-		std::make_pair(entityId, sf::Clock())
+	Timer timer;
+	timer.set(mMaxTime);
+	mTimers.push_back(
+		std::make_pair(entityId, timer)
 	);
 }
 
 void Timers::deleteExpired() {
-	for(unsigned int i = 0; i < mClocks.size(); ++i) {
-		if(mClocks[i].second.getElapsedTime() > mMaxTime) {
-			mClocks.erase(mClocks.begin() + i);
+	for(unsigned int i = 0; i < mTimers.size(); ++i) {
+		if(mTimers[i].second.isExpired()) {
+			mTimers.erase(mTimers.begin() + i);
 		}
 	}
 }
 
 bool Timers::isClocked(uint_least64_t entityId) {
-	for(size_t i = 0; i < mClocks.size(); ++i) {
-		if(mClocks[i].first == entityId) {
-			if(mClocks[i].second.getElapsedTime() > mMaxTime) {
-				mClocks.erase(mClocks.begin() + i);
+	for(size_t i = 0; i < mTimers.size(); ++i) {
+		if(mTimers[i].first == entityId) {
+			if(mTimers[i].second.isExpired()) {
+				mTimers.erase(mTimers.begin() + i);
 				return false; 
 			}
 			return true;
