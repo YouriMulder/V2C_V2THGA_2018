@@ -1,6 +1,5 @@
 #include "Character.hpp"
 
-#include "../World/Physics.hpp"
 #include "Projectile.hpp"
 #include <iostream>
 #include <cstdint>
