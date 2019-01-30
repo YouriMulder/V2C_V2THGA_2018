@@ -8,6 +8,7 @@
 namespace Sounds {
 	extern const std::string hurt;
 	extern const std::string death;
+	extern const std::string slurp;
 }
 /// \brief
 /// This class is used to play sounds.
@@ -15,7 +16,7 @@ class SoundPlayer {
 private:
 /// \brief
 /// This string holds the path to the base path to the sound effects folder.
-	std::string mPathSound = "../res/Sounds/SFX/";
+	const std::string mPathSound = "../res/Sounds/SFX/";
 /// \brief
 /// This sf::Sound is the last played sound.
 	sf::Sound mCurrentSound;

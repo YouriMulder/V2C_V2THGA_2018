@@ -2,6 +2,7 @@
 #define PLAYER_HPP
 
 #include "Character.hpp"
+#include "../SoundPlayer.hpp"
 
 /// \brief
 /// This is the Character class.
@@ -9,6 +10,8 @@
 /// This class is used to make playable characters for a game.
 /// These playable characters move through the levels using the user's input.
 class Player : public Character {
+private:
+	SoundPlayer mSoundPlayer;
 protected:
 	/// \brief
 	/// The maximum health the player is able to have.

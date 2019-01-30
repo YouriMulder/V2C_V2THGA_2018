@@ -1,5 +1,5 @@
 #include "Player.hpp"
-
+#include "../SoundPlayer.hpp"
 #include "../EventManager.hpp"
 #include "Finish.hpp"
 #include <SFML/Graphics.hpp>
@@ -111,6 +111,7 @@ bool Player::shoot() {
 
 void Player::hurt(uint_least8_t damage) {
 	Character::startHurtAnimation();
+	mSoundPlayer.play(Sounds::hurt);
 	if(damage >= Player::health) {
 		Player::health = 0;
 	} else {
