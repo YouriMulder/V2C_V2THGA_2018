@@ -311,21 +311,9 @@ void Character::handleCollision(
 	EntityBase::removeNonSolid(top, bottom, left, right, hitSides);
 
 	if(hitSides.bottom) {
-		// move along with platforms
-		auto highestBottom = bottom[0];
-		for(const auto& object : bottom) {
-			if((*object)->getPosition().y < (*highestBottom)->getPosition().y) {
-				highestBottom = object; 
-			}
+		if(mVelocity.y > 0) {
+			mVelocity.y = 0;
 		}
-
-		// move to next update
-		setPosition( 
-			sf::Vector2f(
-				mPosition.x - ((*highestBottom)->getPosition().x - (*highestBottom)->getNextPosition().x),
-				(*highestBottom)->getPosition().y - getSize().y + 3 // otherwise the player will always fall when standing on moving entities
-			) 
-		);
 
 		mIsInAir = false;
 		mIsJumping = false;

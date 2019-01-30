@@ -96,8 +96,6 @@ void NPC::handleCollision(
 	for(const auto& objectVector: allObjects) {
 		for(const auto& object : objectVector) {
 			if(!hitClocks.isClocked((*object)->getId())) {
-				std::cout << "health: " << unsigned(mHealth) << "\n";
-				std::cout << "damage: " << unsigned(mDamage) << "\n";				
 				(*object)->hurt(mDamage);
 				hitClocks.addClock((*object)->getId());
 			}
