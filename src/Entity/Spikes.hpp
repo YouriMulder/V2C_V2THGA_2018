@@ -11,6 +11,8 @@
 #include <vector>
 #include <cstdint>
 
+/// \brief
+/// This class constructs spikes.
 class Spikes : public LevelObject {
 private:
 	/// \brief

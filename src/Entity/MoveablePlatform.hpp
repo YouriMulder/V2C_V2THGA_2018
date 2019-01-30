@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+/// \brief
+/// This class constructs a moveable platform.
 class MoveablePlatform : public Platform {
 private:
 	/// \brief
