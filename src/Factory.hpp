@@ -39,6 +39,7 @@ struct SettingsData {
 	/// This vector holds the background images for a level.
 	std::vector<std::string> backgroundImages;
 };
+
 /// \brief
 /// Class used to create objects etc. from a file.
 class Factory {
