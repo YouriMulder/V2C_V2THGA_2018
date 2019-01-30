@@ -221,19 +221,22 @@ private:
 	/// Function to go to the previous level
 	void gotoPreviousLevel();
 
+	void respawn();
+
 	/// \brief
 	/// Array of actions.
 	/// \details
 	/// This array contains all the key bindings nessecary.\n
 	/// Numbers 1-4 for selecting screens 1-4.\n
 	/// Escape for closing the game.
-	EventManager actions[7] = {
+	EventManager actions[8] = {
 		EventManager(sf::Keyboard::Num1, 	[&]() {selectScreen(1); }, sf::Event::KeyReleased),
 		EventManager(sf::Keyboard::Num2, 	[&]() {selectScreen(2); }, sf::Event::KeyReleased),
 		EventManager(sf::Keyboard::Num3, 	[&]() {selectScreen(3); }, sf::Event::KeyReleased),
 		EventManager(sf::Keyboard::Num4, 	[&]() {selectScreen(4); }, sf::Event::KeyReleased),
 		EventManager(sf::Keyboard::Numpad6, [&]() {gotoNextLevel(); }, sf::Event::KeyReleased),
 		EventManager(sf::Keyboard::Numpad4, [&]() {gotoPreviousLevel();},sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::BackSpace, [&]() {respawn();},sf::Event::KeyReleased),
 		EventManager(sf::Keyboard::Escape, 	[&]() {mViewManager.close(); })
 	};
 
