@@ -186,16 +186,19 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 				std::string eventName;
 				text >> textureName;
 				text >> position >> size >> textureRepeat >> eventName;
-				movableObjects.push_back(std::make_unique<EventTriggeredObject>(mPathDrugs + textureName, position, size,i, checkDrugName(eventName), true, textureRepeat));
+				movableObjects.push_back(std::make_unique<EventTriggeredObject>(mPathDrugs + textureName, position, size,i, checkDrugName(eventName), true,position,size, textureRepeat));
 			} else if (name == "tutorial") {
 				std::cout << "error";
 				std::string textureName;
 				sf::Vector2f position;
 				sf::Vector2f size;
+				sf::Vector2f hitPosition;
+				sf::Vector2f hitSize;
 				bool textureRepeat;
 				text >> textureName;
 				text >> position >> size >> textureRepeat;
-				movableObjects.push_back(std::make_unique<EventTriggeredObject>(mPathTutorial + textureName, position, size, i, [&]() {}, false, textureRepeat,false));
+				text >> hitPosition >> hitSize;
+				movableObjects.push_back(std::make_unique<EventTriggeredObject>(mPathTutorial + textureName, position, size, i, [&]() {}, false, hitPosition,hitSize, textureRepeat,false));
 			} else if (name == "CHARACTERS") {
 				//std::cerr << "END OBJECTS FOUND\n";
 				readCharacters(text, amountOfScreens, movableObjects);
