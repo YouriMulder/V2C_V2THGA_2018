@@ -41,8 +41,7 @@ struct SettingsData {
 };
 
 /// \brief
-/// This is the factory class.
-
+/// Class used to create objects etc. from a file.
 class Factory {
 private:
 	/// \brief
