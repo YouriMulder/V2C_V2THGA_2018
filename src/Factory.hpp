@@ -40,6 +40,9 @@ struct SettingsData {
 	std::vector<std::string> backgroundImages;
 };
 
+/// \brief
+/// This is the factory class.
+
 class Factory {
 private:
 	/// \brief
