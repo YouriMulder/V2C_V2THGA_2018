@@ -6,6 +6,8 @@
 #include "../ViewManager.hpp"
 #include <string>
 
+/// \brief
+/// This class constructs a levelobject.
 class LevelObject : public EntityBase {
 protected:
 	/// \brief
@@ -54,6 +56,8 @@ public:
 
 	virtual ~LevelObject();
 
+	/// \brief
+	/// Changes the mSize to the size of the sprite.
 	void matchSizeWithSprite();
 
 	/// \brief
@@ -72,6 +76,8 @@ public:
 	/// Changes the height of the LevelObject.
 	void resizeHeight(float height);
 
+	/// \brief
+	/// Sets the position of the LevelObject.
 	virtual void setPosition(const sf::Vector2f& newPosition) override;
 
 	/// \brief

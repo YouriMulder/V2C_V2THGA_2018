@@ -6,6 +6,8 @@
 #include "../ViewManager.hpp"
 #include <string>
 
+/// \brief
+/// This class constructs a platform.
 class Platform : public LevelObject {
 public:
 	/// \brief
