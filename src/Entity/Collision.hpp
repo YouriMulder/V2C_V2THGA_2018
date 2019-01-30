@@ -22,19 +22,19 @@ struct ViewInfo {
 
 struct CollisionBoxes {
 	/// \brief
-	/// Left collisionbox.
+	/// Left collisionBox.
 	sf::FloatRect leftBox;
 
 	/// \brief
-	/// Right collisionbox.
+	/// Right collisionBox.
 	sf::FloatRect rightBox;
 
 	/// \brief
-	/// Bottom collisionbox.
+	/// Bottom collisionBox.
 	sf::FloatRect bottomBox;
 
 	/// \brief
-	/// Top collisionbox.
+	/// Top collisionBox.
 	sf::FloatRect topBox;
 };
 
@@ -75,44 +75,44 @@ private:
 	void updateViewInfo();
 
 	/// \brief
-	/// This function check if items are in the view.
+	/// This function checks if items are in the view.
 	/// \details
-	/// If a item is out of view it will not be checked for collisions. \n
-	/// By checking this first a lot of time is saved in further collision checking.
+	/// If an item is out of view it will not be checked for collisions. \n
+	/// By checking this first, a lot of time is saved in further collision checking.
 	void checkScope();
 	
 	/// \brief
 	/// This function checks if the left top corner of a object is in view.
 	/// \details
 	/// \param currentItem
-	/// The collisionbox of the current item that needs to be checked.
+	/// The collisionBox of the current item that needs to be checked.
 	/// \param currentViewinfo 
 	/// The information of the view the object is in.
 	bool checkScopeLeftTop(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo);
 
 	/// \brief
-	/// This function checks if the right top corner of a object is in view.
+	/// This function checks if the right top corner of an object is in view.
 	/// \details
 	/// \param currentItem
-	/// The collisionbox of the current item that needs to be checked.
+	/// The collisionBox of the current item that needs to be checked.
 	/// \param currentViewinfo 
 	/// The information of the view the object is in.
 	bool checkScopeRightTop(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo);
 
 	/// \brief
-	/// This function checks if the left bottom corner of a object is in view.
+	/// This function checks if the left bottom corner of an object is in view.
 	/// \details
 	/// \param currentItem
-	/// The collisionbox of the current item that needs to be checked.
+	/// The collisionBox of the current item that needs to be checked.
 	/// \param currentViewinfo 
 	/// The information of the view the object is in.
 	bool checkScopeLeftBottom(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo);
 
 	/// \brief
-	/// This function checks if the right bottom corner of a object is in view.
+	/// This function checks if the right bottom corner of an object is in view.
 	/// \details
 	/// \param currentItem
-	/// The collisionbox of the current item that needs to be checked.
+	/// The collisionBox of the current item that needs to be checked.
 	/// \param currentViewinfo 
 	/// The information of the view the object is in.
 	bool checkScopeRightBottom(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo);
@@ -125,10 +125,10 @@ private:
 	void printViewInfo(ViewInfo info);
 
 	/// \brief
-	/// This function handeles the rest of the collision checking after a collision is found.
+	/// This function handles the rest of the collision checking after a collision is found.
 	/// \details
-	/// When a collision is found on the main collision box this function checks where the collision occured.
-	/// Possibilitys 
+	/// When a collision is found on the main collisionBox this function checks where the collision occured.
+	/// Possibilities 
 	void collisionHandler(
 		std::unique_ptr<EntityBase> & object1,
 		std::unique_ptr<EntityBase> & object2,
