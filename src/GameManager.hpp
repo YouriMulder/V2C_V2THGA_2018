@@ -128,6 +128,11 @@ private:
 	/// Array to see which screens are finished.
 	std::array<bool, 4> mFinishedScreen = { false,false,false,false };
 
+	/// \brief
+	/// Delete a object from dynamicItems
+	/// \details
+	/// \param index
+	/// The index at which the object needs to be deleted
 	void dynamicItemsErase(unsigned int index);
 	
 	/// \brief
@@ -209,17 +214,27 @@ private:
 
 
 	/// \brief
+	/// Function to go to the next level
+	void gotoNextLevel();
+
+	/// \brief
+	/// Function to go to the previous level
+	void gotoPreviousLevel();
+
+	/// \brief
 	/// Array of actions.
 	/// \details
 	/// This array contains all the key bindings nessecary.\n
 	/// Numbers 1-4 for selecting screens 1-4.\n
 	/// Escape for closing the game.
-	EventManager actions[5] = {
-		EventManager(sf::Keyboard::Num1, 	[&] {selectScreen(1); }, sf::Event::KeyReleased),
-		EventManager(sf::Keyboard::Num2, 	[&] {selectScreen(2); }, sf::Event::KeyReleased),
-		EventManager(sf::Keyboard::Num3, 	[&] {selectScreen(3); }, sf::Event::KeyReleased),
-		EventManager(sf::Keyboard::Num4, 	[&] {selectScreen(4); }, sf::Event::KeyReleased),
-		EventManager(sf::Keyboard::Escape, 	[&] {mViewManager.close(); })
+	EventManager actions[7] = {
+		EventManager(sf::Keyboard::Num1, 	[&]() {selectScreen(1); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Num2, 	[&]() {selectScreen(2); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Num3, 	[&]() {selectScreen(3); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Num4, 	[&]() {selectScreen(4); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Numpad6, [&]() {gotoNextLevel(); }, sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Numpad4, [&]() {gotoPreviousLevel();},sf::Event::KeyReleased),
+		EventManager(sf::Keyboard::Escape, 	[&]() {mViewManager.close(); })
 	};
 
 public:
