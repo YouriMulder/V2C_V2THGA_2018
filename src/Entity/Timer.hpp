@@ -44,7 +44,7 @@ public:
 	bool isSet() const;
 
 	/// \brief
-	/// This method retuns whether the Timer is expired or not.
+	/// This method returns whether the Timer is expired or not.
 	/// \return
 	/// A bool containing whether the Timer is expired or not.
 	bool isExpired();
