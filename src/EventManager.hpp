@@ -10,8 +10,17 @@
 /// This class manages the keyboard/mouse events.
 class EventManager {
 private:
+
+	/// \brief
+	/// The contion on which the event needs to be triggered.
 	std::function< bool(const sf::Event& event) > mCondition;
+
+	/// \brief
+	/// The work that needs to be done when the condition is met.
 	std::function< void() > mWork;
+
+	/// \brief
+	/// The Event used to trigger on a specific event.
 	sf::Event::EventType mEvent;
 public:
 	bool isEventAndKeyCorrect(
@@ -34,6 +43,14 @@ public:
 		mEvent(sf::Event::KeyPressed)
 	{}
 
+	/// \brief
+	/// Constructor to use when no event is given in condition.
+	/// \details
+	/// Uses default event for lambda
+	/// \param mCondition
+	/// This function is a condition to do the next function.
+	/// \param mWork
+	/// Needs a call for a void function.
 	EventManager(std::function< bool() > condition, std::function< void() > Work) :
 		mCondition([condition](const sf::Event& event = sf::Event())->bool { 
 			return condition();
