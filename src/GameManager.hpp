@@ -17,6 +17,8 @@
 #include "Factory.hpp"
 #include "HUD.hpp"
 
+/// \brief
+/// Main game class that manages every aspect of the game.
 class GameManager {
 private:
 	/// \brief
@@ -221,6 +223,8 @@ private:
 	/// Function to go to the previous level
 	void gotoPreviousLevel();
 
+	/// \brief
+	/// Function to respawn (restart a level while keeping death count)
 	void respawn();
 
 	/// \brief
@@ -228,7 +232,9 @@ private:
 	/// \details
 	/// This array contains all the key bindings nessecary.\n
 	/// Numbers 1-4 for selecting screens 1-4.\n
-	/// Escape for closing the game.
+	/// Escape for closing the game.\n
+	/// nuped6/4 to change level.\n
+	/// backspace to respawn.\n
 	EventManager actions[8] = {
 		EventManager(sf::Keyboard::Num1, 	[&]() {selectScreen(1); }, sf::Event::KeyReleased),
 		EventManager(sf::Keyboard::Num2, 	[&]() {selectScreen(2); }, sf::Event::KeyReleased),

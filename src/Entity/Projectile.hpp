@@ -49,7 +49,7 @@ public:
 	virtual ~Projectile();
 
 	/// \brief
-	/// Updates the projectile
+	/// Updates the projectile.
 	/// \details
 	/// Updates the position of the projectile based on mMovementPerSecond and mIsDirectionRight.
 	virtual void update(const sf::Time& deltaTime) override;

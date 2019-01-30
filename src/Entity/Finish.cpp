@@ -6,7 +6,3 @@ Finish::Finish(const std::string& filename, const sf::Vector2f& position, const 
 {}
 
 Finish::~Finish() {}
-
-sf::FloatRect Finish::getGlobalBounds() const {
-	return mSprite.getGlobalBounds();
-}

@@ -40,6 +40,8 @@ struct SettingsData {
 	std::vector<std::string> backgroundImages;
 };
 
+/// \brief
+/// Class used to create objects etc. from a file.
 class Factory {
 private:
 	/// \brief

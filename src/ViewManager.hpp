@@ -6,19 +6,32 @@
 #include <array>
 #include <memory>
 
-
-struct screen {
+/// \brief
+/// Struct with information of a screen 
+struct Screen {
+	/// \brief
+	/// The screen number;
 	int number;
+
+	/// \brief
+	/// The view corresponding to that screen number.
 	sf::View view;
+
+	/// \brief
+	/// Boolean to check if a screen is selected.
 	bool selected = false;
 };
 
+/// \brief
+/// Class to manage the screens/views on 1 renderwindow.
 class ViewManager{
 private:
 	/// \brief
-	/// a reference to the main window.
+	/// A reference to the main window.
 	sf::RenderWindow & mMainWindow;
 
+	/// \brief
+	/// The current amount of screen.
 	int mAmountOfScreens;
 
 	sf::Vector2f mOffset = sf::Vector2f(20.f, 20.f);
@@ -28,7 +41,7 @@ private:
 	/// \details
 	/// This vector contains screens on the basis of the screen struct.
 	/// The most screens at this point in time is 4.
-	std::vector<screen> mScreens;
+	std::vector<Screen> mScreens;
 
 	std::array<sf::RectangleShape, 4> mBorders;
 	

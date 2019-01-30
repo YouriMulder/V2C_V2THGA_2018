@@ -107,7 +107,8 @@ public:
 		CollisionSides hitSides
 	) override;
 
-
+	/// \brief
+	/// This method clears the mAttachedEntities when no collision is detected.
 	virtual void handleNoCollision() override;
 };
 
