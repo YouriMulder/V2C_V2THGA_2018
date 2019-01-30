@@ -55,6 +55,13 @@ spike textureName position size damage textureRepeat enableTexturePart "textureP
 DRUG:
 DRUG textureName position size textureRepeat eventName
 
+verschillende types drugs:
+	-energy+1
+	-energy-2
+	-energyReset
+	-healthReset
+	-resetBoth
+
 Tutorial object:
 tutorial textureName position size textureRepeat hitBoxposition hitBoxsize
 
