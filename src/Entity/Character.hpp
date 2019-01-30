@@ -322,10 +322,10 @@ public:
 	/// This method handles the collision for a Character.
 	/// \details
 	/// This method is called by the Collision class.
-	/// In this method the restricted sides is updated,
+	/// In this method the restrictedSides is updated,
 	/// mIsInAir is set to false when the Character hits the ground,
 	/// the position is set correctly when standing on a moving object, etc.
-	/// If you want a more in depth view what's happening in this method.
+	/// If you want a more in depth view of what's happening in this method.
 	/// You should check the defintion.
 	virtual void handleCollision(
 		std::vector<std::unique_ptr<EntityBase>*> top, 
@@ -345,7 +345,7 @@ public:
 	/// \brief
 	/// This method updates all the values in the Character.
 	/// \details
-	/// A few values are updates when this function is called. \n
+	/// A few values are updated when this function is called. \n
 	/// For example: \n
 	/// Direction/movement is updated \n
 	/// mState is updated \n
@@ -360,7 +360,7 @@ public:
 	/// \brief
 	/// This method draws the Character to a ViewManager.
 	/// \warning
-	/// The right screen inside the ViewManager must be selected before drawing.
+	/// A screen inside the ViewManager must be selected before drawing.
 	virtual void draw(ViewManager& window) override;
 
 protected:
@@ -400,22 +400,22 @@ protected:
 
 	/// \brief
 	/// The Character is in the air if this is true.\n
-	/// The Character is on the ground if this is false.
+	/// The Character is not on the ground if this is false.
 	bool mCanDoubleJump;
 
 	/// \brief
 	/// The Character is running if this is true.\n
-	/// The Character is running if this is false.
+	/// The Character is not running if this is false.
 	bool mIsRunning;
 
 	/// \brief
 	/// The Character is shooting if this is true.\n
-	/// The Character is shooting if this is false.
+	/// The Character is not shooting if this is false.
 	bool mIsShooting;
 
 	/// \brief
 	/// The Character is finished if this is true.\n
-	/// The Character is finished if this is false.
+	/// The Character is not finished if this is false.
 	bool mIsFinished;
 	
 	/// \brief
@@ -436,24 +436,45 @@ protected:
 	
 	/// \brief
 	/// The Character is hurting if this is true.\n
-	/// The Character is hurting if this is false.
+	/// The Character is not hurting if this is false.
 	bool mIsHurting = false;
 	
+	/// \brief
+	/// The direction in which the character can not walk.
 	CollisionSides mRestrictedSides;
 	
+	/// \brief
+	/// The amount of pixels the character moves down each update.\n
+	/// This only occurs if the character is in air.
 	float mGravity = 0.0f;
+	
+	/// \brief
+	/// The amount of pixels the character moves up when the jump starts.
 	float mStartingJumpForce = -7.0f;
+	
+	/// \brief
+	/// The amount of pixels the character moves up each update.\n
+	/// This only occurs if the character is jumping.
 	float mJumpForce = mStartingJumpForce;
+	
+	/// \brief
+	/// The maximum amount of pixels the character moves down each update.
 	float mMaxGravity = 7.0f;
+	
+	/// \brief
+	/// The amount of pixels the mJumpForce is decreased by each update.
 	float mJumpAcceleration = 0.3f;
+	
+	/// \brief
+	/// The amount of pixels the mGravity is increased by each update.
 	float mGravityAcceleration = 0.3f;
 
 	/// \brief
-	/// The timer to stop the Character from shooting continuesly.
+	/// The timer to stop the Character from shooting continuously.
 	Timer mShootTimer;
 
 	/// \brief
-	/// The time there is be between shots.
+	/// The time there is between shots.
 	sf::Time mTimeBetweenShots = sf::seconds(1);
 	
 	/// \brief
@@ -480,7 +501,7 @@ protected:
 	sf::Vector2i currentSprite = sf::Vector2i(0,0);
 
 	/// \brief
-	/// These are all the possible action which can be performed.
+	/// These are all the possible actions which can be performed.
 	/// \details
 	/// When performAction is called the right action 
 	/// is searched in this vector and the std::function is called.
