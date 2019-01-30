@@ -6,6 +6,8 @@
 #include "EntityBase.hpp"
 #include "Side.hpp"
 
+/// \brief
+/// Struct containing information about views
 struct ViewInfo {
 	/// \brief
 	/// The number of this view.
@@ -20,6 +22,8 @@ struct ViewInfo {
 	sf::Vector2f viewSize;
 };
 
+/// \brief
+/// Struct containing 4 hitboxes 1 for each side
 struct CollisionBoxes {
 	/// \brief
 	/// Left collisionBox
@@ -39,7 +43,8 @@ struct CollisionBoxes {
 };
 
 
-
+/// \brief
+/// Class to handle collisionchecking.
 class Collision {
 private:
 	/// \brief

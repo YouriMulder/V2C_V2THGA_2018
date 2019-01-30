@@ -9,6 +9,8 @@
 #include "Entity/Text.hpp"
 #include "ViewManager.hpp"
 
+/// \brief
+/// Class to display all the information to screen(health,energy,deathcount).
 class HUD {
 private:
 	/// \brief
