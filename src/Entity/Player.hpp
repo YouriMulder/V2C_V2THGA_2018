@@ -5,7 +5,7 @@
 #include "../SoundPlayer.hpp"
 
 /// \brief
-/// This is the Character class.
+/// This is the Player class.
 /// \details
 /// This class is used to make playable characters for a game.
 /// These playable characters move through the levels using the user's input.

@@ -91,7 +91,7 @@ private:
 	/// \details
 	/// \param currentItem
 	/// The collisionBox of the current item that needs to be checked.
-	/// \param currentViewinfo 
+	/// \param currentViewInfo 
 	/// The information of the view the object is in.
 	bool checkScopeLeftTop(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo);
 
@@ -100,7 +100,7 @@ private:
 	/// \details
 	/// \param currentItem
 	/// The collisionBox of the current item that needs to be checked.
-	/// \param currentViewinfo 
+	/// \param currentViewInfo 
 	/// The information of the view the object is in.
 	bool checkScopeRightTop(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo);
 
@@ -109,7 +109,7 @@ private:
 	/// \details
 	/// \param currentItem
 	/// The collisionbox of the current item that needs to be checked.
-	/// \param currentViewinfo 
+	/// \param currentViewInfo 
 	/// The information of the view the object is in.
 	bool checkScopeLeftBottom(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo);
 
@@ -118,7 +118,7 @@ private:
 	/// \details
 	/// \param currentItem
 	/// The collisionbox of the current item that needs to be checked.
-	/// \param currentViewinfo 
+	/// \param currentViewInfo 
 	/// The information of the view the object is in.
 	bool checkScopeRightBottom(const sf::FloatRect & currentItem, const ViewInfo & currentViewInfo);
 

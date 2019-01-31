@@ -8,7 +8,7 @@
 namespace Sounds {
 	extern const std::string hurt;
 	extern const std::string death;
-	extern const std::string slurp;
+	extern const std::string shoot;
 }
 /// \brief
 /// This class is used to play sounds.

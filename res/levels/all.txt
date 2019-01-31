@@ -3,5 +3,7 @@ tutorialLevel1.txt
 tutorialLevel2.txt
 tutorialLevel3.txt
 level0.txt
+level1.txt
+level2.txt
 END
 
