@@ -188,7 +188,7 @@ public:
 	virtual ~Collision();
 
 	/// \brief
-	/// Method to check collisions for all dynamic items.
+	/// Method to check collisions for all dynamic and static items.
 	void checkCollisions();
 };
 
