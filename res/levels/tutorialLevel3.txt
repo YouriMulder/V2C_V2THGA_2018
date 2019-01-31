@@ -15,7 +15,7 @@ platform platform.png (500,350) (200,25) 1 0
 platform platform.png (800,250) (400,25) 1 0
 platform platform.png (1350,350) (300,25) 1 0
 platform platform.png (1750,450) (200,25) 1 0
-tutorial levelSelect.png (0,260) (325,125) 0 (0,400) (300,100)
+tutorial levelSelect.png (0,260) (325,125) 0 (0,400) (100,100)
 
 SCREEN
 

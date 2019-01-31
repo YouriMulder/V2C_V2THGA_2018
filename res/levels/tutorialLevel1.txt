@@ -13,6 +13,8 @@ platform wallRight.png (-10,0) (10,1000) 1 0
 platform platform.png (0,695) (300,25) 1 0
 platform platform.png (400,595) (300,25) 1 0
 platform platform.png (750,495) (300,25) 1 0
+DRUG blueDrug.png (900,475) (25,25) 0 energy+1
+tutorial pills.png (750,200) (225,55) 0 (750,395) (300,100)
 platform platform.png (1100,395) (300,25) 1 0
 platform platform.png (1450,295) (300,25) 1 0
 platform platform.png (1800,195) (300,25) 1 0
