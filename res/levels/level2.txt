@@ -1,0 +1,65 @@
+SETTINGS:
+noOfScreens 2
+gameTime 3
+songName music.ogg
+levelSize (5500,2100) (6000,2000)
+finishPoints (1950,1855) (2320,630)
+
+backgroundImages plx-1.png,plx-2.png,plx-3.png,plx-4.png,plx-5.png
+
+SCREEN1
+
+platform wallRight.png (-10,0) (10,2100) 1 0
+platform platform.png (0,550) (300,25) 1 0
+platform platform.png (500,400) (400,25) 1 0
+platform platform.png (1000,350) (250,25) 1 0
+platform platform.png (1450,200) (400,25) 1 0
+spike spike.png (2000,0) (25,225) 10 1 0
+spike spike.png (2025,225) (25,100) 10 1 0
+spike spike.png (2050,325) (25,100) 10 1 0
+spike spike.png (2075,425) (25,100) 10 1 0
+spike spike.png (2100,525) (25,100) 10 1 0
+spike spike.png (2125,625) (25,100) 10 1 0
+spike spike.png (2100,725) (25,100) 10 1 0
+spike spike.png (2075,825) (25,100) 10 1 0
+spike spike.png (2050,925) (25,100) 10 1 0
+spike spike.png (2025,1025) (25,100) 10 1 0
+spike spike.png (2000,1125) (25,100) 10 1 0
+spike spike.png (1975,1225) (25,100) 10 1 0
+spike spike.png (1950,1325) (25,100) 10 1 0
+spike spike.png (1975,1425) (25,100) 10 1 0
+spike spike.png (2000,1525) (25,100) 10 1 0
+spike spike.png (2025,1625) (25,100) 10 1 0
+spike spike.png (2050,1725) (25,100) 10 1 0
+spike spike.png (1825,225) (25,100) 10 1 0
+spike spike.png (1850,325) (25,100) 10 1 0
+spike spike.png (1875,425) (25,100) 10 1 0
+spike spike.png (1900,525) (25,100) 10 1 0
+spike spike.png (1925,625) (25,100) 10 1 0
+spike spike.png (1900,725) (25,100) 10 1 0
+spike spike.png (1875,825) (25,100) 10 1 0
+spike spike.png (1850,925) (25,100) 10 1 0
+spike spike.png (1825,1025) (25,100) 10 1 0
+spike spike.png (1800,1125) (25,100) 10 1 0
+spike spike.png (1775,1225) (25,100) 10 1 0
+spike spike.png (1750,1325) (25,100) 10 1 0
+spike spike.png (1775,1425) (25,100) 10 1 0
+spike spike.png (1800,1525) (25,100) 10 1 0
+spike spike.png (1825,1625) (25,100) 10 1 0
+spike spike.png (1850,1725) (25,100) 10 1 0
+platform platform.png (1850,1925) (150,25) 1 0
+
+SCREEN
+
+platform platform.png (200,550) (300,25) 1 0
+platform platform.png (800,550) (300,25) 1 0
+movePlatform platform.png (1400,550) (250,25) (0,-300) 200 1 0
+platform wallRight.png (1375,0) (25,250) 1 0
+platform platform.png (2150,700) (220,25) 1 0
+spike spike.png (2220,675) (25,25) 10 0 0
+
+END
+
+CHARACTERS
+player (0,485)
+player (300,435)
