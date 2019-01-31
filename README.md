@@ -28,6 +28,7 @@ Het maken van de .sln file. \n
 Vanaf dit punt kan de .sln file in de build map geopend worden met visual studio 2017.
 
 In visual studio kan er op zowel release als debug gecompiled worden.
+Let wel op debug is de game soms wat traag dus het beste is om op release te compilen.
 
 LET OP!!!!: Wanneer de .exe is gecompiled en gestart wordt vanuit visual studio is er geen probleem.
 			Echter als deze al gecompiled is en de .exe wordt rechtstreeks vanuit de windows file explorer gestart. 
