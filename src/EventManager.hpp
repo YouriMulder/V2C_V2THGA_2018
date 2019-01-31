@@ -33,13 +33,13 @@ public:
 
 	/// \brief
 	/// Constructor for EventManager.
-	/// \param mCondition
+	/// \param condition
 	/// This function is a condition to do the next function.
-	/// \param mWork
+	/// \param work
 	/// Needs a call for a void function.
-	EventManager(std::function< bool(const sf::Event& event) > Condition, std::function< void() > Work) :
+	EventManager(std::function< bool(const sf::Event& event) > condition, std::function< void() > work) :
 		mCondition(Condition),
-		mWork(Work),
+		mWork(work),
 		mEvent(sf::Event::KeyPressed)
 	{}
 
@@ -47,15 +47,15 @@ public:
 	/// Constructor to use when no event is given in condition.
 	/// \details
 	/// Uses default event for lambda
-	/// \param mCondition
+	/// \param condition
 	/// This function is a condition to do the next function.
-	/// \param mWork
+	/// \param work
 	/// Needs a call for a void function.
-	EventManager(std::function< bool() > condition, std::function< void() > Work) :
+	EventManager(std::function< bool() > condition, std::function< void() > work) :
 		mCondition([condition](const sf::Event& event = sf::Event())->bool { 
 			return condition();
 		}),
-		mWork(Work),
+		mWork(work),
 		mEvent(sf::Event::KeyPressed)
 	{}
 
@@ -63,11 +63,11 @@ public:
 	/// Extra constructor for keyboard key presses.
 	/// \details
 	/// This constructor returns what key is pressed on the keyboard.
-	/// \param mKey
+	/// \param key
 	/// Needs a key of the keyboard.
-	/// \param mWork
+	/// \param work
 	/// Needs a call for a void function.
-	EventManager(sf::Keyboard::Key key, std::function< void() > Work) :
+	EventManager(sf::Keyboard::Key key, std::function< void() > work) :
 		mCondition([key](const sf::Event& event)->bool { return sf::Keyboard::isKeyPressed(key); }),
 		mWork(Work),
 		mEvent(sf::Event::KeyPressed)
@@ -80,11 +80,11 @@ public:
 	/// This constructor returns what button is pressed.
 	/// \param mButton
 	/// Needs a button of the mouse.
-	/// \param mWork
+	/// \param work
 	/// Needs a call for a void function.
-	EventManager(sf::Mouse::Button mButton, std::function< void() > mWork) :
+	EventManager(sf::Mouse::Button mButton, std::function< void() > work) :
 		mCondition([mButton](const sf::Event& event)->bool { return sf::Mouse::isButtonPressed(mButton); }),
-		mWork(mWork),
+		mWork(work),
 		mEvent(sf::Event::KeyPressed)
 	{}
 
@@ -92,10 +92,12 @@ public:
 	/// Extra constructor for keyboard key presses.
 	/// \details
 	/// This constructor returns what key is pressed on the keyboard.
-	/// \param mKey
+	/// \param key
 	/// Needs a key of the keyboard.
-	/// \param mWork
+	/// \param work
 	/// Needs a call for a void function.
+	/// \param eventType
+	/// The event type that is needed.
 	EventManager(
 		sf::Keyboard::Key key, 
 		std::function< void() > work,

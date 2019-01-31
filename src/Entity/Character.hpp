@@ -102,6 +102,8 @@ public:
 	/// \param size
 	/// The size of the Character. 
 	/// Most of the time the same size as one single picture in the sprite
+	/// \param screenNumber
+	/// The screen number on which the player needs to be drawn.
 	/// \param maxVelocity
 	/// The maximum velocity the Character is able to move at.
 	/// \param acceleration

@@ -31,7 +31,7 @@ public:
 
 	/// \brief
 	/// Checks if a timer exists with the given id.
-	/// \param id.
+	/// \param id
 	/// The id of the timer you want to check for existance.
 	bool isClocked(uint_least64_t id);
 };

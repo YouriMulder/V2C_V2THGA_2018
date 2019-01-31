@@ -84,6 +84,8 @@ public:
 	/// the NPC will walk from mStartPoint.
 	/// \param screenNumber
 	/// The screen you want to draw the NPC to.
+	/// \param health
+	/// The health for a NPC.
 	/// \param damage
 	/// The damage the NPC will deal to other objects.
 	/// \param jumpingEnabled

@@ -71,8 +71,6 @@ public:
 	/// The position where the MoveablePlatform is drawn (x/y).
 	/// \param size
 	/// The size of the MoveablePlatform (width/height).
-	/// \param picturepart
-	/// The part of the picture that is used as a texture for the MoveablePlatform.
 	/// \param screenNumber
 	/// The screen on which the MoveablePlatform is drawn.
 	/// \param moveRange

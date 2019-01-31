@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['gameduration',['gameDuration',['../struct_settings_data.html#afa4ee76a1ef258e1b0d06e1d60d72ee5',1,'SettingsData']]],
+  ['gamemanager',['GameManager',['../class_game_manager.html',1,'GameManager'],['../class_game_manager.html#aea071f67a57059352fab339dcc6e0fcf',1,'GameManager::GameManager()']]],
+  ['gamemanager_2ecpp',['GameManager.cpp',['../_game_manager_8cpp.html',1,'']]],
+  ['gamemanager_2ehpp',['GameManager.hpp',['../_game_manager_8hpp.html',1,'']]],
+  ['getamountofscreens',['getAmountOfScreens',['../class_view_manager.html#aacc6ac5f6b993a38a4b55fbd18f7e11a',1,'ViewManager']]],
+  ['getenergy',['getEnergy',['../class_player.html#aac3562f665df9a59f164b4b199f6d0d4',1,'Player']]],
+  ['getglobalbounds',['getGlobalBounds',['../class_character.html#af80249ba0092741941c11aea7e772dc7',1,'Character::getGlobalBounds()'],['../class_entity_base.html#acdbd94f8fdb692a0ee66dfca1187bc72',1,'EntityBase::getGlobalBounds()'],['../class_event_triggered_object.html#abcd5bf831525e161c26c2ea240d0be12',1,'EventTriggeredObject::getGlobalBounds()'],['../class_level_object.html#a79d3ec706af5242fc4e30e571cd19ef6',1,'LevelObject::getGlobalBounds()'],['../class_spikes.html#af6475f1494a01c2100e6527c31499217',1,'Spikes::getGlobalBounds()'],['../class_text.html#aa7b01366068cb87fd48bdcd4861873a2',1,'Text::getGlobalBounds()']]],
+  ['gethealth',['getHealth',['../class_player.html#ac724025a2168e5b648a560eeeba7ed4b',1,'Player']]],
+  ['getid',['getId',['../class_entity_base.html#a4136c3549bcdbf38039a00fbfac04dd4',1,'EntityBase']]],
+  ['getnextposition',['getNextPosition',['../class_entity_base.html#ac11b542efd840d9a4d347b80008c9bce',1,'EntityBase::getNextPosition()'],['../class_moveable_platform.html#a86f9d5d2253108f86c2f4ca232eab5f9',1,'MoveablePlatform::getNextPosition()']]],
+  ['getnolines',['getNoLines',['../class_factory.html#a83b9ef83cc11e3793b741c27df11a1f1',1,'Factory']]],
+  ['getposition',['getPosition',['../class_entity_base.html#a5d1fc9ed51cefecb025304e34c0b896a',1,'EntityBase::getPosition()'],['../class_level_object.html#a55e7f0afc3c1b44830ffc5792f9f41ed',1,'LevelObject::getPosition()']]],
+  ['getprojectile',['getProjectile',['../class_character.html#af0aa534bec030237667ee6fcef4eb4b3',1,'Character']]],
+  ['getscreennumber',['getScreenNumber',['../class_entity_base.html#af5c595315d2224bfae5238c6099aff90',1,'EntityBase']]],
+  ['getsize',['getSize',['../class_character.html#a02bfad8104e48476d6a6f5208f83b6c7',1,'Character::getSize()'],['../class_entity_base.html#a11cf294f9a3a7e5bcc330f18eb386d1c',1,'EntityBase::getSize()']]],
+  ['getviewposition',['getViewPosition',['../class_view_manager.html#a75c094851ed884bb50dda7f244051e80',1,'ViewManager']]],
+  ['getviewsize',['getViewSize',['../class_view_manager.html#a709202c5530e6c69ed90280dc11a20a1',1,'ViewManager']]],
+  ['gotonextlevel',['gotoNextLevel',['../class_game_manager.html#af874b18fe174b774d8155a69ff07a837',1,'GameManager']]],
+  ['gotopreviouslevel',['gotoPreviousLevel',['../class_game_manager.html#aaad1a10dd45c106191b43ebd7096dcc0',1,'GameManager']]]
+];
