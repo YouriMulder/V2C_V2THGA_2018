@@ -40,3 +40,6 @@ build: In deze map staan alle visual studio files (.sln,.vcxproj etc.).
 bin: In deze map komt de uiteindelijke .exe file terecht hier wordt een onderscheid gemaakt tussen release en debug.
 res: In deze map staan alle benodigde textures, levelfiles en sounds.
 dependencies: In deze map staan de libraries(SFML).
+doxygen: In deze map staat de doxyfile om doxygen te genereren. 
+
+Voor de al gegenereerde doxygen kan op de volgende drive link gekeken worden: https://drive.google.com/drive/folders/1mIEU50SaadVVD8oHtJi7dGHnunT0mfuu?usp=sharing 
