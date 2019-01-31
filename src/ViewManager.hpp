@@ -10,7 +10,7 @@
 /// Struct with information of a screen 
 struct Screen {
 	/// \brief
-	/// The screen number;
+	/// The screen number.
 	int number;
 
 	/// \brief
@@ -57,7 +57,7 @@ public:
 	/// Contructs the ViewManager on basis of the parameters.
 	/// \param mainWindow
 	/// The window on which de ViewManager is based.
-	/// \param noOffScreens
+	/// \param noOfScreens
 	/// The number of screens that need to be made. Choices: 1,2,4.
 	ViewManager(sf::RenderWindow & mainWindow, const int & noOfScreens);
 
@@ -114,7 +114,7 @@ public:
 	/// The sf::VertexBuffer that needs to be drawn.
 	/// \param firstVertex
 	/// The vertex on which the drawing should start.
-	/// \param vetexCount
+	/// \param vertexCount
 	/// The amount of vertices.
 	void draw(const sf::VertexBuffer &vertexBuffer, std::size_t firstVertex, std::size_t vertexCount);
 

@@ -191,7 +191,6 @@ void Factory::readObjects(std::ifstream& text, int amountOfScreens, std::vector<
 				text >> position >> size >> textureRepeat >> eventName;
 				movableObjects.push_back(std::make_unique<EventTriggeredObject>(mPathDrugs + textureName, position, size,i, checkDrugName(eventName), true,position,size, textureRepeat));
 			} else if (name == "tutorial") {
-				std::cout << "error";
 				std::string textureName;
 				sf::Vector2f position;
 				sf::Vector2f size;

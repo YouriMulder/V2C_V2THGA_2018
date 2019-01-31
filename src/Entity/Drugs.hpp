@@ -4,7 +4,7 @@
 #include "Player.hpp"
 #include "../SoundPlayer.hpp"
 /// \brief
-/// Namespace containing the lambda's corresponding to drug names;
+/// Namespace containing the lambda's corresponding to drug names.
 namespace Drugs {
 	/// \brief
 	/// Lambda for a health reset drug.

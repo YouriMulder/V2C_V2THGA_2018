@@ -74,7 +74,7 @@ public:
 	/// The screenNumber where the EntityBase should be drawn to.
 	/// \param isSolid
 	/// Whether or not the EntityBase should be solid or not.
-	/// \param isVisisble
+	/// \param isVisible
 	/// Whether or not the EntityBase should be drawn to the screen.
 	EntityBase(
 		const sf::Vector2f& position, 
@@ -174,9 +174,9 @@ public:
 	virtual void setPosition(const sf::Vector2f& newPosition);
 	
 	/// \brief
-	/// This method sets mPosition.
-	/// \param newPosition
-	/// The value you want to set mPosition to.
+	/// This method sets mSize.
+	/// \param newSize
+	/// The value you want to set mSize to.
 	void setSize(const sf::Vector2f& newSize);
 
 	/// \brief
@@ -213,7 +213,7 @@ public:
 	
 	/// \brief
 	/// A pure virtual method used to update the EntityBase.
-	/// \param deltaTIme
+	/// \param deltaTime
 	/// The time between the last update and this update.
 	/// Used to make movement based on time not framerate.
 	virtual void update(const sf::Time& deltaTime) = 0;

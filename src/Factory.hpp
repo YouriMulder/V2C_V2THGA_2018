@@ -76,7 +76,7 @@ private:
 	/// This is a opened text file.
 	/// \param amountOfScreens
 	/// This is the amount of screens that have been specified in the level file.
-	/// \param movableOjects
+	/// \param movableObjects
 	/// This vector holds all the movable objects of the level.
 	void readCharacters(std::ifstream& text, int amountOfScreens, std::vector<std::unique_ptr<EntityBase>> & movableObjects);
 
@@ -110,7 +110,7 @@ private:
 
 	/// \brief
 	/// Method used to get the number of lines from a text file;
-	/// \param filename
+	/// \param fileName
 	/// A string that contains the name of the file or the path to the file.
 	/// \return Returns the number of lines.
 	int getNoLines(std::string fileName);
@@ -142,7 +142,7 @@ public:
 	/// \details
 	/// This method uses all the other reading methods to give all the data from a level file in one go.
 	/// It also handles the opening and closing of the file.
-	/// \param filename
+	/// \param fileName
 	/// A string that contains the name of the file or the path to the file.
 	/// \param staticObjects
 	/// A vector that gets filled with the static game objects from the levvel file.
