@@ -38,7 +38,7 @@ public:
 	/// \param work
 	/// Needs a call for a void function.
 	EventManager(std::function< bool(const sf::Event& event) > condition, std::function< void() > work) :
-		mCondition(Condition),
+		mCondition(condition),
 		mWork(work),
 		mEvent(sf::Event::KeyPressed)
 	{}
@@ -69,7 +69,7 @@ public:
 	/// Needs a call for a void function.
 	EventManager(sf::Keyboard::Key key, std::function< void() > work) :
 		mCondition([key](const sf::Event& event)->bool { return sf::Keyboard::isKeyPressed(key); }),
-		mWork(Work),
+		mWork(work),
 		mEvent(sf::Event::KeyPressed)
 	{}
 

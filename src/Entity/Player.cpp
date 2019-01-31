@@ -104,6 +104,7 @@ Player::~Player() {}
 bool Player::shoot() {
 	if(energy > 0 && Character::shoot()) {
 		energy--;
+		mSoundPlayer.play(Sounds::shoot);
 		return true;
 	}
 	return false;

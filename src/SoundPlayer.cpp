@@ -4,7 +4,7 @@
 
 const std::string Sounds::hurt = "hurt.ogg";
 const std::string Sounds::death = "death.ogg";
-const std::string Sounds::slurp = "slurp.ogg";
+const std::string Sounds::shoot = "shoot.ogg";
 
 
 
