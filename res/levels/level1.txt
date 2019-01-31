@@ -1,0 +1,59 @@
+SETTINGS:
+noOfScreens 1
+gameTime 3
+songName music.ogg
+levelSize (3000,2000)
+finishPoints (2930,1905)
+
+backgroundImages plx-1.png,plx-2.png,plx-3.png,plx-4.png,plx-5.png
+
+SCREEN1
+
+platform platform.png (1400,1000) (200,25) 1 0
+spike spike.png (1400,1950) (200,25) 10 1 0
+movePlatform platform.png (1200,1000) (200,25) (0,950) 200 1 0
+movePlatform platform.png (1600,1000) (200,25) (0,950) 200 1 0
+platform platform.png (0,1975) (3000,25) 1 0
+platform platform.png (0,1000) (1200,25) 1 0
+platform platform.png (1800,1000) (1200,25) 1 0
+platform platform.png (1100,1500) (100,25) 1 0
+platform platform.png (1800,1500) (100,25) 1 0
+movePlatform platform.png (2000,1100) (100,25) (0,400) 200 1 0
+movePlatform platform.png (2200,1100) (100,25) (0,400) 300 1 0
+movePlatform platform.png (2400,1100) (100,25) (0,400) 150 1 0
+movePlatform platform.png (2600,1100) (100,25) (0,400) 400 1 0
+platform platform.png (2800,1175) (100,25) 1 0
+platform platform.png (-10,0) (10,2000) 1 0
+platform platform.png (3001,0) (10,2000) 1 0
+platform platform.png (800,1400) (100,25) 1 0
+platform platform.png (650,1600) (100,25) 1 0
+platform platform.png (300,1550) (25,25) 1 0
+platform platform.png (100,1400) (150,25) 1 0
+platform platform.png (2000,800) (100,25) 1 0
+platform platform.png (2300,900) (100,25) 1 0
+platform platform.png (2300,700) (200,25) 1 0
+platform platform.png (2700,600) (100,25) 1 0
+platform platform.png (2700,420) (100,25) 1 0
+platform platform.png (2700,240) (100,25) 1 0
+platform platform.png (2400,140) (100,25) 1 0
+platform platform.png (1800,140) (400,25) 1 0
+NPC (1800,90) 350 1 10
+movePlatform platform.png (0,900) (200,25) (1000,0) 500 1 0
+movePlatform platform.png (0,800) (200,25) (1000,0) 250 1 0
+movePlatform platform.png (0,700) (200,25) (1000,0) 400 1 0
+movePlatform platform.png (0,600) (200,25) (1000,0) 300 1 0
+movePlatform platform.png (0,500) (200,25) (1000,0) 150 1 0
+movePlatform platform.png (0,400) (200,25) (1000,0) 600 1 0
+movePlatform platform.png (0,300) (200,25) (1000,0) 350 1 0
+platform platform.png (1000,200) (200,25) 1 0
+DRUG blueDrug.png (1175,175) (25,25) 0 energy+1
+platform platform.png (2700,1875) (300,25) 1 0
+NPC (2750,1900) 0 4 1
+DRUG blueDrug.png (1800,115) (25,25) 0 energy+1
+DRUG blueDrug.png (200,1375) (25,25) 0 energy+1
+DRUG blueDrug.png (2850,1150) (25,25) 0 energy+1
+
+END
+
+CHARACTERS
+player (1450,935)
